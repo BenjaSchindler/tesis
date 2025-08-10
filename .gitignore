@@ -73,13 +73,8 @@ $RECYCLE.BIN/
 *.msp
 *.lnk
 
-# Large Data Files - exclude very large files but keep smaller processed ones
-data/Madrid.zip
-data/Madrid/*.pkl
-# Keep processed files under reasonable size
-# data/*.pkl
-# data/*.csv
-# data/*.npy
+# Large Data Files - exclude entire data folder to avoid GitHub size limits
+data/
 
 # Model checkpoints and cache
 transformers_cache/
