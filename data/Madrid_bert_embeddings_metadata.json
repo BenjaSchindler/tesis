@@ -1,0 +1,16 @@
+{
+  "model_name": "dccuchile/bert-base-spanish-wwm-uncased",
+  "embedding_shape": [
+    2683,
+    768
+  ],
+  "embedding_dimension": 768,
+  "num_negative_reviews": 1475,
+  "num_neutral_reviews": 1208,
+  "total_reviews": 2683,
+  "files_created": [
+    "Madrid_neutral_negative_bert_embeddings.npy",
+    "Madrid_neutral_negative_sample.pkl",
+    "Madrid_neutral_negative_sample.csv"
+  ]
+}

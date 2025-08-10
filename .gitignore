@@ -1,0 +1,156 @@
+# Environment and API Keys
+.env
+.env.local
+.env.production
+.env.staging
+*.key
+api_keys.txt
+openai_key.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+.env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# PyCharm
+.idea/
+*.swp
+*.swo
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Large Data Files - exclude very large files but keep smaller processed ones
+data/Madrid.zip
+data/Madrid/*.pkl
+# Keep processed files under reasonable size
+# data/*.pkl
+# data/*.csv
+# data/*.npy
+
+# Model checkpoints and cache
+transformers_cache/
+.cache/
+*.model
+*.bin
+pytorch_model.bin
+config.json
+tokenizer.json
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+logs/
+temp/
+
+# IDE and Editor
+*.sublime-project
+*.sublime-workspace
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# Package managers
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Local configuration
+local_config.py
+local_settings.py
+
+# Test outputs
+test_results/
+test_output/
+
+# Generated documentation
+docs/_build/
+
+# Temporary plots and visualizations (if needed)
+# *.png
+# *.jpg
+# *.jpeg
+# plots/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignore specific large files or model weights
+# models/
+# checkpoints/
