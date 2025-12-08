@@ -1,0 +1,98 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+.env.local
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Results and outputs
+phaseA_seed*
+phaseB_seed*
+batch*_seed*
+*_synthetic.csv
+*_augmented.csv
+*_metrics.json
+*_results/
+results/
+outputs/
+logs/
+*.log
+nohup.log
+nohup*.log
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.joblib
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# GCP
+.gcloud/
+*.gcpkey
+
+# Large files - ALL CSVs excluded (too big for GitHub)
+*.csv
+
+# Embeddings cache (regenerable, very large)
+embeddings_cache/
+**/embeddings_cache/
+*.npz
+*.npy
+cache/
+
+# Results directories (contain large generated files)
+**/results/
+phase_e/improvements/results/
+phase_c/results/
+phase_f/results/
+phase_g/results/
+overnight_logs/
+
+# Specific large output patterns
+*_aug.csv
+*_synth.csv
+*_augmented.csv
+*_synthetic.csv
+*_processed.csv
+*_train.csv
+*_test.csv
+*_val.csv

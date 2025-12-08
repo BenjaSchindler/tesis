@@ -1,0 +1,22 @@
+# SMOTE-LLM Dependencies for GCP VMs
+# Install with: pip install -r requirements.txt
+# Or with uv:  uv pip install -r requirements.txt
+
+# Core ML
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+scipy>=1.11.0
+
+# Embeddings
+sentence-transformers>=2.2.0
+
+# LLM API
+openai>=1.0.0
+
+# Utilities
+tqdm>=4.65.0
+python-dotenv>=1.0.0
+
+# Optional: For faster GPU operations (pre-installed on GCP with CUDA)
+# torch>=2.0.0

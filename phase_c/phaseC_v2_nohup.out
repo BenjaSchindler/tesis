@@ -1,0 +1,142 @@
+════════════════════════════════════════════════════════
+  Phase C v2 - Quick Wins (Purity Gate + Optimizations)
+════════════════════════════════════════════════════════
+
+Dataset: ../MBTI_500.csv
+Seed: 42
+
+Phase C v2 Quick Wins:
+  🛡️  PURITY GATE (NEW):
+     - Threshold: 0.025
+     - Blocks: ESFJ (purity=0.009), ISFJ (0.016)
+     - Prevents degradation from contaminated classes
+
+  📊 Quality Gate Lowered:
+     - 0.30 → 0.25 (allow more classes)
+
+  💰 F1 Budget Thresholds Adjusted:
+     - 0.35 0.20 → 0.40 0.20
+     - Moves ESFP from HIGH (30×) to MID (70×) tier
+
+  🌡️  Adaptive Temperature (from Phase C v1):
+     - MID F1 (0.20-0.45): temp=0.5
+
+Expected Improvement (vs Phase C v1: +0.06%):
+  • MID-tier: +0.15% to +0.30%
+  • Overall: +1.00% to +1.15%
+
+════════════════════════════════════════════════════════
+
+✅ GPU detectada - usando CUDA
+
+Ejecutando Phase C con seed 42...
+Logs: phaseC_v2_seed42_20251115_182611.log
+
+2025-11-15 18:26:13.374080: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+/home/benja/miniconda3/lib/python3.13/site-packages/huggingface_hub/file_download.py:1150: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+`SentenceTransformer._target_device` has been deprecated, please use `SentenceTransformer.device` instead.
+
+======================================================================
+Phase 3: Validation-Based Gating
+======================================================================
+Val size: 15.0%, tolerance: 0.020
+Train: 72125, Val: 12728, Test: 21214
+
+Embedder device: cuda:0
+Traceback (most recent call last):
+  File "/home/benja/Desktop/Tesis/SMOTE-LLM/phase_c/../core/runner_phase2.py", line 2798, in <module>
+    orchestrate_pipeline(args)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/benja/Desktop/Tesis/SMOTE-LLM/phase_c/../core/runner_phase2.py", line 1983, in orchestrate_pipeline
+    train_embeddings = compute_embeddings(embedder, train_proc, args.embedding_batch_size)
+  File "/home/benja/Desktop/Tesis/SMOTE-LLM/phase_c/../core/runner_phase2.py", line 587, in compute_embeddings
+    return model.encode(
+           ~~~~~~~~~~~~^
+        list(texts),
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        normalize_embeddings=normalize,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/sentence_transformers/SentenceTransformer.py", line 517, in encode
+    out_features = self.forward(features)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/container.py", line 244, in forward
+    input = module(input)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/sentence_transformers/models/Transformer.py", line 118, in forward
+    output_states = self.auto_model(**trans_features, return_dict=False)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/transformers/models/mpnet/modeling_mpnet.py", line 551, in forward
+    encoder_outputs = self.encoder(
+        embedding_output,
+    ...<4 lines>...
+        return_dict=return_dict,
+    )
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/transformers/models/mpnet/modeling_mpnet.py", line 341, in forward
+    layer_outputs = layer_module(
+        hidden_states,
+    ...<4 lines>...
+        **kwargs,
+    )
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/transformers/models/mpnet/modeling_mpnet.py", line 300, in forward
+    self_attention_outputs = self.attention(
+        hidden_states,
+    ...<3 lines>...
+        output_attentions=output_attentions,
+    )
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/transformers/models/mpnet/modeling_mpnet.py", line 241, in forward
+    self_outputs = self.attn(
+        hidden_states,
+    ...<3 lines>...
+        output_attentions=output_attentions,
+    )
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/benja/miniconda3/lib/python3.13/site-packages/transformers/models/mpnet/modeling_mpnet.py", line 177, in forward
+    attention_scores = torch.matmul(q, k.transpose(-1, -2))
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 864.00 MiB. GPU 0 has a total capacity of 7.66 GiB of which 163.75 MiB is free. Process 310141 has 4.30 GiB memory in use. Including non-PyTorch memory, this process has 2.33 GiB memory in use. Of the allocated memory 2.11 GiB is allocated by PyTorch, and 44.22 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+════════════════════════════════════════════════════════
+  Phase C v2 Completed!
+════════════════════════════════════════════════════════
+
+Output files:
+  📊 phaseC_v2_seed42_metrics.json
+  📝 phaseC_v2_seed42_synthetic.csv
+  📈 phaseC_v2_seed42_augmented.csv
+  📋 phaseC_v2_seed42_20251115_182611.log
+
+Next steps:
+  1. Compare with Phase C v1 (check purity gate messages)
+  2. Verify ESFJ/ISFJ were blocked by purity gate
+  3. Check if ESFP improved with higher budget (70× vs 30×)
+

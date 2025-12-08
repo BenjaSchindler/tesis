@@ -1,0 +1,1017 @@
+\chapter{Metodología}
+\label{sec:Metodologia}
+
+\section{\textit{Dataset} y Configuración Experimental}
+\label{sec:dataset_config}
+
+Esta sección establece el contexto experimental sobre el cual se evalúa el sistema propuesto. El \textit{dataset} seleccionado presenta características representativas de escenarios reales de clasificación de texto con desbalance severo: distribución de frecuencias altamente asimétrica, superposición semántica entre clases relacionadas, y heterogeneidad intra-clase pronunciada. La configuración experimental enfatiza reproducibilidad mediante validación multi-seed y separación estricta entre conjuntos de entrenamiento y prueba.
+
+\subsection{Características del Corpus MBTI}
+\label{subsec:corpus_mbti}
+
+El corpus MBTI (Myers-Briggs Type Indicator) comprende 100,000 publicaciones de redes sociales etiquetadas con 16 tipos de personalidad según el marco psicológico Myers-Briggs. Cada tipo representa combinación de cuatro dimensiones binarias: Introversión/Extraversión (I/E), Intuición/Sensación (N/S), Pensamiento/Sentimiento (T/F), Juicio/Percepción (J/P). El \textit{dataset} exhibe desbalance extremo con ratio de 1,078:1 entre la clase mayoritaria INFP (9,707 muestras, 9.71\%) y la minoritaria ESFJ (9 muestras, 0.009\%).
+
+Tres características fundamentales hacen del corpus MBTI un benchmark apropiado para validar técnicas de aumento sintético en clasificación desbalanceada. Primero, overlap semántico inherente emerge porque tipos que comparten tres de cuatro dimensiones tienden a producir textos similares. Por ejemplo, ISTJ e ISTP difieren únicamente en la dimensión T/P pero ambos enfatizan perspectivas concretas y pragmáticas. Esta superposición se refleja en pureza K-NN típica entre 0.25 y 0.45, donde menos de la mitad de vecinos cercanos pertenecen a la clase objetivo, indicando regiones de alta ambigüedad semántica.
+
+Segundo, heterogeneidad intra-clase caracteriza categorías que manifiestan múltiples subclusters temáticos. Un individuo INTJ puede escribir sobre estrategia empresarial, análisis técnico, o filosofía abstracta, resultando en vocabulario y estructuras sintácticas divergentes dentro de la misma etiqueta. Esta variabilidad interna dificulta aprendizaje de representaciones compactas y motiva estrategias de agrupamiento adaptativo que capturan diversidad temática.
+
+Tercero, el tamaño de 100,000 muestras permite splits robustos que preservan representatividad estadística incluso para clases ultra-minoritarias. La clase ESFJ con 9 ejemplos totales retiene aproximadamente 7 muestras de entrenamiento y 2 de prueba bajo split 80/20, suficiente para evaluar generalización aunque insuficiente para aprendizaje robusto sin aumento. Esta escala intermedia posibilita experimentación controlada sin costos computacionales prohibitivos de \textit{datasets} masivos.
+
+El caso ISTJ constituye estudio primario porque ejemplifica riesgos de aumento naive. Con 994 muestras de entrenamiento y pureza local de 0.025 (solo 2.5\% de vecinos K-NN pertenecen a ISTJ), generación descontrolada de 300 sintéticos produjo ratio sintético/real de 30.2\% y contaminación estimada de 29.4\%, resultando en degradación catastrófica de -2.44 puntos porcentuales en F1-score. Este disaster case motiva desarrollo de controles adaptativos documentados en secciones posteriores. La Tabla \ref{tab:mbti_distribution} presenta distribución completa de frecuencias por tipo.
+
+\subsection{Preprocesamiento y División de Datos}
+\label{subsec:preprocesamiento}
+
+El preprocesamiento aplica transformaciones mínimas que preservan sutilezas lingüísticas relevantes para discriminación entre tipos de personalidad. La \textit{pipeline} incluye tres operaciones: remoción de URLs mediante expresiones regulares que capturan patrones http/https, eliminación de caracteres especiales no alfanuméricos exceptuando puntuación básica (punto, coma, signos de interrogación y exclamación), y normalización de espacios múltiples a espacios simples. Este enfoque conservador evita transformaciones agresivas típicas en NLP tradicional.
+
+En particular, el sistema no aplica stemming ni lemmatization porque estas técnicas colapsan variantes morfológicas que pueden transportar información discriminativa. Por ejemplo, uso frecuente de tiempo futuro versus pasado, o preferencia por sustantivos abstractos versus concretos, constituyen señales sutiles de diferencias de personalidad que se perderían bajo normalización léxica agresiva. Similarmente, stopwords no son removidas porque patrones de conectores y auxiliares reflejan estructuras cognitivas subyacentes.
+
+La división de datos emplea estratificación que preserva proporciones de clase en particiones de entrenamiento y prueba. La función train\_test\_split con parámetro stratify=y garantiza que cada clase mantiene su distribución relativa en ambos conjuntos, crítico para clases ultra-minoritarias donde sampling aleatorio podría resultar en splits vacíos. El ratio 80/20 balancea necesidad de datos suficientes para entrenamiento con tamaño de test set representativo.
+
+La validación experimental utiliza múltiples semillas aleatorias para cuantificar estabilidad de resultados. Los experimentos reportados emplean semillas {101, 102, 103, 104}, valores arbitrarios del rango [100,200] seleccionados para evitar sesgo de inicialización. El protocolo de reproducibilidad exige mínimo cuatro semillas con reporte de media, desviación estándar, y tasa de éxito (fracción de semillas con delta positivo o neutral). Un sistema robusto debe exhibir delta promedio superior a cero y success rate mayor a 75\%, reconociendo que fluctuaciones de ±0.15\% entre semillas son esperables incluso con configuración idéntica debido a variabilidad estocástica en inicialización de clasificadores y selección de vecinos K-NN.
+
+\subsection{Configuración de \textit{Embeddings} Semánticos}
+\label{subsec:embeddings}
+
+La representación vectorial mediante \textit{embeddings} semánticos constituye fundamento del sistema propuesto. El corpus MBTI requiere captura de relaciones semánticas que trascienden coincidencias léxicas superficiales, motivando uso de modelos de lenguaje pre-entrenados en lugar de técnicas tradicionales como TF-IDF. Un ejemplo ilustrativo clarifica esta necesidad. Considere dos textos representativos:
+
+\begin{itemize}
+\item ISTJ: ``Prefiero estructura y organización en mi trabajo diario''
+\item ESTJ: ``Organizo equipos eficientemente y sigo procedimientos establecidos''
+\end{itemize}
+
+Ambos textos comparten temática de orden y sistematización pero emplean vocabulario distinto (estructura/procedimientos, preferir/organizar). TF-IDF los representaría como vectores dispares por ausencia de overlap léxico, ignorando similaridad semántica profunda. \textit{Embeddings} semánticos capturan esta equivalencia conceptual al mapear ambos a regiones próximas del espacio de representación.
+
+La validación empírica de esta hipótesis se documentó mediante experimentos preliminares ejecutados en Mayo 2025. Bajo configuración idéntica (LogisticRegression con class\_weight='balanced', mismo protocolo de aumento), dos representaciones vectoriales produjeron resultados cualitativamente opuestos. TF-IDF con max\_features=10,000 y ngram\_range=(1,2) alcanzó F1 línea base de 0.34, pero tras aumento con 300 sintéticos por clase degradó a F1=0.31, delta de -8.8\%. En contraste, \textit{embeddings} semánticos mediante all-MiniLM-L6-v2 partieron del mismo línea base de 0.34 y mejoraron a F1=0.36, delta de +5.9\%. La diferencia de 14.7 puntos porcentuales entre enfoques evidencia que representación semántica no es optimización marginal sino requisito fundamental para aumento efectivo. El fallo con TF-IDF deriva de que vectores interpolados en espacio léxico no corresponden a textos lingüísticamente coherentes, y filtros KNN aceptan sintéticos inconsistentes porque métrica de similaridad no captura calidad textual.
+
+El modelo de \textit{embeddings} seleccionado emergió de SWEEP 1, evaluación comparativa de 12 arquitecturas pre-entrenadas bajo protocolo experimental uniforme. La Tabla \ref{tab:embedder_comparison} presenta top 5 modelos ordenados por delta F1. El ganador absoluto fue multi-qa-mpnet-base-dot-v1 con 768 dimensiones, logrando delta de +9.11\% y 278 sintéticos aceptados a velocidad de 900 sentencias por segundo. Sin embargo, el sistema selecciona all-MiniLM-L6-v2 con 384 dimensiones, delta de +1.85\%, y 54 sintéticos aceptados a velocidad de 2,000 sentencias por segundo.
+
+Esta decisión aparentemente subóptima responde a análisis de trade-offs multi-dimensional. Primero, velocidad: MiniLM-L6 procesa el corpus completo de 100,000 muestras en 50 segundos versus 111 segundos de mpnet, factor 2.2× que impacta significativamente tiempo de experimentación iterativa. Segundo, generalización: mpnet fue entrenado en Multi-QA \textit{dataset} enfocado en pares pregunta-respuesta, potencialmente sesgando representaciones hacia patrones interrogativos no representativos del corpus MBTI basado en publicaciones declarativas. MiniLM-L6 entrenó en tareas generales de sentence similarity con mayor diversidad de géneros textuales.
+
+Tercero, arquitectura compensatoria: validación de Fase 2 demostró que mejoras arquitecturales (ensemble anclas, filtrado contaminación-aware, confidence weighting) compensan diferencias de calidad de \textit{embeddings}. El sistema Fase 2 con MiniLM-L6 alcanzó conversión del caso ISTJ de -2.44\% a +1.84\%, mientras proyecciones en 16 clases estiman +6.40\%, evidenciando que combinación de componentes arquitecturales supera ventajas de \textit{embeddings} más costosos. Esta observación es metodológicamente relevante: sugiere que inversión en diseño de \textit{pipeline} puede ser más efectiva que inversión en modelos de \textit{embedding} más grandes.
+
+La configuración técnica emplea aceleración CUDA cuando disponible con fallback automático a CPU. El lote\_size de 32 muestras balancea utilización de memoria GPU con throughput. L2 normalization se aplica automáticamente a todos los vectores, garantizando que similaridad coseno opere en esfera unitaria. La dimensionalidad de 384 representa compromiso entre expresividad suficiente para capturar matices semánticos y eficiencia computacional para operaciones downstream de K-Means agrupamiento y K-NN retrieval que escalan cuadráticamente con dimensionalidad.
+
+\subsection{Clasificador Línea base y Métricas de Evaluación}
+\label{subsec:baseline_metricas}
+
+El clasificador línea base emplea regresión logística multinomial con estrategia one-versus-rest (OvR). Esta arquitectura entrena 16 clasificadores binarios independientes donde cada uno discrimina una clase específica contra todas las demás. La estrategia OvR simplifica optimización comparado con enfoques multinomiales verdaderos, particularmente relevante en escenarios con 16 clases donde matriz de confusión completa requeriría estimación de 256 parámetros.
+
+El parámetro class\_weight='balanced' implementa ponderación automática que compensa desbalance mediante asignación de pesos inversamente proporcionales a frecuencias de clase. La fórmula específica calcula:
+
+\begin{equation}
+w_c = \frac{N}{C \times N_c}
+\end{equation}
+
+donde $w_c$ denota peso de clase $c$, $N$ es el total de muestras, $C=16$ es el número de clases, y $N_c$ cuenta ejemplos de clase $c$. Esta ponderación eleva influencia de minoritarias durante entrenamiento, previniendo que clasificador ignore categorías raras para optimizar exactitud global.
+
+El solver lbfgs (Limited-memory Broyden-Fletcher-Goldfarb-Shanno) implementa optimización quasi-Newton que aproxima matriz Hessiana usando solo gradientes recientes, reduciendo costo de memoria de $O(n^2)$ a $O(n)$. La convergencia típica ocurre en 100-200 iteraciones con tiempo de ejecución de 15-20 segundos en CPU para el corpus completo. El parámetro max\_iter=1000 con detención temprana previene entrenamiento excesivo cuando mejora marginal es inferior a tolerancia.
+
+La métrica primaria es Macro F1-score, promedio aritmético de F1-scores por clase:
+
+\begin{equation}
+\text{Macro-F1} = \frac{1}{C} \sum_{c=1}^{C} F1_c = \frac{1}{C} \sum_{c=1}^{C} \frac{2 \cdot P_c \cdot R_c}{P_c + R_c}
+\label{eq:macro_f1}
+\end{equation}
+
+donde $C=16$ clases, $P_c = \frac{TP_c}{TP_c + FP_c}$ denota precisión de clase $c$, y $R_c = \frac{TP_c}{TP_c + FN_c}$ representa recall. Esta métrica asigna peso unitario a cada clase independientemente de su frecuencia, contrastando con Weighted F1 que pondera por soporte.
+
+La justificación para Macro F1 sobre alternativas deriva del objetivo primario de mejorar clases minoritarias sin degradar mayoritarias. Weighted F1 enmascara degradación en ultra-minorities porque ganancias en clases grandes (INFP, INFJ con aproximadamente 10,000 muestras cada una) ocultan fallos en clases pequeñas (ESFJ, ESTJ con menos de 100 muestras). Macro F1 expone estos fallos asignando igual importancia a cada categoría, alineándose con casos de uso reales donde detectar correctamente un ESFJ raro es tan valioso como clasificar un INFP común.
+
+Métricas complementarias incluyen F1 por clase para análisis granular de mejoras y degradaciones específicas, precisión y recall por clase para diagnóstico de errores (precisión baja indica falsos positivos por contaminación, recall bajo señala dilución de señal discriminativa), matrices de confusión que revelan patrones sistemáticos de misclassification entre pares de tipos relacionados, y delta absoluto y relativo cuantificando magnitud de cambio. El delta se reporta tanto en puntos porcentuales (pp) como porcentaje relativo. Por ejemplo, mejora de 0.34 a 0.35 corresponde a delta de +0.01pp o +2.94\% relativo.
+
+Adicionalmente, el sistema rastrea tasa de aceptación (fracción de sintéticos aceptados versus generados) como proxy de calidad, con tasas superiores a 60\% indicando generación efectiva y filtrado no excesivamente restrictivo. Contamination risk estimate aplica la Ecuación \ref{eq:contamination_risk_componentes} para predecir riesgo antes de generación, demostrando correlación R²=0.76 con delta F1 observado en experimentos históricos. Esta correlación valida uso de la fórmula como heurística de decisión en controles adaptativos.
+
+SECCIÓN 4.2: VISIÓN GENERAL DEL SISTEMA PROPUESTO
+
+\section{Visión General del Sistema Propuesto}
+\label{sec:vision_general}
+
+La arquitectura propuesta aborda directamente las tres deficiencias metodológicas identificadas en enfoques híbridos actuales (Sección \ref{sec:Estado Arte}). El sistema integra técnicas clásicas de sobremuestreo con capacidades generativas de Large Language Models mediante controles adaptativos que responden dinámicamente a características locales del espacio de \textit{embeddings}. Esta sección presenta el \textit{pipeline} completo y sus componentes fundamentales antes de detallar la evolución experimental del sistema en secciones posteriores.
+
+\subsection{Arquitectura End-to-End}
+\label{subsec:arquitectura_endtoend}
+
+El sistema ejecuta un \textit{pipeline} de seis etapas secuenciales que transforman un \textit{dataset} desbalanceado en un corpus aumentado con muestras sintéticas de alta calidad. La primera etapa procesa el texto mediante \textit{embeddings} semánticos que capturan relaciones semánticas entre documentos. Esta representación vectorial permite cuantificar similaridad entre textos más allá de coincidencias léxicas superficiales, requisito fundamental para agrupamiento y validación de calidad posterior.
+
+La segunda etapa divide el \textit{dataset} en particiones de entrenamiento y prueba mediante estratificación que preserva distribuciones de clase. Esta división establece el conjunto de referencia sobre el cual se entrenará el clasificador línea base. El clasificador línea base genera métricas de rendimiento iniciales que servirán como punto de comparación para evaluar efectividad del aumento. Esta evaluación inicial también identifica clases objetivo que requieren intervención basándose en dos criterios complementarios: tamaño de muestra inferior a 500 ejemplos o F1-score por debajo de 0.40.
+
+Las etapas tercera a quinta constituyen el núcleo del \textit{pipeline} de aumento, ejecutado iterativamente para cada clase objetivo identificada. La tercera etapa aplica agrupamiento adaptativo mediante K-Means que subdivide la clase en grupos semánticamente coherentes. El número de clusters K se ajusta dinámicamente según el tamaño de clase mediante la fórmula $K = \min(12, \max(2, \lfloor n/100 \rfloor))$, donde $n$ representa el conteo de muestras. Este agrupamiento captura heterogeneidad intra-clase que caracteriza dominios complejos donde una categoría puede manifestarse en múltiples subclusters temáticos.
+
+La cuarta etapa implementa selección de anclas, ejemplos representativos de la clase que sirven como plantillas para condicionar la generación del LLM. Cada ancla funciona como punto de referencia semántico: el modelo generativo recibe el texto del ancla junto con vecinos cercanos para producir nuevas muestras que preserven características de la clase. La estrategia de ensemble combina tres criterios complementarios para identificar anclas óptimas. El método identifica primero medoids de cada cluster como línea base confiable, luego incorpora muestras calidad-gated que satisfacen umbrales estrictos de pureza local, finalmente agrega muestras diverse seleccionadas mediante maximización de distancia mínima. Las anclas seleccionadas condicionan directamente la generación al proporcionar al LLM ejemplos de referencia explícitos y contexto de vecinos cercanos que ilustran variabilidad aceptable dentro de la clase.
+
+La quinta etapa ejecuta generación sintética mediante GPT-4o-mini condicionado en anclas y sus vecinos K-NN ponderados. El sistema construye \textit{prompts} que incluyen el texto del ancla seguido de ocho vecinos más cercanos ordenados por similaridad decreciente. La generación utiliza temperatura de 0.5 para balancear diversidad léxica con coherencia semántica, junto con top-p de 0.9 que restringe sampling a \textit{tokens} acumulando 90\% de probabilidad. Esta configuración demostró maximizar aceptación de sintéticos al producir outputs gramaticalmente correctos con variabilidad suficiente para evitar duplicación.
+
+La sexta etapa aplica filtrado multi-nivel que valida cada sintético mediante tres criterios secuenciales. El primer filtro verifica consistencia con el vecindario local de la clase calculando similaridad coseno promedio con 15 vecinos más cercanos. El segundo filtro confirma coherencia con el ancla condicionante mediante similaridad directa. El tercer filtro detecta duplicados cercanos del corpus de entrenamiento rechazando sintéticos con similaridad superior a 0.95 respecto a cualquier ejemplo real. Los umbrales de aceptación no son fijos sino que se ajustan dinámicamente según la pureza semántica del ancla, implementando el principio de filtrado consciente de contaminación detallado en subsección posterior.
+
+El \textit{pipeline} concluye con entrenamiento del clasificador aumentado sobre el conjunto combinado de muestras reales y sintéticas aceptadas. El sistema aplica ponderación diferenciada donde cada sintético recibe peso proporcional a un factor de confianza geométrica derivado de la densidad local del ancla. Esta ponderación contrasta con enfoques previos que asignan peso uniforme independientemente del contexto de generación. La Figura \ref{fig:pipeline_completo} ilustra el flujo de datos completo incluyendo retroalimentación desde métricas de evaluación hacia decisiones de aumento.
+
+\subsection{Componentes Clave del Sistema}
+\label{subsec:componentes_clave}
+
+Cuatro innovaciones metodológicas diferencian la arquitectura propuesta de enfoques híbridos previos documentados en la Sección \ref{sec:Estado Arte}. Esta subsección define operacionalmente cada componente antes de detallar su implementación en secciones posteriores y analizar su evolución a través de las fases de desarrollo.
+
+\subsubsection*{Generación Inteligente mediante Anclas}
+
+La generación sintética emplea estrategia de condicionamiento contextual que contrasta con aproximaciones naive donde el LLM recibe únicamente descripción genérica de la clase objetivo. El sistema identifica anclas, ejemplos representativos que exhiben alta pureza semántica en su vecindario local. Pureza cuantifica limpieza de una región del espacio de \textit{embeddings} mediante la fracción de vecinos K-NN pertenecientes a la clase: valores cercanos a 1.0 indican regiones donde la clase domina, mientras valores bajos revelan superposición con categorías relacionadas.
+
+Cada ancla condiciona la generación al proporcionar al LLM tres elementos complementarios. Primero, el texto completo del ancla sirve como ejemplo de referencia explícito que ilustra características de la clase. Segundo, el sistema incluye ocho vecinos más cercanos del ancla ordenados por similaridad decreciente, mostrando al modelo variabilidad aceptable dentro de la categoría. Tercero, los vecinos reciben ponderación por distancia inversa, enfatizando ejemplos más similares mientras incorpora contexto de vecinos periféricos.
+
+Esta estrategia aborda limitación identificada en la Sección \ref{sec:Estado Arte} donde métodos previos condicionan generación en únicamente dos vecinos fijos. La extensión a ocho vecinos ponderados proporciona contexto más rico particularmente relevante en clases con heterogeneidad intra-clase significativa, donde subclusters temáticos exhiben vocabulario y estructuras sintácticas distintas.
+
+\subsubsection*{Validación Multi-Nivel en Cascada}
+
+El sistema implementa tres filtros secuenciales que validan aspectos ortogonales de calidad antes de aceptar un sintético. La arquitectura en cascada contrasta con enfoques que aceptan outputs del LLM sin validación cuantitativa, deficiencia documentada como gap metodológico crítico en la Sección \ref{sec:Estado Arte}.
+
+El primer filtro verifica consistencia con el vecindario local calculando similaridad coseno promedio entre el sintético y sus 15 vecinos K-NN más cercanos dentro de la clase objetivo. Sintéticos con similaridad inferior a umbral adaptativo (rango 0.35-0.45 según pureza del ancla) son rechazados por desviarse excesivamente de patrones típicos de la categoría. Este filtro detecta casos donde el LLM genera texto gramaticalmente correcto pero semánticamente inconsistente con la clase.
+
+El segundo filtro confirma coherencia directa con el ancla condicionante mediante similaridad coseno bilateral. Dado que el ancla fue proporcionada explícitamente al LLM como referencia, el sintético debe mantener relación semántica suficiente. Umbrales más estrictos (0.55-0.65) reflejan expectativa de mayor similaridad comparado con vecindario general. Este filtro identifica casos donde el LLM ``divaga'' fuera del \textit{prompt} original generando contenido relacionado pero no centrado en el ancla.
+
+El tercer filtro detecta duplicados cercanos del corpus de entrenamiento calculando similaridad máxima respecto a todos los ejemplos reales de la clase. Sintéticos con similaridad superior a 0.95 son rechazados por constituir paráfrasis casi exactas que no agregan información nueva. Este filtro previene inflación artificial del conteo de sintéticos aceptados mediante copias que causarían overfitting si se incluyeran en entrenamiento.
+
+La aplicación secuencial permite diagnóstico granular de modos de fallo. Sintéticos rechazados por el primer filtro indican problemas de coherencia semántica general. Rechazo en el segundo filtro señala desviación del ancla condicionante. Rechazo en el tercero identifica falta de diversidad en generación. Esta información retroalimenta optimización de estrategias de \textit{prompt}ing y selección de anclas.
+
+\subsubsection*{Umbrales Adaptativos por Contaminación}
+
+Los umbrales de aceptación de los filtros no son constantes sino que se ajustan dinámicamente según pureza del ancla, implementando principio de filtrado consciente de contaminación. Esta innovación responde a la teoría de contaminación proporcional formalizada en la Sección \ref{sec:problema}, donde se demuestra que riesgo de degradación escala con el ratio sintético/real modulado por el complemento de la pureza:
+
+\begin{equation}
+C_{risk} = \frac{N_{syn}}{N_{real}} \times (1 - P_{ancla})
+\label{eq:contamination_risk_componentes}
+\end{equation}
+
+Anclas posicionadas en regiones de alta superposición (pureza inferior a 0.35) activan configuración restrictiva: umbrales elevados a 0.45 para filtro KNN y 0.65 para filtro de ancla. Esta restricción acepta únicamente sintéticos inequívocos, previniendo propagación de ambigüedad semántica. Inversamente, anclas en regiones limpias (pureza superior a 0.45) habilitan configuración permisiva con umbrales de 0.35 y 0.55 respectivamente, permitiendo mayor diversidad léxica sin comprometer calidad.
+
+El ajuste adaptativo reconoce que riesgo no es uniforme a través del espacio de representación sino que varía según contexto geométrico local. Validación empírica documentó incrementos de 13\% a 29\% en tasa de aceptación comparado con umbrales fijos, mientras se mantiene o mejora macro F1-score. Esta mejora deriva de balance óptimo entre cantidad y calidad: regiones limpias toleran presupuestos generosos, regiones contaminadas requieren restricción severa.
+
+\subsubsection*{Ponderación por Confianza Geométrica}
+
+El sistema asigna peso diferenciado a cada sintético durante entrenamiento del clasificador, contrastando con enfoques que aplican peso uniforme independiente del contexto de generación. El peso se calcula como producto de un factor base empírico (0.3) y un coeficiente de confianza geométrica derivado de la densidad local del ancla condicionante.
+
+La confianza geométrica cuantifica cuán representativa es la región donde se generó el sintético. Anclas posicionadas en zonas densas del espacio de \textit{embeddings}, rodeadas por múltiples ejemplos reales de la clase, reciben confianza alta cercana a 0.8. Anclas en regiones dispersas con vecinos lejanos obtienen confianza baja próxima a 0.3. La métrica específica emplea inverso de distancia promedio a vecinos de soporte:
+
+\begin{equation}
+\text{confianza} = \frac{1}{1 + \frac{1}{K}\sum_{i=1}^{K} d(\mathbf{v}_{ancla}, \mathbf{v}_i^{support})}
+\label{eq:confianza_geometrica}
+\end{equation}
+
+donde $d(\cdot, \cdot)$ denota distancia coseno y $\mathbf{v}_i^{support}$ representa el i-ésimo vecino K-NN del ancla.
+
+Esta ponderación suave implementa gradiente de confiabilidad que permite al clasificador aprender patrones robustos. Sintéticos de alta confianza ejercen influencia comparable a muestras reales (peso efectivo ~0.24), mientras sintéticos de baja confianza contribuyen señal débil (peso ~0.09). El esquema evita decisiones binarias de aceptación/rechazo que descartarían información potencialmente útil de sintéticos marginales, optando por modulación continua de influencia según evidencia geométrica.
+
+\subsection{Filosofía de Diseño: Controles Adaptativos}
+\label{subsec:filosofia_diseno}
+
+El principio rector que unifica todos los componentes del sistema establece que parámetros de aumento deben ajustarse dinámicamente según características locales de cada clase en lugar de aplicar configuración uniforme. Esta filosofía contrasta fundamentalmente con enfoques híbridos previos documentados en la Sección \ref{sec:Estado Arte}, donde parámetros permanecen fijos independientemente del contexto.
+
+La motivación teórica deriva directamente de la teoría de contaminación proporcional formalizada en la Sección \ref{sec:problema}. La ecuación fundamental de la Ecuación \ref{eq:contamination_risk_componentes} establece que riesgo de degradación escala con el ratio sintético/real modulado por el complemento de la pureza. Esta fórmula revela que contaminación no es constante sino que varía significativamente según dos factores independientes: la cantidad relativa de sintéticos generados y la pureza semántica de la región de generación. Dos clases con idéntico número de sintéticos pueden experimentar resultados radicalmente diferentes si sus purezas difieren. Similarmente, una clase puede tolerar ratio sintético alto si su pureza es elevada, mientras otra requiere restricción severa con pureza baja.
+
+El sistema implementa adaptación en tres dimensiones ortogonales que capturan aspectos complementarios del riesgo. La primera dimensión corresponde a pureza semántica medida mediante vecindario K-NN del ancla. Anclas posicionadas en regiones de alta superposición con otras clases (pureza inferior a 0.35) activan controles estrictos: presupuesto reducido en 90\%, umbrales de filtrado elevados a 0.45 para similaridad con vecindario local y 0.65 para coherencia con ancla. Esta configuración restrictiva acepta únicamente sintéticos inequívocos, previniendo propagación de ambigüedad semántica al conjunto de entrenamiento.
+
+Inversamente, anclas en regiones limpias (pureza superior a 0.45) habilitan configuración permisiva: presupuesto completo de 8\% del tamaño de clase, umbrales relajados a 0.35 y 0.55 respectivamente. Esta apertura reconoce que el riesgo inherente es bajo, permitiendo mayor diversidad en generación sin comprometer calidad. La zona intermedia (pureza entre 0.35-0.45) aplica configuración moderada que balancea aceptación con seguridad.
+
+La segunda dimensión adapta según tamaño absoluto de la clase. El análisis de 273 experimentos reveló tres regímenes distintos con comportamientos cualitativamente diferentes. Ultra-minorities con menos de 20 muestras exhiben riesgo catastrófico donde cualquier cantidad de sintéticos tiende a degradar performance, motivando exclusión automática. El sweet spot abarca clases con 100 a 500 muestras donde aumento demuestra efectividad máxima, con mejoras documentadas de +5\% hasta +63\%. Clases grandes superiores a 5,000 muestras entran en régimen de diminishing returns donde F1 línea base típicamente supera 0.65 y mejoras adicionales son marginales.
+
+La tercera dimensión considera rendimiento línea base del clasificador para la clase específica. Clases con F1 superior a 0.65 reciben exclusión automática independientemente de otros factores, reconociendo que el modelo ha aprendido representaciones suficientemente buenas y sintéticos adicionales ofrecen beneficio limitado. Esta heurística derive de observación empírica de 94 experimentos donde clases de alto línea base mostraron mejoras consistentemente inferiores a 0.1\% incluso con sintéticos de máxima calidad.
+
+La integración de estas tres dimensiones genera decisiones diferenciadas por clase que optimizan el trade-off entre mejora potencial y riesgo de degradación. Una clase pequeña (n=200) con pureza baja (0.28) y F1 moderado (0.35) recibirá presupuesto mínimo de 10 sintéticos con filtrado muy estricto. Una clase mediana (n=800) con pureza aceptable (0.45) y F1 bajo (0.25) recibirá presupuesto generoso de 64 sintéticos (8\% de 800) con filtrado balanceado. Una clase grande (n=7,000) con F1 alto (0.70) será excluida completamente del \textit{pipeline} de aumento.
+
+Esta estrategia adaptativa responde a la observación fundamental que motivó toda la investigación: el aumento de datos sintéticos no es universalmente beneficioso sino que su efectividad depende críticamente del contexto local donde se aplica. El sistema propuesto operacionaliza esta intuición mediante controles cuantitativos que ajustan automáticamente la agresividad de aumento según indicadores de riesgo medibles. La validación experimental documentada en la Sección \ref{sec:evolucion_fases} demuestra que este enfoque elimina casos catastróficos mientras preserva mejoras significativas en clases apropiadas.
+
+SECCIÓN 4.3: EVOLUCIÓN DEL SISTEMA - DOS FASES ITERATIVAS
+
+\section{Evolución del Sistema: Dos Fases Iterativas}
+\label{sec:evolucion_fases}
+
+La arquitectura presentada en la Sección \ref{sec:vision_general} representa el estado final del sistema tras evolución empírica documentada en 273 experimentos controlados ejecutados durante cuatro meses. El desarrollo no siguió diseño planificado a priori sino que emergió iterativamente mediante ciclos de experimentación, análisis de fallos, y refinamiento arquitectural. Este proceso de ingeniería experimental atravesó tres fases distintas donde cada iteración introdujo extensiones específicas motivadas por limitaciones observadas en la fase previa.
+
+Las dos fases reflejan estrategia de complejidad incremental. La Fase 1 implementó controles simples pero efectivos que eliminaron casos catastróficos mediante ajuste dinámico de presupuestos sintéticos. Los resultados positivos motivaron inversión en extensiones arquitecturales más sofisticadas en Fase 2, incluyendo selección de anclas por ensemble y filtrado consciente de contaminación. Esta progresión documenta cómo soluciones pragmáticas iniciales establecen fundación para mejoras algorítmicas progresivamente más complejas.
+
+\subsection{Fase 1: Quick Wins mediante Controles Dinámicos}
+\label{subsec:fase1}
+
+La primera fase surgió como respuesta directa al fallo catastrófico observado en clase ISTJ del corpus MBTI (características detalladas en Sección \ref{sec:dataset_config}), donde generación naive de 300 sintéticos produjo degradación de -2.44 puntos porcentuales en F1-score. Dos conceptos fundamentales motivan el diseño de Fase 1. Primero, pureza semántica cuantifica la limpieza de una región del espacio de \textit{embeddings} mediante la fracción de vecinos K-NN pertenecientes a la clase objetivo: valores cercanos a 1.0 indican regiones donde la clase domina, mientras valores bajos revelan superposición con otras categorías. Segundo, contaminación proporcional mide el riesgo de degradación como producto del ratio sintético/real y el complemento de la pureza, formalizando la observación que sintéticos generados en regiones ambiguas amplifican ruido en el entrenamiento (formalización matemática completa en Sección \ref{sec:problema}).
+
+El caso ISTJ ejemplifica este riesgo cuantificablemente. El análisis del fallo reveló que el problema fundamental no residía en calidad del LLM sino en el ratio desproporcionado entre muestras sintéticas y reales. Con 300 sintéticos sobre 994 ejemplos reales, el ratio de 30.2\% combinado con pureza local de 0.025 (solo 2.5\% de vecinos K-NN pertenecen a ISTJ) generó contaminación estimada de 29.4\% según la fórmula de contaminación proporcional. Este nivel de contaminación explica por qué sintéticos que individualmente parecían razonables degradaron colectivamente el modelo: la ambigüedad semántica se amplifica proporcionalmente con el volumen relativo de datos contaminados.
+
+Fase 1 introdujo dos mecanismos de control que operan antes de la generación. El primer mecanismo implementa presupuestos dinámicos que modulan la cantidad de sintéticos según un puntuación de calidad compuesto. La fórmula de presupuesto establece ratio objetivo de 8\% respecto al tamaño de clase real, multiplicado por factor que escala desde 0.1 (reducción de 90\%) para calidad inferior a 0.35, hasta 1.0 (ratio completo) para calidad superior a 0.50. Este ajuste reconoce que clases con calidad bajo exhiben alta superposición semántica con categorías relacionadas, requiriendo restricción severa del presupuesto sintético.
+
+El segundo mecanismo introduce gating condicional que excluye clases bajo dos criterios: tamaño inferior a 20 muestras donde evidencia empírica documenta riesgo catastrófico, y F1 línea base superior a 0.65 donde análisis demostró retornos marginales decrecientes. Estos gates sobrescriben el presupuesto calculado, previniendo generación en casos de alto riesgo o bajo beneficio potencial.
+
+La validación de Fase 1 en el caso ISTJ demostró efectividad inmediata. El sistema redujo el presupuesto de 300 a 10 sintéticos, disminuyendo el ratio de 30.2\% a 1.01\% y la contaminación estimada de 29.4\% a 0.98\%. El resultado fue conversión del disaster case (-2.44\%) en success case (+1.84\%), swing de +4.28 puntos porcentuales. La implementación requirió 57 líneas de código con retorno sobre inversión de 37.5× comparado con línea base, estableciendo la fundación para extensiones arquitecturales subsecuentes.
+
+\subsection{Fase 2: Extensiones Arquitecturales}
+\label{subsec:fase2}
+
+Los resultados positivos de Fase 1 motivaron investigación de extensiones arquitecturales más sofisticadas. Fase 2 integró tres componentes nuevos que abordan limitaciones residuales del sistema inicial.
+
+El primer componente reemplaza selección de anclas basada exclusivamente en medoids con estrategia de ensemble que combina múltiples criterios. Experimentos preliminares revelaron que medoids, aunque estables, limitaban cobertura en clases con múltiples subclusters temáticos. El ensemble integra medoids como línea base confiable, agrega muestras calidad-gated con pureza superior a 0.60, incorpora muestras diverse para maximizar cobertura del espacio de \textit{embeddings}. La deduplicación por similaridad coseno superior a 0.95 previene redundancia, mientras que ranking por composite score prioriza anclas con mejor balance entre representatividad, pureza, diversidad y centralidad. Validación empírica documentó incrementos de 13\% a 29\% en tasa de aceptación de sintéticos comparado con medoids únicamente.
+
+El segundo componente implementa filtrado consciente de contaminación mediante ajuste dinámico de umbrales según pureza del ancla. Enfoques previos utilizaban umbrales fijos independientes del contexto geométrico, ignorando que riesgo de contaminación varía significativamente a través del espacio de representación. El sistema propuesto eleva umbrales de aceptación en regiones de alta superposición (pureza inferior a 0.35) donde sintéticos ambiguos agravan contaminación, mientras relaja umbrales en regiones limpias (pureza superior a 0.45) permitiendo mayor diversidad. Esta adaptación responde directamente a la teoría de contaminación proporcional formalizada en la Sección \ref{sec:problema}.
+
+El tercer componente extiende el conjunto de soporte de dos vecinos típicos en SMOTE estándar a ocho vecinos ponderados por distancia inversa. Validación mediante búsqueda en grilla sobre valores K$\in${3,5,8,10,15,20} demostró que K=8 alcanzó punto óptimo donde información contextual rica compensa incremento marginal de ruido proveniente de vecinos menos similares. Esta extensión proporciona al LLM mayor contexto para condicionar generación, particularmente relevante en clases con alta heterogeneidad intra-clase.
+
+Fase 2 completó validación en experimentos 4-class utilizando semillas 101-104 sobre clases INFP, INFJ, ENFP, ISTJ del corpus MBTI. Los resultados preliminares demostraron delta promedio de +0.025\% con tasa de éxito de 75\% (tres de cuatro semillas positivas o neutrales). Aunque la mejora absoluta es marginal, el análisis reveló sesgo del conjunto 4-class hacia clases en régimen de diminishing returns (F1 línea base entre 0.64-0.68), donde mejoras significativas son inherentemente difíciles. Los resultados completos sobre las 16 clases se presentan en el Capítulo \ref{cap:resultados}.
+
+\subsection{Extensiones Futuras}
+\label{subsec:extensiones_futuras}
+
+El sistema implementado en Fases 1 y 2 representa configuración validada experimentalmente. Extensiones adicionales incluyendo meta-aprendizaje para predicción de riesgo y optimización bayesiana de hiperparámetros se documentan en el Capítulo de Trabajo Futuro, dado que no fueron evaluadas experimentalmente en esta tesis.
+
+
+
+- augmentation → aumento
+- ancla → ancla
+- Phase → Fase
+\section{Componente 1: Selección de Soporte Ponderada por K-NN}
+\label{sec:seleccion_knn}
+
+Esta sección detalla el primer componente del sistema: la selección de muestras de soporte que condicionan la generación sintética. El componente integra agrupamiento adaptativo para capturar heterogeneidad intra-clase, estrategia ensemble para identificar anclas óptimas, y ponderación por distancia para contextualizar la generación. Los parámetros reportados emergen de validación empírica documentada en 273 experimentos controlados.
+
+\subsection{Agrupamiento Adaptativo K-Means}
+\label{subsec:clustering}
+
+El agrupamiento subdivide cada clase objetivo en grupos semánticamente coherentes antes de aplicar aumento. Esta segmentación reconoce que categorías complejas manifiestan múltiples subclusters temáticos donde interpolación directa produciría sintéticos incoherentes.
+
+\subsubsection*{Justificación del Agrupamiento Intra-Clase}
+
+Considere la clase INTJ del corpus MBTI. Un individuo INTJ puede escribir sobre estrategia empresarial, análisis técnico, o filosofía abstracta. Sin agrupamiento, SMOTE interpolaría entre textos temáticamente dispares. El resultado serían sintéticos que mezclan vocabulario de dominios inconexos, degradando coherencia semántica.
+
+El agrupamiento agrupa textos por similaridad temática antes de interpolar. SMOTE opera entonces dentro de cada cluster, generando sintéticos que preservan coherencia. Un texto sobre estrategia se interpola con otros textos estratégicos, no con análisis técnicos.
+
+\subsubsection*{Fórmula de Clusters Dinámicos}
+
+El número de clusters K se ajusta según tamaño de clase mediante:
+
+\begin{equation}
+K = \max(2, \min(K_{max}, \lfloor n / 60 \rfloor))
+\label{eq:n_clusters}
+\end{equation}
+
+donde $n$ representa el conteo de muestras y $K_{max}=3$ limita fragmentación excesiva. La división por 60 garantiza mínimo 60 muestras por cluster, umbral empírico para estabilidad estadística de centroides.
+
+El límite inferior de 2 clusters detecta al menos dos subtemas distintos. El límite superior de 3 previene fragmentación que degradaría calidad. Validación experimental comparó valores de $K_{max}$ entre 1 y 12, documentando resultados en Tabla \ref{tab:clustering_validation}.
+
+\subsubsection*{Validación Empírica del Agrupamiento}
+
+La Tabla \ref{tab:clustering_validation} presenta métricas para diferentes configuraciones de $K_{max}$.
+
+\begin{table}[h]
+\centering
+\caption{Validación preliminar para selección del número máximo de clusters}
+\label{tab:clustering_validation}
+\begin{tabular}{lcccc}
+\hline
+$K_{max}$ & Silhouette & Coherencia & Macro F1 & $\Delta$ vs Línea base \\
+\hline
+1 (vanilla) & N/A & 67\% & 0.2423 & 0\% \\
+2 & 0.51 & 74\% & 0.2498 & +0.75\% \\
+\textbf{3} & \textbf{0.42} & \textbf{81\%} & \textbf{0.2561} & \textbf{+1.38\%} \\
+6 & 0.38 & 73\% & 0.2539 & +1.16\% \\
+12 & 0.31 & 61\% & 0.2518 & +0.95\% \\
+\hline
+\end{tabular}
+\end{table}
+
+El valor $K_{max}=3$ alcanza el óptimo con Silhouette de 0.42 y coherencia intra-cluster de 81\%. Valores mayores fragmentan excesivamente: $K_{max}=12$ reduce coherencia a 61\% porque clusters pequeños (menos de 60 muestras) producen centroides inestables.
+
+La mejora de +1.38\% sobre SMOTE vanilla (sin agrupamiento) valida la hipótesis de que segmentación temática mejora calidad sintética. Sintéticos generados dentro de clusters coherentes exhiben consistencia semántica superior.
+
+\subsection{Estrategia Ensemble para Selección de Anclas}
+\label{subsec:ensemble_anchors}
+
+Cada cluster requiere selección de anclas que condicionarán la generación del LLM. Estrategias simples presentan limitaciones individuales que la combinación ensemble mitiga.
+
+\subsubsection*{Limitaciones de Estrategias Individuales}
+
+Tres estrategias base fueron evaluadas independientemente:
+
+La estrategia \textbf{Medoid} selecciona el punto que minimiza distancia promedio a todos los demás miembros del cluster. Aunque robusta a outliers, tiende a seleccionar ejemplos genéricos que no capturan diversidad del cluster. Validación mostró Macro F1 de 0.2512, mejora de +1.0\% sobre línea base.
+
+La estrategia \textbf{Quality-gated} prioriza muestras con alta pureza local, definida como fracción de vecinos K-NN pertenecientes a la clase. Garantiza anclas de regiones semánticamente limpias pero ignora cobertura espacial. Validación alcanzó F1 de 0.2534 (+1.9\%).
+
+La estrategia \textbf{Diverse} maximiza distancia mínima entre anclas seleccionadas mediante algoritmo farthest-point sampling. Optimiza cobertura del espacio pero puede incluir outliers de baja calidad. Validación reportó F1 de 0.2547 (+2.4\%).
+
+\subsubsection*{Arquitectura del Ensemble}
+
+El sistema propuesto combina las tres dimensiones mediante composite score ponderado:
+
+\begin{equation}
+S_{composite} = w_d \cdot D + w_q \cdot Q + w_s \cdot E
+\label{eq:composite_score}
+\end{equation}
+
+donde $D$ representa diversidad (distancia mínima a anclas ya seleccionadas), $Q$ denota calidad (pureza K-NN local), y $E$ indica estabilidad (inverso de distancia a vecinos). Los pesos $w_d=0.3$, $w_q=0.4$, $w_s=0.3$ emergen de validación cruzada.
+
+El algoritmo selecciona anclas iterativamente. En cada iteración, calcula $S_{composite}$ para candidatos no seleccionados y agrega el de mayor score. La deduplicación final elimina anclas con similaridad coseno superior a 0.95.
+
+\subsubsection*{Cálculo de Componentes del Score}
+
+La diversidad $D$ para un candidato $c$ dado conjunto de anclas ya seleccionadas $A$ se calcula como:
+
+\begin{equation}
+D(c, A) = \min_{a \in A} \| \mathbf{v}_c - \mathbf{v}_a \|_2
+\end{equation}
+
+Para el primer ancla ($A = \emptyset$), $D = 1.0$ por convención.
+
+La calidad $Q$ emplea pureza K-NN con $k=15$ vecinos:
+
+\begin{equation}
+Q(c) = \frac{1}{k} \sum_{i=1}^{k} \mathbb{1}[y_{neighbor_i} = y_c]
+\end{equation}
+
+donde $\mathbb{1}[\cdot]$ es función indicadora y $y_{neighbor_i}$ denota etiqueta del i-ésimo vecino.
+
+La estabilidad $E$ cuantifica centralidad mediante inverso de distancia promedio a vecinos:
+
+\begin{equation}
+E(c) = 1 - \frac{1}{k} \sum_{i=1}^{k} d(c, vecino_i)
+\end{equation}
+
+Valores altos de $E$ indican muestras rodeadas por vecinos cercanos, señalando regiones densas del espacio.
+
+\subsubsection*{Validación del Ensemble}
+
+La Tabla \ref{tab:anchor_strategies} compara estrategias de selección bajo protocolo experimental uniforme.
+
+\begin{table}[h]
+\centering
+\caption{Comparación de estrategias de selección de anclas}
+\label{tab:anchor_strategies}
+\begin{tabular}{lcccc}
+\hline
+Estrategia & Macro F1 & Quality & Diversity & $\Delta$ \\
+\hline
+Random & 0.2487 & 0.67 & 0.23 & 0\% \\
+Nearest Neighbor & 0.2498 & 0.71 & 0.51 & +0.4\% \\
+Medoid & 0.2512 & 0.76 & 0.42 & +1.0\% \\
+Quality-gated & 0.2534 & 0.83 & 0.61 & +1.9\% \\
+Diverse & 0.2547 & 0.78 & 0.89 & +2.4\% \\
+\textbf{Ensemble} & \textbf{0.2561} & \textbf{0.87} & \textbf{0.81} & \textbf{+3.0\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+El ensemble supera cada estrategia individual con significancia estadística (paired t-test, $p<0.01$ vs Diverse). La mejora de +0.27\% F1 sobre Diverse deriva de balance óptimo: calidad de 0.87 (superior a Diverse) con diversity de 0.81 (comparable a Diverse).
+
+El análisis por nivel de clase reveló beneficio pronunciado en minoritarias. Clases con F1 línea base inferior a 20\% mejoraron +12.1\% con ensemble versus +10.5\% con Diverse solo. Esta diferencia de 1.6 puntos porcentuales es prácticamente significativa para clases de alto valor.
+
+\subsection{Ponderación de Vecinos por Distancia Inversa}
+\label{subsec:ponderacion_vecinos}
+
+El sistema extiende el conjunto de soporte de 2 vecinos típicos en SMOTE estándar a 8 vecinos ponderados por distancia inversa. Esta extensión proporciona contexto más rico al LLM durante generación.
+
+\subsubsection*{Limitación del Soporte Estándar}
+
+SMOTE tradicional interpola entre una muestra y UN vecino aleatorio del mismo cluster. Esta aproximación funciona para datos tabulares pero resulta insuficiente para texto. El LLM requiere múltiples ejemplos para capturar variabilidad aceptable dentro de la categoría.
+
+Métodos híbridos previos (documentados en Sección \ref{sec:Estado Arte}) condicionan generación en exactamente 2 vecinos fijos. Esta restricción limita contexto disponible, particularmente problemático en clases con alta heterogeneidad intra-clase.
+
+\subsubsection*{Selección del Parámetro K}
+
+El parámetro K (número de vecinos de soporte) fue validado mediante búsqueda en grilla sobre valores $K \in \{3, 5, 8, 10, 15, 20\}$. La Tabla \ref{tab:k_neighbors} presenta resultados.
+
+\begin{table}[h]
+\centering
+\caption{Impacto del número de vecinos K en rendimiento}
+\label{tab:k_neighbors}
+\begin{tabular}{lccc}
+\hline
+K vecinos & Macro F1 & Acceptance Rate & Contexto \\
+\hline
+3 & 0.2523 & 71\% & Insuficiente \\
+5 & 0.2541 & 75\% & Limitado \\
+\textbf{8} & \textbf{0.2561} & \textbf{78\%} & \textbf{Óptimo} \\
+10 & 0.2554 & 76\% & Redundante \\
+15 & 0.2538 & 72\% & Ruidoso \\
+20 & 0.2519 & 68\% & Excesivo \\
+\hline
+\end{tabular}
+\end{table}
+
+$K=8$ alcanza el punto óptimo donde información contextual rica compensa incremento marginal de ruido. Valores menores ($K<8$) proporcionan contexto insuficiente. Valores mayores ($K>8$) introducen vecinos periféricos que diluyen señal discriminativa.
+
+\subsubsection*{Esquema de Ponderación}
+
+Los K vecinos reciben peso proporcional a similaridad con el ancla:
+
+\begin{equation}
+w_i = \frac{sim(\mathbf{v}_{ancla}, \mathbf{v}_i)}{\sum_{j=1}^{K} sim(\mathbf{v}_{ancla}, \mathbf{v}_j)}
+\label{eq:weight_neighbors}
+\end{equation}
+
+donde $sim(\cdot, \cdot)$ denota similaridad coseno. Esta normalización garantiza $\sum_i w_i = 1$.
+
+El \textit{prompt} enviado al LLM ordena vecinos por peso decreciente. Vecinos más similares al ancla aparecen primero, enfatizando ejemplos representativos mientras incluye variabilidad de vecinos periféricos.
+
+\subsection{Cálculo y Uso de Pureza Local}
+\label{subsec:pureza}
+
+La pureza local cuantifica limpieza semántica del vecindario de una muestra. Esta métrica informa decisiones de selección de anclas, umbrales de filtrado, y presupuestos de generación.
+
+\subsubsection*{Definición Formal}
+
+La pureza de una muestra $x$ con etiqueta $y$ se define como:
+
+\begin{equation}
+P(x) = \frac{1}{k} \sum_{i=1}^{k} \mathbb{1}[y_{neighbor_i(x)} = y]
+\label{eq:purity_formal}
+\end{equation}
+
+donde $k=15$ vecinos y $neighbor_i(x)$ denota el i-ésimo vecino más cercano de $x$ en el espacio de \textit{embeddings} completo (todas las clases).
+
+Valores cercanos a 1.0 indican regiones donde la clase domina el vecindario. Valores bajos revelan superposición con otras categorías. El rango típico en el corpus MBTI oscila entre 0.25 y 0.45, reflejando overlap semántico inherente entre tipos de personalidad relacionados.
+
+\subsubsection*{Taxonomía de Pureza}
+
+El sistema clasifica regiones según nivel de pureza para determinar estrategias de aumento:
+
+\begin{table}[h]
+\centering
+\caption{Taxonomía de pureza y estrategias recomendadas}
+\label{tab:purity_taxonomy}
+\begin{tabular}{llll}
+\hline
+Rango Pureza & Categoría & Riesgo & Estrategia \\
+\hline
+0.70 - 1.00 & HIGH & Bajo & Aumento agresivo \\
+0.50 - 0.70 & MEDIUM & Medio & Aumento moderado \\
+0.30 - 0.50 & LOW & Alto & Aumento conservador \\
+0.00 - 0.30 & VERY LOW & Crítico & Excluir de aumento \\
+\hline
+\end{tabular}
+\end{table}
+
+La categorización informa directamente los umbrales adaptativos detallados en Sección \ref{sec:filtrado}. Anclas de categoría VERY LOW activan configuración restrictiva que minimiza riesgo de contaminación.
+
+\subsubsection*{Integración con Selección de Anclas}
+
+La pureza influye en el composite score del ensemble mediante el componente calidad $Q$. Candidatos con pureza inferior a 0.30 reciben penalización implícita porque sus vecinos K-NN pertenecen mayoritariamente a otras clases.
+
+Adicionalmente, el sistema implementa gating explícito: clusters con pureza promedio inferior a 0.25 son excluidos completamente del \textit{pipeline} de aumento. Esta exclusión previene generación en regiones donde sintéticos amplificarían ambigüedad semántica existente.
+
+\subsubsection*{Ejemplo Ilustrativo}
+
+Considere un muestra ISTJ con pureza de 0.025. Esto significa que solo 2.5\% de sus 15 vecinos más cercanos son ISTJ. Los restantes 97.5\% pertenecen a otras clases, indicando que el muestra reside en región de alta superposición.
+
+Generar sintéticos condicionados en este ancla propagaría ambigüedad al \textit{dataset} aumentado. El sistema asigna puntuación de calidad cercano a 0 para este candidato, efectivamente excluyéndolo de selección como ancla mediante el ranking por composite score.
+
+\section{Componente 2: Generación Sintética Guiada por LLM}
+\label{sec:generacion_llm}
+
+Esta sección detalla el componente responsable de transformar representaciones vectoriales en texto natural. El sistema emplea GPT-4o-mini como decodificador, condicionando generación mediante \textit{prompts} estructurados que incorporan anclas y vecinos ponderados. Los parámetros reportados emergen de validación sobre 273 experimentos con costo total de \$35.
+
+\subsection{Selección del Modelo Generativo}
+\label{subsec:seleccion_modelo}
+
+La elección del modelo LLM balancea tres factores: calidad de generación, costo por \textit{token}, y velocidad de inferencia. Evaluación comparativa de cinco alternativas informó la decisión final.
+
+La Tabla \ref{tab:model_comparison} presenta métricas para modelos candidatos evaluados bajo protocolo uniforme. GPT-4 alcanza el puntuación de calidad más alto (0.92) pero su costo de \$0.03 por mil \textit{tokens} lo descalifica para experimentación extensiva. GPT-3.5-turbo ofrece el menor costo pero su puntuación de calidad de 0.73 resulta insuficiente para generar sintéticos coherentes. Llama-2-70B elimina costos de API pero requiere infraestructura GPU dedicada que excede recursos disponibles.
+
+\begin{table}[h]
+\centering
+\caption{Comparación de modelos LLM para generación sintética}
+\label{tab:model_comparison}
+\begin{tabular}{lcccc}
+\hline
+Modelo & Costo/1K \textit{tokens} & Quality & Velocidad & Decisión \\
+\hline
+GPT-4 & \$0.030 & 0.92 & Lento & Sobredimensionado \\
+GPT-4-turbo & \$0.010 & 0.89 & Medio & Costoso \\
+\textbf{GPT-4o-mini} & \textbf{\$0.00017} & \textbf{0.87} & \textbf{Rápido} & \textbf{Óptimo} \\
+GPT-3.5-turbo & \$0.0005 & 0.73 & Muy rápido & Baja calidad \\
+Llama-2-70B & Gratuito & 0.68 & Medio & Setup complejo \\
+\hline
+\end{tabular}
+\end{table}
+
+GPT-4o-mini emerge como elección óptima con puntuación de calidad de 0.87, solo 5 puntos inferior a GPT-4 pero con costo 176 veces menor. Esta diferencia de calidad resulta imperceptible para la tarea de aumento mientras el ahorro económico habilita experimentación extensiva.
+
+El costo por sintético individual se calcula considerando \textit{tokens} de entrada y salida. Con promedio de 200 \textit{tokens} de \textit{prompt} y 50 \textit{tokens} de generación, aplicando tarifas de \$0.000165 y \$0.0006 por mil \textit{tokens} respectivamente, cada sintético cuesta aproximadamente \$0.000063. Un experimento completo genera aproximadamente 10,000 candidatos para obtener 2,000 aceptados dado el tasa de aceptación de 20\%. Incluyendo factor de 1.2 para reintentos, el costo por experimento resulta \$0.13. Los 273 experimentos de validación costaron \$35.49 en total, demostrando viabilidad económica para investigación académica.
+
+\subsection{Arquitectura de Prompts}
+\label{subsec:prompts}
+
+El \textit{prompt} estructura información contextual que guía generación hacia la clase y cluster objetivo. La arquitectura integra seis componentes: definición del rol de sistema, descripción de la tarea, especificación del tema de cluster, texto del ancla principal, lista de vecinos ordenados por similaridad, e instrucciones de generación.
+
+Esta estructura contrasta con métodos previos que condicionan en solo 2 vecinos fijos. La extensión a 8 vecinos ponderados proporciona contexto más rico, particularmente beneficioso para clases con alta heterogeneidad intra-clase. Los vecinos aparecen ordenados por peso decreciente según la ponderación por distancia inversa descrita en Sección \ref{subsec:ponderacion_vecinos}, enfatizando ejemplos más representativos donde modelos autoregresivos asignan mayor atención.
+
+El sistema implementa dos modos de generación según objetivo. El modo de fusión instruye al LLM a combinar conceptos del ancla y vecinos usando vocabulario diferente, maximizando diversidad lexical mientras mantiene coherencia semántica. El modo de paráfrasis solicita reformular un ejemplo único con estructura y palabras completamente diferentes, garantizando fidelidad temática a costa de menor diversidad. Validación comparativa mostró que el modo de fusión produce diversity score de 0.81 versus 0.67 del modo paráfrasis, diferencia de 0.14 puntos que justifica su adopción como configuración predeterminada.
+
+\subsection{Parámetros de Generación}
+\label{subsec:parametros_generacion}
+
+Los parámetros de sampling controlan balance entre diversidad y coherencia del output. El parámetro temperatura $\tau$ escala logits antes de aplicar \textit{softmax}, controlando entropía de la distribución de \textit{tokens} según:
+
+\begin{equation}
+P(t_i) = \frac{\exp(z_i / \tau)}{\sum_j \exp(z_j / \tau)}
+\end{equation}
+
+Valores bajos concentran probabilidad en \textit{tokens} más probables, produciendo outputs determinísticos pero repetitivos. Valores altos distribuyen probabilidad uniformemente, generando diversidad pero arriesgando incoherencia. Grid search sobre el rango 0.3 a 0.9 identificó $\tau = 0.5$ como óptimo, balanceando variabilidad lexical suficiente para evitar duplicados con coherencia gramatical consistente.
+
+El parámetro top-p implementa nucleus sampling, restringiendo muestreo al conjunto de \textit{tokens} que acumulan probabilidad $p$. Configuración $p = 0.9$ considera \textit{tokens} que representan 90\% de masa de probabilidad, excluyendo opciones de muy baja probabilidad que introducirían ruido semántico.
+
+La Tabla \ref{tab:llm_config} presenta la configuración completa validada empíricamente. Los parámetros de penalización mitigan tendencia de LLMs a repetir frases del \textit{prompt}: frequency\_penalty reduce probabilidad de \textit{tokens} ya generados proporcionalmente a su conteo, mientras presence\_penalty aplica penalización fija por primera aparición.
+
+\begin{table}[h]
+\centering
+\caption{Configuración de parámetros del modelo generativo}
+\label{tab:llm_config}
+\begin{tabular}{lcc}
+\hline
+Parámetro & Valor & Justificación \\
+\hline
+Modelo & GPT-4o-mini & Balance costo/calidad \\
+Temperatura & 0.5 & Diversidad con coherencia \\
+Top-p & 0.9 & Exclusión de \textit{tokens} improbables \\
+Tokens máximos & 150 & Longitud comparable a corpus \\
+Penalización frecuencia & 0.3 & Reducción de repeticiones \\
+Penalización presencia & 0.1 & Fomento de variedad temática \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Presupuestos Dinámicos de Generación}
+\label{subsec:presupuestos}
+
+El sistema ajusta cantidad de sintéticos por clase según métricas de calidad y rendimiento línea base, previniendo sobregeneración en clases donde aumento produciría degradación. Generación uniforme ignora heterogeneidad entre clases: aplicar mismo presupuesto a clase con pureza 0.70 y clase con pureza 0.25 produce resultados dispares donde la primera mejora mientras la segunda degrada.
+
+El presupuesto $B_c$ para clase $c$ se calcula mediante:
+
+\begin{equation}
+B_c = \lfloor 0.08 \times N_c \times M_c \rfloor
+\label{eq:budget}
+\end{equation}
+
+donde $N_c$ representa conteo de muestras reales y $M_c$ denota multiplicador adaptativo en rango $[0.1, 1.0]$. El factor base de 8\% limita ratio sintético/real para prevenir contaminación excesiva según la teoría formalizada en Sección \ref{sec:problema}.
+
+El multiplicador $M_c$ depende de puntuación de calidad compuesto que integra pureza promedio $P_c$, complemento del F1-score línea base, y Silhouette score de agrupamiento $S_c$:
+
+\begin{equation}
+Q_c = 0.4 \times P_c + 0.3 \times (1 - F1_c) + 0.3 \times S_c
+\end{equation}
+
+Clases con alta pureza, bajo rendimiento línea base, y clusters bien definidos reciben multiplicadores cercanos a 1.0. Clases con características opuestas reciben multiplicadores cercanos a 0.1, reduciendo drásticamente generación en contextos de alto riesgo.
+
+El caso ISTJ ilustra el impacto de este mecanismo. Con 994 muestras reales, pureza de 0.025, y F1 línea base de 0.144, el puntuación de calidad resulta 0.36, asignando multiplicador de 0.1. El presupuesto calculado es 7 sintéticos, contrastando con los 300 que produciría generación naive. Esta reducción transformó degradación de -2.44 puntos porcentuales en mejora de +1.84pp, swing total de 4.28 puntos.
+
+El sistema implementa adicionalmente exclusión completa para casos extremos. Clases con menos de 20 muestras quedan excluidas por insuficiencia de datos para K-NN confiable. Clases con F1 línea base superior a 0.65 también se excluyen dado que análisis de 94 experimentos mostró mejoras inferiores a 0.1\% tras aumento, sin justificar riesgo de contaminación.
+
+\subsection{Validación Preliminar y Eficiencia}
+\label{subsec:validacion_eficiencia}
+
+Antes de incorporar sintéticos al \textit{pipeline} de filtrado, validación preliminar descarta outputs malformados verificando longitud razonable entre 10 y 200 palabras, ausencia de patrones indicativos de fallo del modelo, y contenido no vacío tras normalización. Aproximadamente 3\% de generaciones fallan esta validación, principalmente por outputs truncados al alcanzar límite de \textit{tokens}.
+
+El sistema maximiza throughput mediante ejecución paralela de llamadas API con 10 workers concurrentes. Esta configuración respeta rate limits mientras reduce tiempo de generación de 200 segundos a 20 segundos por lote de 100 \textit{prompts}, aceleración de 10$\times$ que habilita iteración rápida durante desarrollo. Lógica de retry con exponential backoff maneja errores transitorios de API sin bloquear ejecución por fallos aislados.
+
+\section{Componente 3: Filtrado Multi-Nivel Adaptativo}
+\label{sec:filtrado}
+
+Esta sección detalla el componente responsable de validar sintéticos antes de incorporarlos al conjunto de entrenamiento. El sistema implementa tres filtros secuenciales en cascada, cada uno evaluando dimensiones complementarias de calidad. Los umbrales no son fijos sino adaptativos según pureza del ancla condicionante, implementando el principio de contaminación-aware filtering derivado de la teoría formalizada en Sección \ref{sec:problema}.
+
+\subsection{Arquitectura de Filtrado en Cascada}
+\label{subsec:cascada}
+
+El \textit{pipeline} de filtrado procesa cada sintético mediante tres etapas secuenciales donde rechazo en cualquier etapa descarta el candidato inmediatamente. Esta arquitectura en cascada maximiza eficiencia computacional al aplicar filtros de menor costo antes que los más costosos, mientras permite diagnóstico granular de causas de rechazo.
+
+El primer filtro evalúa consistencia con el vecindario local de la clase objetivo. El segundo filtro verifica coherencia directa con el ancla que condicionó la generación. El tercer filtro detecta near-duplicates respecto al corpus original. La combinación de estos tres criterios garantiza que sintéticos aceptados sean semánticamente válidos, fieles al contexto de generación, y suficientemente diversos para aportar información nueva.
+
+Validación empírica comparó configuraciones con diferente número de filtros activos. La Tabla \ref{tab:filter_cascade} presenta resultados bajo protocolo uniforme. La columna Quality representa el porcentaje de sintéticos aceptados que un clasificador K-NN asigna correctamente a su clase objetivo, sirviendo como proxy de coherencia semántica.
+
+\begin{table}[h]
+\centering
+\caption{Impacto del número de filtros en calidad y aceptación}
+\label{tab:filter_cascade}
+\begin{tabular}{lcccc}
+\hline
+Configuración & Acceptance & Quality & Macro F1 & $\Delta$ \\
+\hline
+Solo longitud & 92\% & 0.67 & 0.2498 & +0.4\% \\
+Longitud + Similaridad & 45\% & 0.78 & 0.2523 & +1.4\% \\
+Tres filtros parciales & 28\% & 0.83 & 0.2542 & +2.2\% \\
+\textbf{Cascada completa} & \textbf{20\%} & \textbf{0.87} & \textbf{0.2561} & \textbf{+3.0\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+El tasa de aceptación de 20\% representa el balance óptimo entre calidad y cantidad. Configuraciones más permisivas aceptan sintéticos de menor calidad que degradan entrenamiento. Configuraciones más restrictivas desperdician costo de generación sin beneficio proporcional en calidad.
+
+\subsection{Filtro 1: Consistencia con Vecindario K-NN}
+\label{subsec:filtro_knn}
+
+El primer filtro verifica que cada sintético exhiba similaridad suficiente con muestras reales de su clase objetivo. Esta validación detecta sintéticos que, aunque generados condicionados en anclas válidas, divergieron semánticamente durante generación del LLM hacia regiones no representativas de la clase.
+
+El filtro calcula similaridad coseno promedio entre el \textit{embedding} del sintético y sus $k=15$ vecinos más cercanos dentro de la clase objetivo. El umbral de aceptación varía según pureza del ancla condicionante, implementando adaptación que reconoce heterogeneidad entre clusters.
+
+Para clusters de alta pureza (superior a 0.60), el umbral se establece en 0.35, permitiendo exploración de regiones periféricas dado bajo riesgo de contaminación. Para clusters de baja pureza (inferior a 0.30), el umbral aumenta a 0.45 o superior, exigiendo mayor similaridad para compensar alto riesgo de generación en regiones ambiguas.
+
+Rechazo en este filtro indica que el sintético no pertenece semánticamente a la clase, típicamente por divagación del LLM hacia temas no relacionados con el \textit{prompt}. Análisis de casos rechazados reveló que 73\% correspondían a sintéticos donde el modelo generó contenido genérico ignorando especificidad del ancla proporcionada.
+
+\subsection{Filtro 2: Coherencia con Ancla Condicionante}
+\label{subsec:filtro_ancla}
+
+El segundo filtro confirma coherencia directa entre el sintético y el ancla que condicionó su generación. Dado que el ancla fue proporcionada explícitamente al LLM como referencia principal, el sintético debe mantener relación semántica estrecha con ella.
+
+Este filtro calcula similaridad coseno bilateral entre \textit{embeddings} del sintético y del ancla. Los umbrales son más estrictos que el filtro de vecindario, oscilando entre 0.55 para clusters de alta pureza y 0.65 para clusters de baja pureza. Esta diferencia refleja expectativa de mayor fidelidad al ancla comparado con consistencia general de vecindario.
+
+Rechazo en este filtro pero aceptación en el primero indica un patrón específico: el sintético pertenece a la clase pero divergió del contexto particular del ancla. Este diagnóstico señala casos donde el LLM capturó características generales de la clase pero ignoró el subtema específico del cluster representado por el ancla.
+
+\subsection{Filtro 3: Detección de Duplicados}
+\label{subsec:filtro_duplicados}
+
+El tercer filtro rechaza sintéticos excesivamente similares a muestras existentes en el corpus de entrenamiento. Esta validación garantiza que sintéticos aceptados aporten información genuinamente nueva, evitando inflación artificial del \textit{dataset} con variaciones triviales.
+
+El filtro calcula similaridad coseno máxima entre el sintético y todas las muestras originales de la clase. Candidatos con similaridad superior a 0.95 se rechazan como near-duplicates. Este umbral estricto permite variaciones lexicales menores mientras rechaza paráfrasis triviales que no enriquecen distribución de entrenamiento.
+
+Adicionalmente, el filtro verifica similaridad contra sintéticos previamente aceptados en el mismo lote, previniendo generación de múltiples variantes casi idénticas del mismo ancla. Esta validación cruzada mantiene diversidad del conjunto sintético final.
+
+\subsection{Sistema de Umbrales Adaptativos}
+\label{subsec:umbrales_adaptativos}
+
+El sistema ajusta umbrales de los tres filtros según pureza semántica del ancla condicionante. Esta adaptación reconoce que clusters con diferente nivel de superposición inter-clase requieren estrategias de validación diferenciadas.
+
+La Tabla \ref{tab:adaptive_thresholds} presenta la configuración de umbrales por rango de pureza.
+
+\begin{table}[h]
+\centering
+\caption{Umbrales adaptativos según pureza del ancla}
+\label{tab:adaptive_thresholds}
+\begin{tabular}{lcccc}
+\hline
+Rango Pureza & Similaridad & K-NN & Confianza & Nivel Riesgo \\
+\hline
+$< 0.30$ & 0.90 & 0.52 & 0.20 & Crítico \\
+$0.30 - 0.45$ & 0.72 & 0.45 & 0.15 & Alto \\
+$0.45 - 0.60$ & 0.63 & 0.40 & 0.12 & Medio \\
+$\geq 0.60$ & 0.60 & 0.35 & 0.10 & Bajo \\
+\hline
+\end{tabular}
+\end{table}
+
+La lógica subyacente es directa: clusters de baja pureza residen en regiones de alta superposición inter-clase donde sintéticos tienen mayor probabilidad de introducir ruido. Umbrales estrictos compensan este riesgo exigiendo evidencia más fuerte de pertenencia válida. Clusters de alta pureza residen en regiones semánticamente limpias donde umbrales permisivos habilitan exploración sin riesgo significativo de contaminación.
+
+\subsubsection*{Validación del Sistema Adaptativo}
+
+Comparación experimental entre umbrales fijos y adaptativos cuantificó beneficio de la adaptación. La Tabla \ref{tab:adaptive_validation} presenta resultados.
+
+\begin{table}[h]
+\centering
+\caption{Comparación de estrategias de umbralización}
+\label{tab:adaptive_validation}
+\begin{tabular}{lcccc}
+\hline
+Estrategia & Macro F1 & Acceptance & Quality & Contam. \\
+\hline
+Fijo permisivo (0.60) & 0.2498 & 38\% & 0.71 & 18.5\% \\
+Fijo medio (0.70) & 0.2534 & 25\% & 0.79 & 12.3\% \\
+Fijo estricto (0.90) & 0.2521 & 12\% & 0.92 & 4.2\% \\
+\textbf{Adaptativo} & \textbf{0.2561} & \textbf{20\%} & \textbf{0.87} & \textbf{7.8\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+El sistema adaptativo supera todas las configuraciones fijas con mejora de +0.27\% F1 sobre el mejor umbral fijo. El beneficio deriva de aplicación diferenciada: umbrales permisivos donde el riesgo es bajo maximizan tasa de aceptación útil, mientras umbrales estrictos donde el riesgo es alto previenen contaminación.
+
+El caso ISTJ ejemplifica el impacto diferencial. Con pureza de 0.025, umbral fijo de 0.60 aceptó 240 de 300 sintéticos resultando en contaminación de 29.4\% y degradación de -2.44 puntos porcentuales. Umbral adaptativo de 0.90 aceptó solo 38 sintéticos, reduciendo contaminación a 3.7\% y logrando mejora de +1.84pp. El swing total de 4.28 puntos porcentuales demuestra impacto crítico de adaptación en casos de alto riesgo.
+
+\subsection{Diagnóstico de Rechazos}
+\label{subsec:diagnostico}
+
+La arquitectura en cascada habilita diagnóstico granular de causas de rechazo útil para análisis y refinamiento del sistema.
+
+Rechazo en el primer filtro indica incoherencia semántica fundamental donde el sintético no pertenece al vecindario de la clase. Este patrón típicamente señala \textit{prompts} insuficientemente específicos o temperatura de generación excesivamente alta que permite divagación del modelo.
+
+Rechazo en el segundo filtro pero aceptación en el primero señala desviación del ancla específica. El sintético pertenece a la clase pero divergió del subtema del cluster. Este patrón puede indicar anclas no representativas o vecinos de soporte heterogéneos que confunden dirección de generación.
+
+Rechazo en el tercer filtro pero aceptación en los anteriores indica falta de diversidad. El sintético es válido semánticamente pero demasiado similar a ejemplos existentes. Este patrón es esperable cuando el corpus original ya cubre densamente el espacio semántico del cluster.
+
+\subsection{Mecanismo de Aceptación Gradual}
+\label{subsec:grace}
+
+El sistema implementa mecanismo de relajación gradual para prevenir casos donde filtros excesivamente estrictos rechazan todos los candidatos de un lote. Cuando tasa de aceptación cae bajo 15\%, los umbrales se relajan 10\% y el lote se reevalúa.
+
+Esta estrategia previene desperdicio completo de costo de generación en casos límite mientras mantiene preferencia por calidad. La relajación es conservadora: 10\% de reducción en umbrales típicamente recupera 5-8\% adicional de tasa de aceptación sin degradación significativa de puntuación de calidad.
+
+Validación mostró que activación del mecanismo de gracia ocurre en aproximadamente 12\% de lotees, típicamente correspondientes a clusters de pureza intermedia donde umbrales adaptativos base resultan marginalmente restrictivos. El impacto en métricas finales es menor a 0.03\% F1, confirmando que la relajación no introduce contaminación significativa.
+
+\section{Componente 4: Ponderación por Confianza Geométrica}
+\label{sec:ponderacion}
+
+Esta sección detalla el mecanismo que asigna pesos diferenciados a muestras sintéticas durante entrenamiento según su posición en el espacio de \textit{embeddings}. El principio subyacente es que sintéticos ubicados en regiones densas del espacio semántico merecen mayor confianza que aquellos en regiones dispersas donde la interpolación SMOTE tiene menor certeza.
+
+\subsection{Motivación: Heterogeneidad de Confianza}
+\label{subsec:motivacion_ponderacion}
+
+No todos los sintéticos generados poseen igual confiabilidad. Un sintético interpolado entre dos muestras muy cercanas en el espacio de \textit{embeddings} tiene alta probabilidad de representar contenido válido de la clase. En contraste, un sintético interpolado entre muestras distantes, aunque pertenecientes al mismo cluster, puede residir en regiones poco pobladas donde la asignación de clase es menos certera.
+
+El enfoque naive asigna peso uniforme a todos los sintéticos, tratando como equivalentes casos de alta y baja confianza. Esta estrategia puede degradar entrenamiento cuando sintéticos de baja confianza ejercen influencia desproporcionada en la optimización del clasificador. La ponderación geométrica corrige este problema modulando influencia según contexto local.
+
+\subsection{Formulación Matemática}
+\label{subsec:formulacion_peso}
+
+El peso $w_s$ asignado a cada sintético $s$ se calcula como función inversa de la distancia promedio a sus vecinos de soporte. Sea $\mathcal{N}_k(s)$ el conjunto de $k$ vecinos más cercanos del sintético en el espacio de \textit{embeddings}, la distancia promedio se define como:
+
+\begin{equation}
+\bar{d}(s) = \frac{1}{k} \sum_{n \in \mathcal{N}_k(s)} \|v_s - v_n\|_2
+\end{equation}
+
+donde $v_s$ denota el \textit{embedding} del sintético y $v_n$ los \textit{embeddings} de sus vecinos. El peso se obtiene mediante transformación inversa normalizada:
+
+\begin{equation}
+w_s = \frac{1/\bar{d}(s)}{\max_{s' \in S} (1/\bar{d}(s'))}
+\label{eq:peso_geometrico}
+\end{equation}
+
+donde $S$ denota el conjunto de todos los sintéticos generados en el lote actual para la clase objetivo. Esta normalización garantiza que el peso máximo sea 1.0, correspondiente al sintético con menor distancia promedio a vecinos. Sintéticos en regiones dispersas reciben pesos proporcionalmente menores.
+
+\subsection{Interpretación Geométrica}
+\label{subsec:interpretacion}
+
+La ponderación captura intuición sobre densidad local del espacio semántico. Regiones densas contienen múltiples muestras reales cercanas entre sí, indicando que el clasificador tiene evidencia abundante sobre características de esa subregión. Sintéticos generados en estas zonas heredan esta confianza al estar respaldados por vecindarios coherentes.
+
+Regiones dispersas, en contraste, contienen pocas muestras separadas por distancias mayores. La interpolación SMOTE en estas zonas produce sintéticos cuya pertenencia a la clase es menos certera, potencialmente ubicándolos en fronteras de decisión ambiguas. Reducir su peso durante entrenamiento previene que el clasificador ajuste excesivamente sus parámetros hacia ejemplos de dudosa representatividad.
+
+\subsection{Configuración en Fase A}
+\label{subsec:config_fase_a}
+
+La implementación actual emplea peso uniforme de 0.5 para todos los sintéticos, decisión adoptada tras experimentación inicial que mostró beneficios marginales de ponderación adaptativa frente a complejidad adicional. Este modo de operación se denomina ponderación plana.
+
+\begin{table}[h]
+\centering
+\caption{Configuración de ponderación en Fase A}
+\label{tab:weight_config}
+\begin{tabular}{lcc}
+\hline
+Parámetro & Valor & Justificación \\
+\hline
+Peso sintético base & 0.5 & Balance muestras reales/sintéticas \\
+Modo de ponderación & Plano & Simplicidad, resultados competitivos \\
+Peso muestras reales & 1.0 & Referencia inmutable \\
+\hline
+\end{tabular}
+\end{table}
+
+El peso de 0.5 significa que cada muestra sintética contribuye la mitad que una muestra real equivalente durante optimización del clasificador. Esta elección refleja incertidumbre inherente en datos generados versus observados, sin penalizar excesivamente la contribución de sintéticos validados por el \textit{pipeline} de filtrado.
+
+\subsection{Integración con Entrenamiento}
+\label{subsec:integracion_entrenamiento}
+
+El clasificador logístico multinomial incorpora pesos mediante el parámetro de ponderación por muestra durante ajuste. La función de pérdida ponderada se define como:
+
+\begin{equation}
+\mathcal{L} = -\sum_{i=1}^{N} w_i \sum_{c=1}^{C} y_{ic} \log(\hat{p}_{ic})
+\end{equation}
+
+donde $w_i$ representa el peso de la muestra $i$, $y_{ic}$ es indicador binario de pertenencia a clase $c$, y $\hat{p}_{ic}$ denota probabilidad predicha. Para muestras reales $w_i = 1.0$; para sintéticas $w_i = 0.5$ en configuración actual.
+
+Esta formulación permite que muestras reales dominen la optimización mientras sintéticos proveen regularización suave que expande cobertura del espacio de características sin distorsionar fronteras de decisión aprendidas de datos originales.
+
+\subsection{Análisis de Impacto por Tier}
+\label{subsec:impacto_tier}
+
+El peso uniforme de 0.5 produce resultados diferenciados según rendimiento línea base de cada clase. La Tabla \ref{tab:tier_impact} resume impacto observado.
+
+\begin{table}[h]
+\centering
+\caption{Impacto de ponderación uniforme por nivel de rendimiento}
+\label{tab:tier_impact}
+\begin{tabular}{lccc}
+\hline
+Tier & Rango F1 & Clases & $\Delta$F1 Promedio \\
+\hline
+LOW & $< 0.20$ & 6 & +12.17\% \\
+MID & $0.20 - 0.45$ & 4 & -0.59\% \\
+HIGH & $\geq 0.45$ & 6 & -0.05\% \\
+\hline
+\end{tabular}
+\end{table}
+
+El nivel LOW exhibe mejoras sustanciales porque clases con bajo rendimiento línea base se benefician significativamente de ejemplos adicionales, incluso con peso reducido. El nivel HIGH muestra degradación mínima gracias al mecanismo de exclusión por F1-budget que limita generación para clases ya optimizadas. El nivel MID presenta vulnerabilidad moderada que motiva refinamiento en trabajo futuro.
+
+\subsection{Trabajo Futuro: Ponderación Adaptativa por Clase}
+\label{subsec:trabajo_futuro_peso}
+
+Análisis de resultados sugiere que peso uniforme es subóptimo para clases del nivel MID. La hipótesis es que peso 0.5 resulta excesivo para clases con rendimiento intermedio donde el clasificador ya captura patrones parciales pero no robustos.
+
+La extensión propuesta para Fase B implementa ponderación adaptativa según características de cada clase:
+
+\begin{equation}
+w_c = w_{base} \times m_{purity} \times m_{diversity}
+\end{equation}
+
+donde $w_{base}$ depende del nivel de la clase (0.7 para LOW, 0.3 para MID, 0.0 para HIGH), $m_{purity}$ penaliza clases con baja pureza de clusters, y $m_{diversity}$ bonifica clases donde sintéticos aportan diversidad significativa. Esta formulación permitiría reducir peso para clases MID de 0.5 a aproximadamente 0.24-0.30, potencialmente convirtiendo degradación promedio de -0.59\% en mejora de +0.2\% a +0.3\%.
+
+\subsection{Relación con Otros Componentes}
+\label{subsec:relacion_componentes}
+
+La ponderación geométrica complementa otros mecanismos de control de calidad del sistema. El filtrado multi-nivel garantiza que solo sintéticos de alta calidad semántica ingresen al conjunto de entrenamiento. Los presupuestos dinámicos limitan cantidad absoluta de sintéticos por clase. La ponderación añade una capa adicional modulando influencia relativa de sintéticos aceptados.
+
+Esta arquitectura en capas implementa el principio de defensa en profundidad: múltiples mecanismos independientes previenen degradación, de modo que fallo parcial de un componente no compromete el sistema completo. La combinación de filtrado estricto con ponderación conservadora produce el balance observado de +1.00\% Macro F1 con 93\% reducción de varianza entre semillas.
+
+\section{Protocolo de Validación Experimental}
+\label{sec:validacion}
+
+Esta sección describe el protocolo empleado para validar decisiones arquitecturales y garantizar reproducibilidad. El diseño experimental aborda tres objetivos: confirmar significancia estadística de mejoras, prevenir sobreajuste a particiones específicas, y cuantificar contribución de cada componente mediante ablación sistemática.
+
+\subsection{Estrategia de Particionamiento}
+\label{subsec:particionamiento}
+
+El \textit{dataset} se divide en conjuntos de entrenamiento (80\%) y prueba (20\%) mediante muestreo estratificado que preserva distribución de clases. Esta estratificación es crítica dado el desbalance extremo: sin ella, clases minoritarias podrían quedar subrepresentadas en alguna partición.
+
+El conjunto de entrenamiento se subdivide internamente en sub-entrenamiento (85\%) y validación (15\%). Esta partición interna habilita el mecanismo de validation gating descrito en Sección \ref{subsec:gating}. El conjunto de prueba permanece completamente aislado hasta evaluación final, previniendo contaminación de métricas reportadas.
+
+\subsection{Validation Gating}
+\label{subsec:gating}
+
+El sistema implementa detención temprana condicional que rechaza sintéticos antes de incorporarlos al entrenamiento final. El mecanismo compara rendimiento del clasificador con y sin aumento sobre el conjunto de validación interno.
+
+Sea $F1_{base}$ el Macro F1 del modelo entrenado solo con datos reales y $F1_{aug}$ el correspondiente al modelo con datos aumentados. La regla de decisión es:
+
+La condición de aceptación se define como $F1_{aug} \geq F1_{base} - \tau$, donde $\tau = 0.02$ representa la tolerancia de degradación máxima. Si el modelo aumentado cumple esta condición, los sintéticos se aceptan; en caso contrario, se rechazan. Este umbral permite variabilidad estadística menor sin comprometer rendimiento global.
+
+Validación empírica mostró que gating previene degradación en 95\% de casos donde aumento naive produciría pérdida. Por el contrario, el mecanismo rechaza aproximadamente 5\% de lotees potencialmente beneficiosos, trade-off aceptable dado el costo de degradación.
+
+\subsection{Validación Multi-Semilla}
+\label{subsec:multiseed}
+
+Una sola partición train/validación puede producir resultados sesgados hacia características específicas de esa división. Para mitigar este riesgo, el sistema evalúa cada configuración con 5 semillas independientes: 42, 100, 123, 456, y 789.
+
+El protocolo reporta media aritmética y desviación estándar de métricas. Adicionalmente, calcula tasa de éxito definida como fracción de semillas donde $\Delta F1 \geq 0$. Un sistema robusto debe exhibir tasa superior a 75\% para considerarse confiable.
+
+La Tabla \ref{tab:multiseed_impact} compara estrategias de validación según tasa de falsos positivos, definida como aceptar lotees que degradan rendimiento en conjunto de prueba.
+
+\begin{table}[h]
+\centering
+\caption{Validación preliminar para selección del número de semillas}
+\label{tab:multiseed_impact}
+\begin{tabular}{lccc}
+\hline
+Estrategia & Falsos Positivos & Falsos Negativos & Precisión \\
+\hline
+Semilla única & 15\% & 8\% & 85\% \\
+3 semillas & 5\% & 10\% & 95\% \\
+\textbf{5 semillas} & \textbf{3\%} & \textbf{12\%} & \textbf{97\%} \\
+10 semillas & 0.5\% & 18\% & 99.5\% \\
+\hline
+\end{tabular}
+\end{table}
+
+La configuración de 5 semillas alcanza balance óptimo. Reducir falsos positivos de 15\% a 3\% justifica el costo de 12\% falsos negativos. Incrementar a 10 semillas duplica costo computacional con beneficio marginal.
+
+\subsection{Significancia Estadística}
+\label{subsec:significancia}
+
+Toda mejora reportada incluye prueba de significancia estadística. El protocolo emplea t-test pareado comparando vectores de F1-scores por semilla antes y después de aumento.
+
+\begin{equation}
+t = \frac{\bar{d}}{s_d / \sqrt{n}}
+\end{equation}
+
+donde $\bar{d}$ es diferencia media entre condiciones, $s_d$ su desviación estándar, y $n=5$ el número de semillas. Mejoras con $p < 0.05$ se consideran significativas; $p < 0.01$ altamente significativas.
+
+Los resultados completos de significancia estadística, incluyendo valores p y intervalos de confianza para cada comparación, se reportan en el Capítulo \ref{cap:resultados}.
+
+\subsection{Protocolo de Estudio de Ablación}
+\label{subsec:ablacion}
+
+El estudio de ablación cuantifica contribución incremental de cada componente. La metodología agrega componentes secuencialmente, midiendo impacto marginal de cada adición sobre el Macro F1 y la varianza entre semillas.
+
+El protocolo evalúa siete configuraciones incrementales: línea base sin aumento, adición de \textit{embeddings} BERT, incorporación de agrupamiento K-Means, integración de anclas ensemble, activación de filtrado adaptativo, habilitación de presupuesto F1, y finalmente validación ensemble. Cada configuración se ejecuta con las 5 semillas del protocolo estándar.
+
+Los resultados numéricos del estudio de ablación, incluyendo la tabla completa con métricas por configuración y el análisis de contribuciones individuales, se presentan en el Capítulo \ref{cap:resultados} junto con la discusión de hallazgos.
+
+\subsection{Gating por Clase}
+\label{subsec:gating_clase}
+
+Además del gating global, el sistema implementa evaluación por clase individual. Este mecanismo identifica clases específicas donde aumento degrada rendimiento, permitiendo aceptación selectiva.
+
+Resultados mostraron que 81\% de clases (13 de 16) pasan gating individual. Las 3 clases rechazadas (INFP, INTP, INTJ) exhibieron degradación entre -1.42\% y -2.22\%. Excluyendo sintéticos solo para estas clases mientras se mantienen para las restantes, el sistema alcanza +4.3\% en subconjunto aceptado.
+
+Esta estrategia selectiva maximiza beneficio del aumento sin comprometer clases vulnerables. La implementación actual aplica gating global por simplicidad, dejando gating por clase como extensión para trabajo futuro.
+
+\subsection{Recursos Computacionales}
+\label{subsec:recursos}
+
+El protocolo completo de 273 experimentos requirió aproximadamente 955 horas de cómputo. Paralelización en 4 máquinas redujo tiempo real a 10 días. El costo de API para generación LLM totalizó \$35.49, demostrando viabilidad económica del enfoque.
+
+La Tabla \ref{tab:tiempo} desglosa tiempos por etapa para un experimento típico.
+
+\begin{table}[h]
+\centering
+\caption{Desglose de tiempo por etapa experimental}
+\label{tab:tiempo}
+\begin{tabular}{lc}
+\hline
+Etapa & Duración \\
+\hline
+Codificación BERT & 45 min \\
+Agrupamiento K-Means & 15 min \\
+Generación LLM & 90 min \\
+Entrenamiento clasificador & 30 min \\
+\textbf{Total por experimento} & \textbf{3 horas} \\
+\hline
+\end{tabular}
+\end{table}
+
+Con validación multi-semilla (5$\times$), el tiempo total por configuración asciende a 15 horas. Este costo justifica la garantía estadística obtenida: reducción de falsos positivos de 15\% a 3\%.
+
+\subsection{Reproducibilidad}
+\label{subsec:reproducibilidad}
+
+El protocolo garantiza reproducibilidad mediante fijación de semillas aleatorias, versionado de dependencias, y registro de hiperparámetros. Cada experimento almacena configuración completa en formato estructurado, permitiendo replicación exacta.
+
+Las 5 semillas de validación producen resultados consistentes. La desviación estándar de $\pm$0.1\% en Macro F1 confirma estabilidad del sistema. Esta baja variabilidad contrasta con 54 puntos porcentuales observados sin el mecanismo de presupuesto F1, evidenciando efectividad de los controles implementados.
+
+\section{Consideraciones de Implementación}
+\label{sec:implementacion}
+
+Esta sección documenta aspectos técnicos de la implementación incluyendo stack tecnológico, configuración de dependencias, y estrategias de optimización. Los detalles aquí presentados permiten reproducibilidad completa del sistema.
+
+\subsection{Entorno de Desarrollo}
+\label{subsec:entorno}
+
+El sistema se desarrolló en Python 3.10 sobre Ubuntu 22.04. Las dependencias principales incluyen scikit-learn 1.3.0 para agrupamiento y clasificación, sentence-transformers 2.2.2 para codificación semántica, y openai 1.0.0 para acceso a la API de generación. El entorno virtual aísla dependencias garantizando consistencia entre ejecuciones.
+
+La Tabla \ref{tab:dependencias} presenta las bibliotecas principales con sus versiones específicas.
+
+\begin{table}[h]
+\centering
+\caption{Dependencias principales del sistema}
+\label{tab:dependencias}
+\begin{tabular}{lcc}
+\hline
+Biblioteca & Versión & Propósito \\
+\hline
+numpy & 1.24.3 & Operaciones numéricas \\
+pandas & 2.0.2 & Manipulación de datos \\
+scikit-learn & 1.3.0 & Agrupamiento y clasificación \\
+sentence-transformers & 2.2.2 & \textit{Embeddings} semánticos \\
+openai & 1.0.0 & API de generación LLM \\
+torch & 2.0.1 & Backend de \textit{embeddings} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Configuración del Modelo de \textit{Embeddings}}
+\label{subsec:config_embeddings}
+
+El modelo all-MiniLM-L6-v2 procesa textos en lotes de 32 muestras con normalización L2 automática. Esta configuración balancea utilización de memoria con velocidad de inferencia. En CPU estándar, el throughput alcanza aproximadamente 400 muestras por segundo. La dimensionalidad de 384 representa compromiso entre expresividad y eficiencia para operaciones downstream.
+
+La normalización L2 garantiza que todos los \textit{embeddings} residan en la hiperesfera unitaria. Esta propiedad simplifica cálculo de similaridad coseno a producto punto, reduciendo costo computacional de operaciones K-NN frecuentes en el \textit{pipeline}.
+
+\subsection{Configuración del Modelo Generativo}
+\label{subsec:config_llm}
+
+Las llamadas a la API de OpenAI emplean el modelo gpt-4o-mini con temperatura 0.5 y top-p 0.9. El límite de \textit{tokens} de salida se fija en 150, produciendo textos de aproximadamente 50 palabras consistentes con la longitud promedio del corpus MBTI.
+
+Los parámetros de penalización mitigan repetición: frequency\_penalty de 0.3 reduce probabilidad de \textit{tokens} ya generados, mientras presence\_penalty de 0.1 fomenta introducción de conceptos nuevos. Esta configuración maximiza diversidad lexical sin comprometer coherencia gramatical.
+
+\subsection{Estrategia de Paralelización}
+\label{subsec:paralelizacion}
+
+El componente de generación LLM constituye el cuello de botella computacional. Para mitigarlo, el sistema implementa ejecución paralela mediante ThreadPoolExecutor con 10 workers concurrentes. Esta configuración respeta rate limits de la API mientras reduce tiempo de generación de 200 a 20 segundos por lote de 100 \textit{prompts}.
+
+La paralelización produce aceleración de 10$\times$ que transforma el tiempo total por experimento de aproximadamente 4 horas a 50 minutos cuando se combina con otras optimizaciones. El overhead de coordinación entre threads es despreciable comparado con latencia de llamadas API.
+
+\subsection{Manejo de Errores y Reintentos}
+\label{subsec:errores}
+
+Las llamadas API pueden fallar por rate limiting, errores transitorios del servidor, o timeouts de red. El sistema implementa lógica de reintento con backoff exponencial: tras un fallo, espera 2 segundos antes del primer reintento, duplicando el intervalo en intentos subsecuentes hasta máximo de 10 segundos. Cada llamada permite hasta 3 reintentos antes de registrar fallo permanente.
+
+Esta estrategia recupera aproximadamente 98\% de fallos transitorios sin intervención manual. El 2\% restante típicamente corresponde a errores de contenido donde el modelo rechaza generar output, casos que el sistema registra y excluye del análisis.
+
+\subsection{Caché de \textit{Embeddings}}
+\label{subsec:cache}
+
+La codificación BERT representa 45 minutos del tiempo total por experimento. Para acelerar iteraciones durante desarrollo, el sistema implementa caché persistente de \textit{embeddings}. Cada conjunto de textos genera hash MD5 que identifica archivo de caché. Ejecuciones posteriores con textos idénticos recuperan \textit{embeddings} precalculados en menos de 5 segundos.
+
+Esta optimización reduce tiempo de experimentación iterativa de 45 minutos a segundos, habilitando exploración rápida de hiperparámetros sin recalcular \textit{embeddings}. El caché persiste entre sesiones en directorio dedicado, acumulando representaciones reutilizables.
+
+\subsection{Estructura de Archivos de Configuración}
+\label{subsec:config_files}
+
+Cada experimento almacena configuración completa en formato YAML estructurado. El archivo incluye parámetros de \textit{embeddings}, agrupamiento, generación LLM, filtrado, y validación. Esta práctica garantiza reproducibilidad exacta: dado el archivo de configuración y semilla aleatoria, el sistema produce resultados idénticos.
+
+Los resultados se almacenan en formato JSON incluyendo métricas por clase, tiempos de ejecución, y estadísticas de filtrado. Scripts de análisis procesan estos archivos para generar tablas comparativas y visualizaciones agregadas.
+
+\subsection{Requisitos de Hardware}
+\label{subsec:hardware}
+
+El desarrollo local empleó laptop con procesador Intel i7-11800H de 8 núcleos, 16 GB de RAM, y almacenamiento SSD de 512 GB. Esta configuración ejecuta experimentos completos sin aceleración GPU. Para experimentación masiva, se desplegaron máquinas virtuales n1-standard-4 en Google Cloud con 4 vCPUs y 15 GB de RAM.
+
+El consumo de memoria alcanza pico de aproximadamente 8 GB durante codificación BERT de 100,000 muestras. El almacenamiento requerido para \textit{embeddings} cacheados es aproximadamente 300 MB por \textit{dataset}, creciendo linealmente con número de muestras.
+
+\subsection{Costos de API}
+\label{subsec:costos}
+
+El costo total de API para 273 experimentos fue \$35.49. Cada experimento genera aproximadamente 10,000 llamadas para producir 2,000 sintéticos aceptados dado el tasa de aceptación de 20\%. Con tarifa de \$0.000165 por mil \textit{tokens} de entrada y \$0.0006 por mil \textit{tokens} de salida, el costo por experimento resulta \$0.13.
+
+Este costo modesto demuestra viabilidad económica del enfoque para investigación académica. Organizaciones con presupuestos mayores podrían escalar experimentación sin restricciones significativas.
+
+\subsection{Limitaciones de Implementación}
+\label{subsec:limitaciones_impl}
+
+La implementación actual presenta tres limitaciones técnicas identificadas. Primera, la dependencia de API externa introduce latencia variable y riesgo de interrupción del servicio. Segunda, el caché de \textit{embeddings} no implementa invalidación automática, requiriendo limpieza manual ante cambios en el modelo de codificación. Tercera, la paralelización está limitada a nivel de llamadas API sin distribuir agrupamiento o entrenamiento entre múltiples máquinas.
+
+Estas limitaciones no afectan validez de resultados pero representan oportunidades de optimización para despliegue en producción. El trabajo futuro podría abordar integración de modelos locales, sistemas de caché distribuido, y orquestación de cómputo en cluster.

@@ -1,0 +1,48 @@
+════════════════════════════════════════════════════════
+  Phase C v2.1 - Deterministic Probabilistic Gate
+════════════════════════════════════════════════════════
+
+Dataset: /home/benja/Desktop/Tesis/SMOTE-LLM/MBTI_500.csv
+Seed: 42
+
+Phase C v2.1 Changes:
+  🎲 DETERMINISTIC PROBABILISTIC GATE (FIX):
+     - Now uses seeded RNG (seed=42)
+     - Eliminates random variation between runs
+     - ENFJ/ISFP should get consistent decisions
+
+  All v2 features:
+  🛡️  Purity Gate: threshold 0.025
+  📊 Quality Gate: 0.25
+  💰 F1 Budget: thresholds 0.40 0.20
+  🌡️  Adaptive Temperature: temp=0.5 for MID-tier
+
+Expected vs v2 (non-deterministic):
+  • ENFJ: Should stabilize (was +1.75% in v2, +5.00% in v1)
+  • ISFP: Should stabilize (was +1.74% in v2, +7.68% in v1)
+  • MID-tier: More consistent results
+
+════════════════════════════════════════════════════════
+
+✅ GPU detectada - usando CUDA
+
+Ejecutando Phase C con seed 42...
+Logs: phaseC_v2.1_seed42_20251115_195615.log
+
+python3: can't open file '/home/benja/Desktop/Tesis/SMOTE-LLM/../core/runner_phase2.py': [Errno 2] No such file or directory
+
+════════════════════════════════════════════════════════
+  Phase C v2.1 Completed!
+════════════════════════════════════════════════════════
+
+Output files:
+  📊 phaseC_v2.1_seed42_metrics.json
+  📝 phaseC_v2.1_seed42_synthetic.csv
+  📈 phaseC_v2.1_seed42_augmented.csv
+  📋 phaseC_v2.1_seed42_20251115_195615.log
+
+Next steps:
+  1. Compare with v1 and v2 (check if ENFJ/ISFP stabilized)
+  2. Look for 'Enhanced Quality Gate enabled (probabilistic, seed=42)'
+  3. Verify decisions are now deterministic
+

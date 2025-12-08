@@ -1,0 +1,101 @@
+{
+  "ENS_TopG5_Extended": {
+    "ensemble": "ENS_TopG5_Extended",
+    "n_runs": 3,
+    "mean": 10.687233021560303,
+    "std": 1.0954140730922406,
+    "min": 9.819361806897627,
+    "max": 12.23247311163377,
+    "cv": 10.249744446316129,
+    "original": 13.73,
+    "results": [
+      {
+        "run": "replication_run1",
+        "delta_percent": 9.819361806897627,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.22265592919945215,
+        "n_synthetic": 294
+      },
+      {
+        "run": "replication_run2",
+        "delta_percent": 10.009864146149516,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.22304216778855798,
+        "n_synthetic": 294
+      },
+      {
+        "run": "replication_run3",
+        "delta_percent": 12.23247311163377,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.2275484502538222,
+        "n_synthetic": 315
+      }
+    ]
+  },
+  "ENS_SUPER_G5_F7_v2": {
+    "ensemble": "ENS_SUPER_G5_F7_v2",
+    "n_runs": 3,
+    "mean": 14.331189250959698,
+    "std": 0.49571504010717127,
+    "min": 13.854439232634123,
+    "max": 15.01468465563656,
+    "cv": 3.4589944450979555,
+    "original": 13.32,
+    "results": [
+      {
+        "run": "replication_run1",
+        "delta_percent": 15.01468465563656,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.2331893125422832,
+        "n_synthetic": 355
+      },
+      {
+        "run": "replication_run2",
+        "delta_percent": 14.124443864608416,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.23138437225419298,
+        "n_synthetic": 364
+      },
+      {
+        "run": "replication_run3",
+        "delta_percent": 13.854439232634123,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.23083694481306377,
+        "n_synthetic": 364
+      }
+    ]
+  },
+  "ENS_Top3_G5": {
+    "ensemble": "ENS_Top3_G5",
+    "n_runs": 3,
+    "mean": 8.404548303803088,
+    "std": 2.468876879258638,
+    "min": 4.913549374329449,
+    "max": 10.202243776215266,
+    "cv": 29.37548563010177,
+    "original": 5.98,
+    "results": [
+      {
+        "run": "replication_run1",
+        "delta_percent": 10.097851760864545,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.22322056041250044,
+        "n_synthetic": 199
+      },
+      {
+        "run": "replication_run2",
+        "delta_percent": 10.202243776215266,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.2234322125364655,
+        "n_synthetic": 212
+      },
+      {
+        "run": "replication_run3",
+        "delta_percent": 4.913549374329449,
+        "baseline_f1": 0.20274742589650288,
+        "augmented_f1": 0.21270952077310956,
+        "n_synthetic": 222
+      }
+    ]
+  }
+}
