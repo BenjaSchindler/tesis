@@ -1,0 +1,18 @@
+% Tabla: Validacion de presupuesto de generacion
+% Experimento 7c: Presupuesto de Generacion
+\begin{table}[h]
+\centering
+\caption{Impacto del presupuesto de generacion sintetica por clase}
+\label{tab:budget_validation}
+\begin{tabular}{ccccc}
+\hline
+Presupuesto (\%) & N Sinteticas & Calidad & Macro F1 & $\Delta$ F1 \\
+\hline
+5\% & 63 & 0.242 & 0.2055 & +0.49\% \\
+8\% & 100 & 0.236 & 0.2061 & +0.78\% \\
+\textbf{12\%} & \textbf{150} & \textbf{0.228} & \textbf{0.2075} & \textbf{+1.47\%*} \\
+15\% & 188 & 0.221 & 0.2069 & +1.17\%* \\
+\hline
+\multicolumn{5}{l}{\footnotesize *Estadisticamente significativo (p $<$ 0.05)} \\
+\end{tabular}
+\end{table}

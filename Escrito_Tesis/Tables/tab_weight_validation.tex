@@ -1,0 +1,26 @@
+% Tabla: Validación del peso de muestras sintéticas
+% Experimento 07a - K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Impacto del peso de muestras sintéticas en el entrenamiento}
+\label{tab:weight_validation}
+\begin{tabular}{cccccc}
+\toprule
+\textbf{Peso ($w$)} & \textbf{N Sintéticos} & \textbf{Calidad} & \textbf{Macro F1} & \textbf{$\Delta$ F1} & \textbf{p-valor} \\
+\midrule
+0.3 & 125 & 0.231 & 0.2103 & +2.83\% & $<$0.0001 \\
+0.5 & 125 & 0.231 & 0.2081 & +1.76\% & 0.0009 \\
+0.7 & 125 & 0.231 & 0.2100 & +2.68\% & $<$0.0001 \\
+\rowcolor{green!20}
+\textbf{1.0} & \textbf{125} & \textbf{0.231} & \textbf{0.2110} & \textbf{+3.17\%} & $<$\textbf{0.0001} \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Línea base F1: 0.2045. Todas las configuraciones son estadísticamente significativas.
+
+\textbullet\ \textbf{Hallazgo clave}: peso igual ($w$=1.0) supera significativamente al peso reducido ($w$=0.5).
+
+\textbullet\ Esto contradice la suposición inicial de que sintéticos deberían ponderarse menos que reales.
+
+\end{table}

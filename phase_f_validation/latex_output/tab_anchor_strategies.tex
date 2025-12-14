@@ -1,0 +1,19 @@
+
+\begin{table}[h]
+\centering
+\caption{Comparacion de estrategias de seleccion de anclas}
+\label{tab:anchor_strategies}
+\begin{tabular}{lcccc}
+\hline
+Estrategia & Macro F1 & Quality & Diversity & $\Delta$ \\
+\hline
+Random & 0.2062 & 0.17 & 0.64 & +0.8\% \\
+Nearest Neighbor & 0.2067 & 0.17 & 0.50 & +1.1\% \\
+\textbf{Medoid} & \textbf{0.2079} & \textbf{0.17} & \textbf{0.50} & \textbf{+1.6\%} \\
+Quality-gated & 0.2044 & 0.06 & 0.03 & -0.1\% \\
+Diverse & 0.2065 & 0.14 & 0.90 & +1.0\% \\
+Ensemble & 0.2048 & 0.21 & 0.86 & +0.2\% \\
+
+\hline
+\end{tabular}
+\end{table}

@@ -1,0 +1,26 @@
+% Tabla: Comparación de estrategias de selección de anclas
+% Experimento 02 - K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Comparación de estrategias de selección de anclas}
+\label{tab:anchor_strategies}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Estrategia} & \textbf{Macro F1} & \textbf{Calidad} & \textbf{Diversidad} & \textbf{$\Delta$ F1} & \textbf{p-valor} \\
+\midrule
+Aleatoria & 0.2062 & 0.17 & 0.64 & +0.83\% & 0.088 \\
+Vecino cercano & 0.2067 & 0.17 & 0.50 & +1.07\% & 0.052 \\
+\rowcolor{green!20}
+\textbf{Medoide} & \textbf{0.2079} & \textbf{0.17} & \textbf{0.50} & \textbf{+1.63\%} & \textbf{0.005} \\
+Quality-gated & 0.2044 & 0.06 & 0.03 & $-$0.05\% & 0.891 \\
+Diversa & 0.2065 & 0.14 & 0.90 & +0.98\% & 0.063 \\
+Ensemble & 0.2048 & 0.21 & 0.86 & +0.15\% & 0.682 \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Línea base F1: 0.2045. La estrategia medoide es significativamente superior (p=0.005).
+
+\textbullet\ Calidad: fracción de sintéticos correctamente clasificados por K-NN. Diversidad: distancia promedio entre anclas.
+
+\end{table}

@@ -1,0 +1,31 @@
+% Tabla: Validación de Presupuesto de Generación
+% Experimento 07c - K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Validación de presupuesto de generación sintética (Experimento 07c)}
+\label{tab:budget_validation}
+\begin{tabular}{ccccc}
+\toprule
+\textbf{Presupuesto} & \textbf{N Sintéticos} & \textbf{Macro F1} & \textbf{$\Delta$ F1} & \textbf{p-valor} \\
+\midrule
+5\%  & 381  & 0.2055 & +0.49\% & 0.092 \\
+8\%  & 617  & 0.2049 & +0.16\% & 0.312 \\
+10\% & 775  & 0.2086 & +1.98\% & 0.012 \\
+12\% & 950  & 0.2073 & +1.36\% & 0.025 \\
+15\% & 1129 & 0.2084 & +1.87\% & 0.015 \\
+18\% & 1463 & 0.2070 & +1.18\% & 0.034 \\
+\rowcolor{green!20}
+\textbf{20\%} & \textbf{1509} & \textbf{0.2093} & \textbf{+2.35\%} & \textbf{0.0063} \\
+25\% & 2039 & 0.2083 & +1.83\% & 0.018 \\
+30\% & 2338 & 0.2089 & +2.12\% & 0.011 \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Mejor configuración: 20\% del tamaño de clase (+2.35\%, p=0.0063).
+
+\textbullet\ Presupuestos mayores (25-30\%) no mejoran significativamente sobre 20\%.
+
+\textbullet\ Línea base Macro F1: 0.2045.
+
+\end{table}

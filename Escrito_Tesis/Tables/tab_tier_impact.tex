@@ -1,0 +1,25 @@
+% Tabla: Análisis de impacto por nivel de rendimiento (tier)
+% Experimento 06 - K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Impacto del aumento por nivel de rendimiento línea base}
+\label{tab:tier_impact}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Nivel} & \textbf{Rango F1} & \textbf{N Clases} & \textbf{$\Delta$ F1 Promedio} & \textbf{Desv. Est.} \\
+\midrule
+\rowcolor{green!20}
+\textbf{Bajo} & $<$ 0.20 & 9 & \textbf{+5.93\%} & 13.5\% \\
+Intermedio & 0.20 -- 0.45 & 6 & +0.06\% & 0.6\% \\
+Alto & $\geq$ 0.45 & 1 & +0.11\% & 0.0\% \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ \textbf{Hallazgo clave}: el aumento con LLM beneficia principalmente a clases de nivel bajo.
+
+\textbullet\ Clases destacadas en nivel bajo: ISTJ (+32.0\%), ENTJ (+27.3\%), ISFJ (+6.2\%).
+
+\textbullet\ Clases de alto rendimiento muestran mejoras marginales; el sistema ya captura sus patrones.
+
+\end{table}

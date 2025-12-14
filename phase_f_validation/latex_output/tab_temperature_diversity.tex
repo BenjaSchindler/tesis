@@ -1,0 +1,19 @@
+% Tabla: Analisis de diversidad por temperatura del LLM
+% Experimento 07b: Diversidad por Temperatura
+\begin{table}[h]
+\centering
+\caption{Analisis de diversidad por temperatura del LLM}
+\label{tab:temperature_diversity}
+\begin{tabular}{ccccccc}
+\hline
+$\tau$ & N Gen & Rechazo & Div Texto & Div Vocab & Drift & $\Delta$ F1 \\
+\hline
+0.3 & 566 & 66\% & 1.256 & 0.143 & 0.965 & +1.52\%* \\
+0.5 & 574 & 66\% & 1.255 & 0.145 & 0.957 & +1.16\% \\
+0.7 & 563 & 66\% & 1.258 & 0.149 & 0.963 & +1.82\%* \\
+\textbf{0.9} & \textbf{602} & \textbf{67\%} & \textbf{1.259} & \textbf{0.162} & \textbf{0.956} & \textbf{+2.03\%*} \\
+\hline
+\multicolumn{7}{l}{\footnotesize *Estadisticamente significativo (p $<$ 0.05)}\\
+\multicolumn{7}{l}{\footnotesize Div Texto: diversidad embedding, Div Vocab: palabras unicas/total, Drift: distancia al anchor}\\
+\end{tabular}
+\end{table}

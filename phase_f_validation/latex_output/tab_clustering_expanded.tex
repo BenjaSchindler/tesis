@@ -1,0 +1,31 @@
+\begin{table}[htbp]
+\centering
+\caption{Validación de K\_max para Clustering (Experimento 01 Expandido)}
+\label{tab:clustering_expanded}
+\begin{tabular}{cccccc}
+\toprule
+\textbf{K\_max} & \textbf{Silhouette} & \textbf{Coherencia} & \textbf{Macro F1} & \textbf{$\Delta$ F1} & \textbf{Sig.} \\
+\midrule
+1  & N/A   & 67.0\% & 0.2058 & +0.64\% & * \\
+2  & 0.057 & 63.8\% & 0.2059 & +0.68\% &   \\
+3  & 0.051 & 63.9\% & 0.2066 & +1.01\% & * \\
+4  & 0.047 & 64.0\% & 0.2065 & +0.94\% &   \\
+5  & 0.046 & 64.1\% & 0.2082 & +1.78\% & * \\
+6  & 0.042 & 64.1\% & 0.2074 & +1.40\% & * \\
+7  & 0.042 & 64.1\% & 0.2078 & +1.62\% & * \\
+8  & 0.040 & 64.1\% & 0.2055 & +0.49\% &   \\
+9  & 0.040 & 64.2\% & 0.2063 & +0.88\% &   \\
+10 & 0.039 & 64.2\% & 0.2077 & +1.55\% & * \\
+11 & 0.039 & 64.2\% & 0.2045 & -0.03\% &   \\
+12 & 0.039 & 64.2\% & 0.2068 & +1.11\% & * \\
+15 & 0.038 & 64.2\% & 0.2053 & +0.37\% &   \\
+\rowcolor{green!20}
+\textbf{18} & \textbf{0.037} & \textbf{64.3\%} & \textbf{0.2085} & \textbf{+1.92\%} & \textbf{*} \\
+24 & 0.037 & 64.3\% & 0.2067 & +1.05\% &   \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item * Estadísticamente significativo (p < 0.05). Mejor configuración: K\_max=18.
+\end{tablenotes}
+\end{table}

@@ -1,0 +1,26 @@
+% Tabla: Validación de cascada de filtros (v3 con ranking adaptativo)
+% Experimento 04 - K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Cascada de filtros con selección adaptativa por ranking}
+\label{tab:filter_cascade}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Configuración} & \textbf{N Filtros} & \textbf{N Sintéticos} & \textbf{Calidad} & \textbf{Macro F1} & \textbf{$\Delta$ F1} & \textbf{p-valor} \\
+\midrule
+Solo longitud & 1 & 127 & 0.154 & 0.2079 & +1.65\% & 0.012 \\
+Longitud + similaridad & 2 & 127 & 0.235 & 0.2074 & +1.40\% & 0.040 \\
+Tres filtros & 3 & 129 & 0.306 & 0.2074 & +1.38\% & 0.002 \\
+\rowcolor{green!20}
+\textbf{Cascada completa} & \textbf{4} & \textbf{125} & \textbf{0.231} & \textbf{0.2081} & \textbf{+1.76\%} & \textbf{0.0009} \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Línea base F1: 0.2045. Todas las configuraciones son estadísticamente significativas (p $<$ 0.05).
+
+\textbullet\ La cascada completa incluye: longitud, similaridad con ancla, pureza K-NN, y confianza del clasificador.
+
+\textbullet\ Cantidad de sintéticos controlada ($\sim$125) mediante ranking adaptativo para comparación justa.
+
+\end{table}

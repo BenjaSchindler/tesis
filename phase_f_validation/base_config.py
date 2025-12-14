@@ -78,6 +78,8 @@ KFOLD_CONFIG = {
 EXPERIMENT_PARAMS = {
     "clustering": {
         "K_MAX_VALUES": [1, 2, 3, 6, 12, 24],
+        # Expanded: granular 6-12 range
+        "K_MAX_VALUES_EXPANDED": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 18, 24],
     },
     "anchor_strategies": {
         "STRATEGIES": ["random", "nearest_neighbor", "medoid",
@@ -85,6 +87,8 @@ EXPERIMENT_PARAMS = {
     },
     "k_neighbors": {
         "K_VALUES": [5, 10, 15, 25, 50, 75, 100],
+        # Expanded: granular 10-25 + beyond 100
+        "K_VALUES_EXPANDED": [5, 8, 10, 12, 15, 18, 20, 25, 30, 50, 75, 100, 125, 150, 200],
     },
     "filter_cascade": {
         "CONFIGS": ["length_only", "length_similarity",
@@ -104,6 +108,23 @@ EXPERIMENT_PARAMS = {
             "MID": {"min": 0.20, "max": 0.45},
             "HIGH": {"min": 0.45, "max": 1.0},
         },
+    },
+    # New: exp07 expanded parameters
+    "budget": {
+        "BUDGET_VALUES": [0.05, 0.08, 0.12, 0.15],
+        # Expanded: higher budgets
+        "BUDGET_VALUES_EXPANDED": [0.05, 0.08, 0.10, 0.12, 0.15, 0.18, 0.20, 0.25, 0.30],
+    },
+    "weight_by_tier": {
+        "CONFIGS": [
+            {"name": "uniform_1.0", "LOW": 1.0, "MID": 1.0, "HIGH": 1.0},
+            {"name": "tier_boost_low", "LOW": 1.5, "MID": 1.0, "HIGH": 0.5},
+            {"name": "tier_boost_extreme", "LOW": 2.0, "MID": 0.8, "HIGH": 0.3},
+            {"name": "only_low", "LOW": 1.0, "MID": 0.0, "HIGH": 0.0},
+        ],
+    },
+    "temperature": {
+        "VALUES": [0.3, 0.5, 0.7, 0.9],
     },
 }
 

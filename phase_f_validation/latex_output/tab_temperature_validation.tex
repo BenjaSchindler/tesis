@@ -1,0 +1,18 @@
+% Tabla: Validacion de temperatura del LLM
+% Experimento 7b: Temperatura del LLM
+\begin{table}[h]
+\centering
+\caption{Impacto de la temperatura del LLM en la calidad de muestras sinteticas}
+\label{tab:temperature_validation}
+\begin{tabular}{ccccc}
+\hline
+Temperatura ($\tau$) & N Sinteticas & Calidad & Macro F1 & $\Delta$ F1 \\
+\hline
+\textbf{0.3} & \textbf{125} & \textbf{0.245} & \textbf{0.2063} & \textbf{+0.88\%*} \\
+0.5 & 125 & 0.238 & 0.2057 & +0.60\% \\
+0.7 & 125 & 0.231 & 0.2056 & +0.54\% \\
+0.9 & 125 & 0.219 & 0.2051 & +0.29\% \\
+\hline
+\multicolumn{5}{l}{\footnotesize *Estadisticamente significativo (p $<$ 0.05)} \\
+\end{tabular}
+\end{table}

@@ -1,0 +1,18 @@
+% Tabla: Validacion de peso de muestras sinteticas
+% Experimento 7a: Peso de Muestras Sinteticas
+\begin{table}[h]
+\centering
+\caption{Impacto del peso de muestras sinteticas en el entrenamiento}
+\label{tab:weight_validation}
+\begin{tabular}{ccccc}
+\hline
+Peso ($w$) & N Sinteticas & Macro F1 & $\Delta$ F1 & p-valor \\
+\hline
+0.3 & 125 & 0.2103 & +2.83\%* & $<$0.0001 \\
+0.5 & 125 & 0.2081 & +1.76\%* & 0.0009 \\
+0.7 & 125 & 0.2100 & +2.68\%* & $<$0.0001 \\
+\textbf{1.0} & \textbf{125} & \textbf{0.2110} & \textbf{+3.17\%*} & $<$\textbf{0.0001} \\
+\hline
+\multicolumn{5}{l}{\footnotesize *Estadisticamente significativo (p $<$ 0.05)} \\
+\end{tabular}
+\end{table}

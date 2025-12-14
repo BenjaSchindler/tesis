@@ -1,0 +1,32 @@
+\begin{table}[htbp]
+\centering
+\caption{Validación de K Vecinos para Contexto del Prompt (Experimento 03 Expandido)}
+\label{tab:k_neighbors_expanded}
+\begin{tabular}{ccccc}
+\toprule
+\textbf{K} & \textbf{Macro F1} & \textbf{$\Delta$ F1} & \textbf{Tasa Acept.} & \textbf{Contexto} \\
+\midrule
+5   & 0.2063 & +0.84\% & 99\% & Insuficiente \\
+8   & 0.2064 & +0.90\% & 96\% & Limitado \\
+10  & 0.2056 & +0.51\% & 95\% & Limitado \\
+12  & 0.2055 & +0.49\% & 98\% & Óptimo \\
+15  & 0.2059 & +0.68\% & 96\% & Óptimo \\
+18  & 0.2065 & +0.99\% & 96\% & Óptimo \\
+20  & 0.2060 & +0.73\% & 97\% & Óptimo \\
+25  & 0.2062 & +0.82\%* & 96\% & Redundante \\
+30  & 0.2061 & +0.76\% & 98\% & Redundante \\
+50  & 0.2046 & +0.04\% & 97\% & Redundante \\
+75  & 0.2065 & +0.95\% & 97\% & Ruidoso \\
+100 & 0.2063 & +0.84\% & 96\% & Ruidoso \\
+125 & 0.2068 & +1.09\% & 99\% & Muy Ruidoso \\
+150 & 0.2055 & +0.49\% & 96\% & Muy Ruidoso \\
+\rowcolor{green!20}
+\textbf{200} & \textbf{0.2078} & \textbf{+1.60\%*} & \textbf{97\%} & \textbf{Excesivo} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item * Estadísticamente significativo (p < 0.05). Mejor configuración: K=200.
+\item Nota: Contexto "Excesivo" aún produce mejoras significativas.
+\end{tablenotes}
+\end{table}

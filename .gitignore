@@ -96,3 +96,7 @@ overnight_logs/
 *_train.csv
 *_test.csv
 *_val.csv
+*.zip
+# Generated plots (optional: commit if needed for thesis)
+# plots/
+# latex_output/
