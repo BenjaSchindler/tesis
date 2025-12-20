@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """
-Experiment 11: Ensemble Validation
+Experiment 11: Ensemble Validation (Extended)
 
 Validates ensemble configurations by combining synthetics from components:
 - ENS_Top3_G5: Top 4 Phase F components
 - ENS_SUPER_G5_F7_v2: Extended with Phase G winners
 - ENS_TopG5_Extended: Extended with contrastive
 - ENS_WaveChampions: Best from each wave
+
+EXTENDED FEATURES (Phase G Extended):
+- Weighted combination of components
+- Deduplication strategies (similarity, class-wise, clustering)
+- Per-class config selection
 """
 
 import sys
@@ -24,13 +29,46 @@ from validation_runner import (
 from config_definitions import ENSEMBLES, get_config_params, ALL_CONFIGS
 from base_config import RESULTS_DIR
 
+# Import deduplication utilities
+try:
+    from deduplication import (
+        deduplicate_by_similarity,
+        deduplicate_classwise,
+        deduplicate_by_clustering,
+        deduplicate_cross_component,
+        print_dedup_stats
+    )
+    DEDUP_AVAILABLE = True
+except ImportError:
+    DEDUP_AVAILABLE = False
+    print("WARNING: deduplication.py not found, deduplication features disabled")
+
 
 def run_ensemble_validation(
     ensemble_name: str,
     cache: EmbeddingCache,
-    verbose: bool = True
+    verbose: bool = True,
+    weights: list = None,
+    dedup_method: str = None,
+    dedup_params: dict = None
 ):
-    """Validate an ensemble by generating and combining synthetics from components."""
+    """
+    Validate an ensemble by generating and combining synthetics from components.
+
+    Args:
+        ensemble_name: Name of ensemble configuration
+        cache: EmbeddingCache instance
+        verbose: Print progress
+        weights: Optional list of weights for each component (for weighted sampling)
+                 If None, uses equal weights. Weights are normalized automatically.
+        dedup_method: Optional deduplication method:
+            - None: No deduplication (default)
+            - 'similarity': Cosine similarity threshold
+            - 'classwise': Class-wise similarity deduplication
+            - 'clustering': Clustering-based deduplication
+            - 'cross_component': Cross-component deduplication
+        dedup_params: Parameters for deduplication method (e.g., {'threshold': 0.95})
+    """
 
     if verbose:
         print(f"\n{'#'*70}")
@@ -43,6 +81,10 @@ def run_ensemble_validation(
     if verbose:
         print(f"\n  Description: {ensemble_info['description']}")
         print(f"  Components: {components}")
+        if weights:
+            print(f"  Weights: {weights}")
+        if dedup_method:
+            print(f"  Deduplication: {dedup_method} {dedup_params or {}}")
 
     all_synthetic_emb = []
     all_synthetic_labels = []
@@ -72,6 +114,109 @@ def run_ensemble_validation(
         if verbose:
             print(f"    Generated {len(X_synth)} samples")
 
+    # Apply deduplication if specified
+    if dedup_method and DEDUP_AVAILABLE and all_synthetic_emb:
+        if verbose:
+            print(f"\n  Applying deduplication: {dedup_method}")
+
+        dedup_params = dedup_params or {}
+
+        if dedup_method == 'cross_component':
+            # Cross-component deduplication (preserves component ordering)
+            component_data = list(zip(all_synthetic_emb, all_synthetic_labels))
+            deduped_components, dedup_stats = deduplicate_cross_component(
+                component_data,
+                threshold=dedup_params.get('threshold', 0.95),
+                method=dedup_params.get('method', 'cosine')
+            )
+
+            # Unpack deduplicated components
+            all_synthetic_emb = [X for X, y in deduped_components]
+            all_synthetic_labels = [y for X, y in deduped_components]
+
+            if verbose:
+                print_dedup_stats(dedup_stats, "Cross-Component Deduplication")
+
+        else:
+            # First combine, then deduplicate
+            if all_synthetic_emb:
+                X_combined = np.vstack(all_synthetic_emb)
+                y_combined = np.concatenate(all_synthetic_labels)
+
+                if dedup_method == 'similarity':
+                    X_dedup, y_dedup, dedup_stats = deduplicate_by_similarity(
+                        X_combined, y_combined,
+                        threshold=dedup_params.get('threshold', 0.95),
+                        method=dedup_params.get('method', 'cosine')
+                    )
+                elif dedup_method == 'classwise':
+                    X_dedup, y_dedup, dedup_stats = deduplicate_classwise(
+                        X_combined, y_combined,
+                        threshold=dedup_params.get('threshold', 0.95),
+                        method=dedup_params.get('method', 'cosine')
+                    )
+                elif dedup_method == 'clustering':
+                    X_dedup, y_dedup, dedup_stats = deduplicate_by_clustering(
+                        X_combined, y_combined,
+                        n_clusters=dedup_params.get('n_clusters', None),
+                        cluster_method=dedup_params.get('cluster_method', 'kmeans'),
+                        keep_strategy=dedup_params.get('keep_strategy', 'centroid')
+                    )
+                else:
+                    if verbose:
+                        print(f"  WARNING: Unknown dedup_method {dedup_method}, skipping")
+                    X_dedup, y_dedup = X_combined, y_combined
+                    dedup_stats = {}
+
+                # Replace with deduplicated data
+                all_synthetic_emb = [X_dedup]
+                all_synthetic_labels = [y_dedup]
+
+                if verbose and dedup_stats:
+                    print_dedup_stats(dedup_stats, f"Deduplication ({dedup_method})")
+
+    # Apply weighting if specified
+    if weights and all_synthetic_emb:
+        if verbose:
+            print(f"\n  Applying weighted sampling...")
+
+        # Normalize weights
+        weights_array = np.array(weights[:len(all_synthetic_emb)])
+        if np.sum(weights_array) == 0:
+            weights_array = np.ones(len(all_synthetic_emb))
+        weights_array = weights_array / np.sum(weights_array)
+
+        if verbose:
+            print(f"  Normalized weights: {weights_array}")
+
+        # Weighted sampling from each component
+        weighted_emb = []
+        weighted_labels = []
+
+        # Determine total samples to keep (average of component sizes)
+        total_samples = sum(len(X) for X in all_synthetic_emb)
+        target_samples = int(total_samples * 0.8)  # Keep 80% after weighting
+
+        for i, (X, y, w) in enumerate(zip(all_synthetic_emb, all_synthetic_labels, weights_array)):
+            if len(X) == 0:
+                continue
+
+            # Sample proportional to weight
+            n_samples = int(target_samples * w)
+            n_samples = min(n_samples, len(X))  # Can't sample more than available
+
+            if n_samples > 0:
+                # Random sample with replacement if needed
+                indices = np.random.choice(len(X), size=n_samples, replace=(n_samples > len(X)))
+                weighted_emb.append(X[indices])
+                weighted_labels.append(y[indices])
+
+                if verbose:
+                    print(f"    Component {i}: {len(X)} → {n_samples} samples (weight={w:.3f})")
+
+        all_synthetic_emb = weighted_emb
+        all_synthetic_labels = weighted_labels
+
     # Combine all synthetics
     if all_synthetic_emb:
         X_ensemble = np.vstack(all_synthetic_emb)
@@ -81,7 +226,7 @@ def run_ensemble_validation(
         y_ensemble = np.array([])
 
     if verbose:
-        print(f"\n  Combined {len(X_ensemble)} synthetic samples")
+        print(f"\n  Final combined: {len(X_ensemble)} synthetic samples")
         print(f"  Per-component breakdown:")
         for comp, count in component_stats.items():
             print(f"    {comp}: {count}")

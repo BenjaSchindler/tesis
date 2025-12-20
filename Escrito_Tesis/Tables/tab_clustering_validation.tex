@@ -6,24 +6,24 @@
 \label{tab:clustering_validation}
 \begin{tabular}{cccccc}
 \toprule
-\textbf{$K_{max}$} & \textbf{Silueta} & \textbf{Coherencia} & \textbf{Macro F1} & \textbf{$\Delta$ F1} & \textbf{p-valor} \\
+\textbf{$K_{max}$} & \textbf{Silueta} & \textbf{Coherencia} & \textbf{Macro F1} & \textbf{$\Delta$ F1 (pp)} & \textbf{p-valor} \\
 \midrule
-1  & N/A   & 67.0\% & 0.2058 & +0.64\% & 0.041 \\
-2  & 0.057 & 63.8\% & 0.2059 & +0.68\% & 0.089 \\
-3  & 0.051 & 63.9\% & 0.2066 & +1.01\% & 0.031 \\
-5  & 0.046 & 64.1\% & 0.2082 & +1.78\% & 0.012 \\
-6  & 0.042 & 64.1\% & 0.2074 & +1.40\% & 0.023 \\
-10 & 0.039 & 64.2\% & 0.2077 & +1.55\% & 0.018 \\
-12 & 0.039 & 64.2\% & 0.2068 & +1.11\% & 0.029 \\
+1  & N/A   & 67.0\% & 0.2058 & +0.13 & 0.041 \\
+2  & 0.057 & 63.8\% & 0.2059 & +0.14 & 0.089 \\
+3  & 0.051 & 63.9\% & 0.2066 & +0.21 & 0.031 \\
+5  & 0.046 & 64.1\% & 0.2082 & +0.37 & 0.012 \\
+6  & 0.042 & 64.1\% & 0.2074 & +0.29 & 0.023 \\
+10 & 0.039 & 64.2\% & 0.2077 & +0.32 & 0.018 \\
+12 & 0.039 & 64.2\% & 0.2068 & +0.23 & 0.029 \\
 \rowcolor{green!20}
-\textbf{18} & \textbf{0.037} & \textbf{64.3\%} & \textbf{0.2085} & \textbf{+1.92\%} & \textbf{0.003} \\
-24 & 0.037 & 64.3\% & 0.2067 & +1.05\% & 0.078 \\
+\textbf{18} & \textbf{0.037} & \textbf{64.3\%} & \textbf{0.2085} & \textbf{+0.40} & \textbf{0.003} \\
+24 & 0.037 & 64.3\% & 0.2067 & +0.22 & 0.078 \\
 \bottomrule
 \end{tabular}
 \vspace{0.5em}\footnotesize
 
 \textbullet\ Línea base F1: 0.2045. Validación: K-Fold estratificado (5 splits $\times$ 3 repeticiones = 15 folds).
 
-\textbullet\ La configuración óptima $K_{max}=18$ logra +1.92\% con significancia estadística (p=0.003).
+\textbullet\ La configuración óptima $K_{max}=18$ logra +0.40 pp con significancia estadística (p=0.003).
 
 \end{table}

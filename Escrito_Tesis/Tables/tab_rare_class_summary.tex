@@ -1,0 +1,29 @@
+% Tabla: Resumen de clases problemáticas y soluciones
+% Validación - Síntesis de resultados
+\begin{table}[htbp]
+\centering
+\caption{Estado final de clases de baja frecuencia y estrategias de solución}
+\label{tab:rare_class_summary}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Clase} & \textbf{N} & \textbf{Config. estándar} & \textbf{Sobremuestreo 20$\times$} & \textbf{MLP Profundo} & \textbf{Estado} \\
+\midrule
+\rowcolor{green!20}
+\textbf{ESFJ} & 42 & 0.00 pp & +0.80 pp & \textbf{+1.36 pp} & \textbf{Resuelto} \\
+\rowcolor{yellow!20}
+ESTJ & 39 & 0.00 pp & 0.00 pp & +0.43 pp & Parcial \\
+\rowcolor{red!10}
+ESFP & 48 & 0.00 pp & 0.00 pp & +0.10 pp & No resuelto \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Config. estándar: mejores configuraciones individuales con Regresión Logística.
+
+\textbullet\ Sobremuestreo 20$\times$: multiplicador de volumen para clases de baja frecuencia.
+
+\textbullet\ MLP Profundo: perceptrón multicapa con arquitectura 512-256-128 neuronas.
+
+\textbullet\ \textbf{Conclusión}: la combinación de sobremuestreo masivo con clasificadores no lineales resuelve 1 de 3 clases problemáticas.
+
+\end{table}

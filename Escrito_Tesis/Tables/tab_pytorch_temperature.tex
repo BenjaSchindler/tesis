@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{Temperature Validation (PyTorch MLP)}
+\label{tab:pytorch_temperature}
+\begin{tabular}{ccccccc}
+\toprule
+$\tau$ & Baseline & Augmented & $\Delta$ (pp) & p-value & Win\% & Synth \\
+\midrule
+0.2 & 0.2390 & 0.2492 & +1.02$^{*}$ & 0.0032 & 87\% & 246 \\
+0.3 & 0.2475 & 0.2458 & -0.17 & 0.7604 & 47\% & 248 \\
+0.5 & 0.2409 & 0.2486 & +0.77 & 0.1127 & 73\% & 238 \\
+0.7 & 0.2431 & 0.2451 & +0.20 & 0.6302 & 47\% & 242 \\
+0.9 & 0.2377 & 0.2476 & +0.99$^{*}$ & 0.0352 & 73\% & 256 \\
+\bottomrule
+\end{tabular}
+\end{table}

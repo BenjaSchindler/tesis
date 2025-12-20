@@ -1,0 +1,27 @@
+% Tabla: Rendimiento en clases de baja frecuencia por clasificador
+% Validación K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Mejoras en clases de baja frecuencia según clasificador}
+\label{tab:rare_class_performance}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Clasificador} & \textbf{ESFJ $\Delta$ (pp)} & \textbf{ESFP $\Delta$ (pp)} & \textbf{ESTJ $\Delta$ (pp)} & \textbf{$\Delta$ General (pp)} \\
+\midrule
+\rowcolor{green!20}
+\textbf{MLP Profundo (512-256-128)} & \textbf{+1.36} & \textbf{+0.10} & \textbf{+0.43} & \textbf{+4.17} \\
+MLP Medio (256-128) & +1.12 & 0.00 & 0.00 & +0.33 \\
+Regresión Logística & +0.27 & +0.07 & +0.02 & +0.36 \\
+XGBoost & $-$0.27 & 0.00 & 0.00 & $-$0.43 \\
+LightGBM & $-$0.42 & 0.00 & 0.00 & $-$0.10 \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Muestras sintéticas: ESFJ=780, ESFP=992, ESTJ=811 (incluyendo originales).
+
+\textbullet\ \textbf{Hallazgo clave}: MLP Profundo resuelve ESFJ (+1.36 pp) y mejora ESTJ (+0.43 pp).
+
+\textbullet\ ESFP permanece irresoluble (máximo +0.10 pp) incluso con 992 muestras sintéticas.
+
+\end{table}

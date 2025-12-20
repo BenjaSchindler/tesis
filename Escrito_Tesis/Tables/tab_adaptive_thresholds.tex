@@ -2,22 +2,22 @@
 % Experimento 05 - K-Fold CV (5×3 = 15 folds)
 \begin{table}[htbp]
 \centering
-\caption{Validación de estrategias de umbrales adaptativos (Experimento 05)}
+\caption{Validación de estrategias de umbrales adaptativos}
 \label{tab:adaptive_thresholds}
 \begin{tabular}{lccccc}
 \toprule
-\textbf{Estrategia} & \textbf{Umbral Prom.} & \textbf{N Synth} & \textbf{Macro F1} & \textbf{$\Delta$ F1} & \textbf{p-valor} \\
+\textbf{Estrategia} & \textbf{Umbral Prom.} & \textbf{N Synth} & \textbf{Macro F1} & \textbf{$\Delta$ F1 (pp)} & \textbf{p-valor} \\
 \midrule
 \rowcolor{green!20}
-\textbf{strict\_relaxing} & \textbf{0.38} & \textbf{96} & \textbf{0.2068} & \textbf{+1.13\%} & \textbf{0.019} \\
-medium\_relaxing & 0.39 & 107 & 0.2059 & +0.67\% & 0.058 \\
-permissive\_relaxing & 0.38 & 100 & 0.2062 & +0.83\% & 0.041 \\
-purity\_adaptive & 0.39 & 97 & 0.2065 & +0.99\% & 0.028 \\
+\textbf{Relajación estricta} & \textbf{0.38} & \textbf{96} & \textbf{0.2068} & \textbf{+0.23} & \textbf{0.019} \\
+Relajación media & 0.39 & 107 & 0.2059 & +0.14 & 0.058 \\
+Relajación permisiva & 0.38 & 100 & 0.2062 & +0.17 & 0.041 \\
+Adaptativo por pureza & 0.39 & 97 & 0.2065 & +0.20 & 0.028 \\
 \bottomrule
 \end{tabular}
 \vspace{0.5em}\footnotesize
 
-\textbullet\ Mejor estrategia: strict\_relaxing (+1.13\%, p=0.019).
+\textbullet\ Mejor estrategia: Relajación estricta (+0.23 pp, p=0.019).
 
 \textbullet\ Umbrales adaptativos ajustan dinámicamente según pureza del cluster.
 

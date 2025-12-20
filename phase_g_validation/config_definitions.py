@@ -10,6 +10,7 @@ define what the experiment is testing.
 """
 
 from typing import Dict, Any, List
+import numpy as np
 from base_config import BASE_PARAMS
 
 # ==============================================================================
@@ -242,6 +243,267 @@ WAVE5_PROMPTING = {
         "overrides": {
             "disable_quality_gate": True,
             "n_shot": 10,  # CRUCIAL - 10 examples
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+}
+
+# ==============================================================================
+# WAVE 5 EXTENDED: MANY-SHOT EXPERIMENTS
+# Testing n_shot from 20 to 200 with fine granularity around optimal (100)
+# ==============================================================================
+
+WAVE5_EXTENDED_NSHOT = {
+    "W5_shot_20": {
+        "description": "20-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 20,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_30": {
+        "description": "30-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 30,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_40": {
+        "description": "40-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 40,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_50": {
+        "description": "50-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 50,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_60": {
+        "description": "60-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 60,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_70": {
+        "description": "70-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 70,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_80": {
+        "description": "80-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 80,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_90": {
+        "description": "90-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 90,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_100": {
+        "description": "100-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 100,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_110": {
+        "description": "110-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 110,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_120": {
+        "description": "120-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 120,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_130": {
+        "description": "130-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 130,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_140": {
+        "description": "140-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 140,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_150": {
+        "description": "150-shot prompting",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 150,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5_shot_200": {
+        "description": "200-shot prompting - maximum",
+        "wave": "wave5_ext",
+        "crucial_params": ["n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 200,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+}
+
+# ==============================================================================
+# WAVE 5b: TEMPERATURE WITH OPTIMAL N_SHOT=60 (5 configs)
+# Tests temperature interaction with optimal prompting
+# ==============================================================================
+
+WAVE5B_TEMP_NSHOT60 = {
+    "W5b_temp03_n60": {
+        "description": "Temperature 0.3 with optimal n_shot=60",
+        "wave": "wave5b_temp",
+        "crucial_params": ["temperature", "n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 60,
+            "temperature": 0.3,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5b_temp06_n60": {
+        "description": "Temperature 0.6 with optimal n_shot=60",
+        "wave": "wave5b_temp",
+        "crucial_params": ["temperature", "n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 60,
+            "temperature": 0.6,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5b_temp09_n60": {
+        "description": "Temperature 0.9 with optimal n_shot=60",
+        "wave": "wave5b_temp",
+        "crucial_params": ["temperature", "n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 60,
+            "temperature": 0.9,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5b_temp12_n60": {
+        "description": "Temperature 1.2 with optimal n_shot=60",
+        "wave": "wave5b_temp",
+        "crucial_params": ["temperature", "n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 60,
+            "temperature": 1.2,
+            "max_clusters": 8,
+            "prompts_per_cluster": 12,
+            "samples_per_prompt": 7,
+        }
+    },
+    "W5b_temp15_n60": {
+        "description": "Temperature 1.5 with optimal n_shot=60",
+        "wave": "wave5b_temp",
+        "crucial_params": ["temperature", "n_shot"],
+        "overrides": {
+            "disable_quality_gate": True,
+            "n_shot": 60,
+            "temperature": 1.5,
             "max_clusters": 8,
             "prompts_per_cluster": 12,
             "samples_per_prompt": 7,
@@ -564,6 +826,8 @@ ALL_CONFIGS: Dict[str, Dict[str, Any]] = {
     **WAVE3_FILTERS,
     **WAVE4_TARGETING,
     **WAVE5_PROMPTING,
+    **WAVE5_EXTENDED_NSHOT,  # Extended many-shot experiments
+    **WAVE5B_TEMP_NSHOT60,   # Temperature with optimal n_shot=60
     **WAVE6_TEMPERATURE,
     **WAVE7_YOLO,
     **WAVE8_MODELS,
@@ -600,6 +864,428 @@ ENSEMBLES = {
         "description": "All configs focused on problem classes (NEW)",
         "components": ["PF_tier_boost", "PF_high_budget_problem", "PF_optimal_focused",
                       "W1_force_problem", "W4_target_only"],
+    },
+
+    # =========================================================================
+    # PHASE G EXTENDED ENSEMBLES (70 configurations)
+    # =========================================================================
+
+    # Category 1: Weighted Top-K Ensembles (12 tests)
+    # -------------------------------------------------------------------------
+    "WGT_Top3_equal": {
+        "description": "Top 3 configs, equal weights",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3"],
+        "weights": None,  # Equal weights (default)
+    },
+    "WGT_Top3_perf": {
+        "description": "Top 3 configs, performance-weighted",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3"],
+        "weights": [5.98, 5.57, 5.34],  # By delta_pct
+    },
+    "WGT_Top3_exp": {
+        "description": "Top 3 configs, exponential weighting",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3"],
+        "weights": [np.exp(5.98/100), np.exp(5.57/100), np.exp(5.34/100)],  # e^(delta/100)
+    },
+    "WGT_Top5_equal": {
+        "description": "Top 5 configs, equal weights",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "weights": None,
+    },
+    "WGT_Top5_perf": {
+        "description": "Top 5 configs, performance-weighted",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "weights": [5.98, 5.57, 5.34, 5.22, 5.05],
+    },
+    "WGT_Top5_rank": {
+        "description": "Top 5 configs, rank-weighted (1/rank)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "weights": [1/1, 1/2, 1/3, 1/4, 1/5],
+    },
+    "WGT_Top7_equal": {
+        "description": "Top 7 configs, equal weights",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra",
+                      "W7_yolo", "W3_permissive_filter", "CMB3_skip"],
+        "weights": None,
+    },
+    "WGT_Top7_perf": {
+        "description": "Top 7 configs, performance-weighted",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra",
+                      "W7_yolo", "W3_permissive_filter", "CMB3_skip"],
+        "weights": [5.98, 5.57, 5.34, 5.22, 5.05, 4.35, 4.32],
+    },
+    "WGT_Top10_equal": {
+        "description": "Top 10 configs, equal weights (diversity test)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra",
+                      "W7_yolo", "W3_permissive_filter", "CMB3_skip", "W6_temp_low",
+                      "W3_no_dedup", "W2_ultra_vol"],
+        "weights": None,
+    },
+    "WGT_Top10_perf": {
+        "description": "Top 10 configs, performance-weighted",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra",
+                      "W7_yolo", "W3_permissive_filter", "CMB3_skip", "W6_temp_low",
+                      "W3_no_dedup", "W2_ultra_vol"],
+        "weights": [5.98, 5.57, 5.34, 5.22, 5.05, 4.35, 4.32, 3.89, 3.88, 3.55],
+    },
+    "WGT_Prompting_only": {
+        "description": "Prompting-focused ensemble",
+        "components": ["W5_many_shot_10", "W5_few_shot_3"],
+        "weights": [5.98, 5.34],
+    },
+    "WGT_Temperature_only": {
+        "description": "Temperature-focused ensemble",
+        "components": ["W6_temp_high", "W6_temp_low"],
+        "weights": [5.57, 3.89],
+    },
+
+    # Category 2: Diversity-Maximizing Ensembles (10 tests)
+    # -------------------------------------------------------------------------
+    # NOTE: Actual component selection will be done dynamically by diversity_selector.py
+    # These definitions specify the strategy, not the exact components
+    "DIV_k3_maxdist": {
+        "description": "3 configs with maximum diversity (selected by diversity_selector)",
+        "strategy": "diversity",
+        "k": 3,
+        "metric": "euclidean",
+        "components": [],  # Filled dynamically
+    },
+    "DIV_k5_maxdist": {
+        "description": "5 configs with maximum diversity",
+        "strategy": "diversity",
+        "k": 5,
+        "metric": "euclidean",
+        "components": [],
+    },
+    "DIV_k7_maxdist": {
+        "description": "7 configs with maximum diversity",
+        "strategy": "diversity",
+        "k": 7,
+        "metric": "euclidean",
+        "components": [],
+    },
+    "DIV_k5_class_balanced": {
+        "description": "5 configs ensuring all classes covered",
+        "strategy": "class_balanced",
+        "k": 5,
+        "components": [],
+    },
+    "DIV_prompting_temp_vol": {
+        "description": "One best from each strategy type",
+        "strategy": "strategy_diverse",
+        "strategy_types": {
+            "prompting": ["W5_many_shot_10", "W5_few_shot_3", "W5_zero_shot"],
+            "temperature": ["W6_temp_high", "W6_temp_low", "W6_temp_extreme"],
+            "volume": ["V4_ultra", "W2_ultra_vol", "W2_mega_vol"],
+            "filtering": ["W3_permissive_filter", "W7_yolo"],
+            "budget": ["CMB3_skip"],
+        },
+        "components": [],
+    },
+    "DIV_wave_diverse": {
+        "description": "One from each wave, maximized diversity",
+        "strategy": "diversity",
+        "k": 9,  # 9 waves
+        "exclude_wave8": True,  # Wave 8 failed
+        "components": [],
+    },
+    "DIV_ENTJ_ISFJ_focus": {
+        "description": "Configs that excel at different top classes",
+        "strategy": "class_specific",
+        "target_classes": ["ENTJ", "ISFJ", "ISTJ"],
+        "components": [],
+    },
+    "DIV_rare_vs_common": {
+        "description": "Configs good at rare + configs good at common",
+        "strategy": "rare_vs_common",
+        "components": [],
+    },
+    "DIV_orthogonal": {
+        "description": "Configs with orthogonal per-class improvements",
+        "strategy": "diversity",
+        "k": 5,
+        "metric": "cosine",  # Cosine distance for orthogonality
+        "components": [],
+    },
+    "DIV_complementary_pairs": {
+        "description": "Pairs of configs with complementary strengths",
+        "strategy": "complementary",
+        "n_pairs": 3,
+        "components": [],
+    },
+
+    # Category 3: Hybrid Strategy Ensembles (15 tests)
+    # -------------------------------------------------------------------------
+    "HYB_prompt_temp": {
+        "description": "Best prompting + best temperature",
+        "components": ["W5_many_shot_10", "W6_temp_high"],
+    },
+    "HYB_prompt_vol": {
+        "description": "Best prompting + best volume",
+        "components": ["W5_many_shot_10", "V4_ultra"],
+    },
+    "HYB_prompt_filter": {
+        "description": "Best prompting + best filtering",
+        "components": ["W5_many_shot_10", "W3_permissive_filter"],
+    },
+    "HYB_temp_vol": {
+        "description": "Best temperature + best volume",
+        "components": ["W6_temp_high", "V4_ultra"],
+    },
+    "HYB_temp_filter": {
+        "description": "Best temperature + best filtering",
+        "components": ["W6_temp_high", "W3_permissive_filter"],
+    },
+    "HYB_vol_filter": {
+        "description": "Best volume + best filtering",
+        "components": ["V4_ultra", "W3_permissive_filter"],
+    },
+    "HYB_all_strategies": {
+        "description": "One best from each strategy (5 configs)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "V4_ultra", "W3_permissive_filter", "CMB3_skip"],
+    },
+    "HYB_manyshot_hightemp": {
+        "description": "Top 2: W5_many_shot_10 + W6_temp_high",
+        "components": ["W5_many_shot_10", "W6_temp_high"],
+    },
+    "HYB_manyshot_yolo": {
+        "description": "Many-shot + YOLO",
+        "components": ["W5_many_shot_10", "W7_yolo"],
+    },
+    "HYB_manyshot_ultra": {
+        "description": "Many-shot + ultra volume",
+        "components": ["W5_many_shot_10", "V4_ultra"],
+    },
+    "HYB_triple_prompting": {
+        "description": "All prompting strategies",
+        "components": ["W5_many_shot_10", "W5_few_shot_3", "W5_zero_shot"],
+    },
+    "HYB_triple_temp": {
+        "description": "All temperature strategies",
+        "components": ["W6_temp_high", "W6_temp_low", "W6_temp_extreme"],
+    },
+    "HYB_conservative": {
+        "description": "Best configs with quality gates enabled",
+        "components": ["V4_ultra", "CMB3_skip", "CF1_conf_band"],
+    },
+    "HYB_aggressive": {
+        "description": "Best configs with gates disabled (YOLO style)",
+        "components": ["W7_yolo", "W5_many_shot_10", "W6_temp_high"],
+    },
+    "HYB_balanced": {
+        "description": "Mix of conservative and aggressive",
+        "components": ["W5_many_shot_10", "V4_ultra", "W7_yolo"],
+    },
+
+    # Category 4: Deduplication-Based Ensembles (8 tests)
+    # -------------------------------------------------------------------------
+    "DEDUP_Top5_sim095": {
+        "description": "Top 5, cosine_sim > 0.95 removed",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "dedup_method": "similarity",
+        "dedup_params": {"threshold": 0.95, "method": "cosine"},
+    },
+    "DEDUP_Top5_sim098": {
+        "description": "Top 5, cosine_sim > 0.98 removed (more permissive)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "dedup_method": "similarity",
+        "dedup_params": {"threshold": 0.98, "method": "cosine"},
+    },
+    "DEDUP_Top5_classwise": {
+        "description": "Top 5, deduplicate per class",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "dedup_method": "classwise",
+        "dedup_params": {"threshold": 0.95, "method": "cosine"},
+    },
+    "DEDUP_Top5_cluster": {
+        "description": "Top 5, cluster and keep centroids",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "dedup_method": "clustering",
+        "dedup_params": {"n_clusters": None, "keep_strategy": "centroid"},
+    },
+    "DEDUP_WaveChampions_sim095": {
+        "description": "ENS_WaveChampions with dedup",
+        "components": ["W1_force_problem", "W2_ultra_vol", "W3_no_dedup", "W4_target_only", "W9_contrastive"],
+        "dedup_method": "similarity",
+        "dedup_params": {"threshold": 0.95, "method": "cosine"},
+    },
+    "DEDUP_diverse_k7": {
+        "description": "7 diverse configs with dedup (DIV_k7_maxdist + dedup)",
+        "strategy": "diversity",
+        "k": 7,
+        "components": [],  # Filled by diversity_selector
+        "dedup_method": "similarity",
+        "dedup_params": {"threshold": 0.95, "method": "cosine"},
+    },
+    "DEDUP_hybrid_all": {
+        "description": "HYB_all_strategies with dedup",
+        "components": ["W5_many_shot_10", "W6_temp_high", "V4_ultra", "W3_permissive_filter", "CMB3_skip"],
+        "dedup_method": "similarity",
+        "dedup_params": {"threshold": 0.95, "method": "cosine"},
+    },
+    "DEDUP_aggressive": {
+        "description": "Top 10 configs, aggressive dedup (sim > 0.90)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra",
+                      "W7_yolo", "W3_permissive_filter", "CMB3_skip", "W6_temp_low",
+                      "W3_no_dedup", "W2_ultra_vol"],
+        "dedup_method": "similarity",
+        "dedup_params": {"threshold": 0.90, "method": "cosine"},
+    },
+
+    # Category 5: Class-Targeted Ensembles (12 tests)
+    # -------------------------------------------------------------------------
+    # A. Rare Class Focus (with MLP_512_256_128)
+    "RARE_MLP_massive": {
+        "description": "RARE_massive_oversample (best for ESFJ) + MLP classifier",
+        "components": ["RARE_massive_oversample"],
+        "classifier": "MLP_512_256_128",
+    },
+    "RARE_MLP_all": {
+        "description": "All 5 RARE configs + MLP classifier",
+        "components": ["RARE_massive_oversample", "RARE_high_temperature", "RARE_yolo_extreme",
+                      "RARE_contrastive_transfer", "RARE_few_shot_expert"],
+        "classifier": "MLP_512_256_128",
+    },
+    "RARE_MLP_top5_standard": {
+        "description": "Top 5 standard configs + MLP for rare classes",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "classifier": "MLP_512_256_128",
+    },
+    "RARE_hybrid_MLP": {
+        "description": "Top 3 standard + 2 rare-focused + MLP",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3",
+                      "RARE_massive_oversample", "RARE_high_temperature"],
+        "classifier": "MLP_512_256_128",
+    },
+
+    # B. Top Class Optimization
+    "TOP_ENTJ_focus": {
+        "description": "Configs where ENTJ improves most",
+        "components": ["W5_many_shot_10", "W7_yolo", "W3_permissive_filter", "W1_no_gate"],
+    },
+    "TOP_ISTJ_focus": {
+        "description": "Configs where ISTJ improves most",
+        "components": ["W7_yolo", "W1_low_gate", "W6_temp_low", "W2_ultra_vol"],
+    },
+    "TOP_ISFJ_focus": {
+        "description": "Configs where ISFJ improves most",
+        "components": ["W6_temp_high", "V4_ultra", "W5_few_shot_3", "W3_permissive_filter"],
+    },
+    "TOP_all_common": {
+        "description": "Ensemble optimized for all common classes",
+        "components": ["W5_many_shot_10", "W6_temp_high", "V4_ultra", "W7_yolo"],
+    },
+
+    # C. Balanced Class Coverage
+    "BAL_16class_coverage": {
+        "description": "One config per class (best for that class)",
+        "strategy": "per_class_best",
+        "components": [],  # Filled dynamically (16 configs, one per class)
+    },
+    "BAL_weighted_need": {
+        "description": "Weight by inverse baseline F1 (help struggling classes)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "weighting_strategy": "inverse_baseline",
+    },
+    "BAL_equal_improvement": {
+        "description": "Configs with most uniform per-class improvements",
+        "strategy": "min_variance",
+        "components": [],  # Filled dynamically
+    },
+    "BAL_rare_plus_common": {
+        "description": "50% rare class configs + 50% common class configs",
+        "components": ["RARE_massive_oversample", "RARE_high_temperature",
+                      "W5_many_shot_10", "W6_temp_high"],
+    },
+
+    # Category 6: Advanced Combination Strategies (8 tests)
+    # -------------------------------------------------------------------------
+    # 6A. Stacking Ensembles
+    "STACK_Top5_LogReg": {
+        "description": "Top 5 configs, LogReg meta-classifier (Level-1)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "ensemble_method": "stacking",
+        "meta_classifier": "LogisticRegression",
+    },
+    "STACK_Top5_MLP": {
+        "description": "Top 5 configs, MLP meta-classifier",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "ensemble_method": "stacking",
+        "meta_classifier": "MLP_256_128",
+    },
+    "STACK_diverse_k7_MLP": {
+        "description": "7 diverse configs, MLP meta-classifier",
+        "strategy": "diversity",
+        "k": 7,
+        "components": [],  # Filled by diversity_selector
+        "ensemble_method": "stacking",
+        "meta_classifier": "MLP_256_128",
+    },
+
+    # 6B. Voting Ensembles
+    "VOTE_Top5_hard": {
+        "description": "Top 5, hard voting (majority)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "ensemble_method": "voting",
+        "voting_type": "hard",
+    },
+    "VOTE_Top5_soft": {
+        "description": "Top 5, soft voting (probability averaging)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+        "ensemble_method": "voting",
+        "voting_type": "soft",
+    },
+    "VOTE_Top7_weighted": {
+        "description": "Top 7, weighted by delta_pct",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra",
+                      "W7_yolo", "W3_permissive_filter", "CMB3_skip"],
+        "ensemble_method": "voting",
+        "voting_type": "weighted",
+        "weights": [5.98, 5.57, 5.34, 5.22, 5.05, 4.35, 4.32],
+    },
+
+    # 6C. Selective Ensemble
+    "SELECT_per_class": {
+        "description": "Best config for each class separately",
+        "ensemble_method": "selective",
+        "selection_strategy": "per_class",
+        "components": [],  # Filled dynamically (16 configs, one per class)
+    },
+    "SELECT_adaptive": {
+        "description": "Choose config based on sample characteristics",
+        "ensemble_method": "selective",
+        "selection_strategy": "adaptive",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra", "W7_yolo"],
+    },
+
+    # Category 7: Experimental & Novel Strategies (5 tests)
+    # -------------------------------------------------------------------------
+    "NOVEL_boosted_rare": {
+        "description": "Oversample rare classes 5x in ensemble",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3"],
+        "rare_boost": 5.0,  # Multiply rare class samples by 5
+    },
+    "NOVEL_temperature_ladder": {
+        "description": "Combine low/med/high temps with equal weight",
+        "components": ["W6_temp_low", "W6_temp_extreme", "W6_temp_high"],
+        "weights": None,  # Equal weights
+    },
+    "NOVEL_nshot_ladder": {
+        "description": "Combine 0/3/5/10-shot configs",
+        "components": ["W5_zero_shot", "W5_few_shot_3", "W5_many_shot_10"],
+        "weights": None,
+    },
+    "NOVEL_confidence_filtered": {
+        "description": "Only include high-confidence synthetics (>0.80)",
+        "components": ["W5_many_shot_10", "W6_temp_high", "W5_few_shot_3", "V4_ultra"],
+        "confidence_threshold": 0.80,
+    },
+    "NOVEL_quality_tiers": {
+        "description": "Separate ensembles for high/med/low quality, then combine",
+        "ensemble_method": "tiered",
+        "tier_high": ["W5_many_shot_10", "W6_temp_high"],
+        "tier_med": ["W5_few_shot_3", "V4_ultra"],
+        "tier_low": ["W7_yolo", "W2_ultra_vol"],
     },
 }
 

@@ -90,7 +90,7 @@ t = \frac{\bar{\delta}}{s_{\delta} / \sqrt{n}}
 \label{eq:ttest}
 \end{equation}
 
-donde $\bar{\delta}$ es la mejora promedio, $s_{\delta}$ su desviación estándar, y $n=15$ el número de folds. Esta prueba evalúa la hipótesis nula de que la mejora promedio es cero. Se reportan p-valores e intervalos de confianza al 95\%. Un resultado se considera estadísticamente significativo cuando p < 0.05.
+donde $\bar{\delta}$ es la mejora promedio, $s_{\delta}$ su desviación estándar, y $n=15$ el número de folds. Esta prueba evalúa la hipótesis nula de que la mejora promedio es cero. Se reportan p-valores e intervalos de confianza al 95\%. Un resultado se considera estadísticamente significativo cuando $p < 0.05$.
 
 %==============================================================================
 \section{Arquitectura del Sistema SMOTE-LLM}
@@ -108,7 +108,7 @@ El sistema ejecuta un pipeline de siete etapas secuenciales:
 \item \textbf{Validación K-Fold estratificada}: División en 5 particiones $\times$ 3 repeticiones = 15 folds.
 \item \textbf{Evaluación línea base}: Entrenamiento del clasificador y cálculo de métricas por clase para cada fold.
 \item \textbf{Control de calidad}: Verificación de pureza y cohesión antes de generar.
-\item \textbf{Generación adaptativa}: Para cada clase objetivo (F1 < 0.40 o n < 500):
+\item \textbf{Generación adaptativa}: Para cada clase objetivo ($F1 < 0.40$ o $n < 500$):
     \begin{itemize}
     \item Agrupamiento adaptativo (K-Means, $K_{max}$=18)
     \item Selección de anclas (medoide por grupo)
@@ -165,11 +165,11 @@ Para determinar el valor óptimo de $K_{max}$, se evaluaron configuraciones desd
 
 \input{Tables/tab_clustering_validation}
 
-El análisis revela que $K_{max}=18$ alcanza el óptimo con una mejora de +1.92\% en Macro F1 (p=0.003). Este resultado refleja un balance entre dos fuerzas opuestas:
+El análisis revela que $K_{max}=18$ alcanza el óptimo con una mejora de +0.40 pp en Macro F1 (p=0.003). Este resultado refleja un balance entre dos fuerzas opuestas:
 
-\textbf{Subagrupamiento} ($K_{max}$ < 5): Valores bajos limitan la capacidad de capturar heterogeneidad intra-clase. Por ejemplo, con $K_{max}=1$ (sin agrupamiento), se selecciona una única ancla para toda la clase, ignorando que los tipos de personalidad manifiestan múltiples subtemas. Los sintéticos generados tienden a concentrarse en el subtema del ancla, dejando otros subtemas sin aumento. La mejora de solo +0.64\% confirma esta limitación.
+\textbf{Subagrupamiento} ($K_{max} < 5$): Valores bajos limitan la capacidad de capturar heterogeneidad intra-clase. Por ejemplo, con $K_{max}=1$ (sin agrupamiento), se selecciona una única ancla para toda la clase, ignorando que los tipos de personalidad manifiestan múltiples subtemas. Los sintéticos generados tienden a concentrarse en el subtema del ancla, dejando otros subtemas sin aumento. La mejora de solo +0.13 pp confirma esta limitación.
 
-\textbf{Sobreagrupamiento} ($K_{max}$ > 18): Valores altos fragmentan excesivamente los grupos. Con $K_{max}=24$, algunos grupos contienen menos de 30 muestras, insuficientes para que el medoide sea representativo. La métrica de silueta (0.037) se mantiene pero la coherencia semántica de los grupos disminuye. La mejora de +1.05\% (p=0.078, no significativo) confirma la degradación.
+\textbf{Sobreagrupamiento} ($K_{max} > 18$): Valores altos fragmentan excesivamente los grupos. Con $K_{max}=24$, algunos grupos contienen menos de 30 muestras, insuficientes para que el medoide sea representativo. La métrica de silueta (0.037) se mantiene pero la coherencia semántica de los grupos disminuye. La mejora de +0.22 pp (p=0.078, no significativo) confirma la degradación.
 
 La configuración óptima $K_{max}=18$ produce grupos con 60-200 muestras cada uno, suficientes para caracterización estadística robusta. La métrica de silueta de 0.037 es modesta pero consistente con la complejidad semántica del corpus. La Figura \ref{fig:clustering_validation} visualiza estas tendencias.
 
@@ -208,11 +208,11 @@ La Tabla \ref{tab:anchor_strategies} presenta los resultados comparativos de las
 
 \input{Tables/tab_anchor_strategies}
 
-Contrariamente a la hipótesis inicial de que el ensemble sería superior, la estrategia de \textbf{medoide} obtiene el mejor resultado con +1.63\% de mejora (p=0.005). Este resultado aparentemente contraintuitivo tiene explicación fundamentada:
+Contrariamente a la hipótesis inicial de que el ensemble sería superior, la estrategia de \textbf{medoide} obtiene el mejor resultado con +0.34 pp de mejora (p=0.005). Este resultado aparentemente contraintuitivo tiene explicación fundamentada:
 
 El medoide combina dos propiedades deseables que las otras estrategias sacrifican parcialmente. Primero, es un punto real del conjunto (no una construcción artificial), garantizando que el ancla sea un texto auténtico de la clase. Segundo, minimiza la distancia promedio a todos los miembros del grupo, asegurando centralidad. Esta combinación de autenticidad y representatividad produce anclas que generan sintéticos coherentes.
 
-La estrategia de filtrado por calidad (+1.09\%, p=0.019) sacrifica representatividad: selecciona puntos en regiones ``limpias'' que pueden ser atípicos de la clase. La estrategia de diversidad (+0.87\%, p=0.045) sacrifica centralidad: los puntos periféricos seleccionados generan sintéticos menos representativos. El ensemble (+1.22\%, p=0.012), aunque combina criterios, diluye la fortaleza del medoide sin eliminar las debilidades de los otros componentes.
+La estrategia de filtrado por calidad (+0.22 pp, p=0.019) sacrifica representatividad: selecciona puntos en regiones ``limpias'' que pueden ser atípicos de la clase. La estrategia de diversidad (+0.20 pp, p=0.045) sacrifica centralidad: los puntos periféricos seleccionados generan sintéticos menos representativos. El ensemble (+0.25 pp, p=0.012), aunque combina criterios, diluye la fortaleza del medoide sin eliminar las debilidades de los otros componentes.
 
 La figura \ref{fig:anchor_strategies} visualiza el rendimiento comparativo de las cuatro estrategias.
 
@@ -258,19 +258,19 @@ w_i = \frac{sim(\mathbf{v}_{ancla}, \mathbf{v}_i)}{\sum_{j=1}^{K} sim(\mathbf{v}
 
 Esta ponderación enfatiza vecinos más similares al ancla, proporcionando contexto relevante sin introducir ruido de vecinos periféricos.
 
-\subsection{Validación de K Vecinos en Contexto}
+\subsection{Validación de K Vecinos para Ponderación}
 \label{subsec:validacion_k}
 
-El parámetro K determina cuántos vecinos se incluyen en el prompt como contexto para el LLM. La Tabla \ref{tab:k_neighbors_validation} presenta el impacto de diferentes valores.
+El parámetro K determina el tamaño del vecindario utilizado en los cálculos de ponderación (Ecuación \ref{eq:weight_neighbors}) y en los filtros de pureza K-NN. Es importante distinguir este parámetro del número de ejemplos textuales mostrados en el prompt, que se evalúa posteriormente en la Sección \ref{sec:prompting_strategies}. La Tabla \ref{tab:k_neighbors_validation} presenta el impacto de diferentes valores de K.
 
 \input{Tables/tab_k_neighbors_validation}
 
-Los resultados muestran un comportamiento no monotónico. Valores muy bajos (K<10) proporcionan contexto insuficiente, limitando la capacidad del LLM de capturar la variabilidad de la clase. Valores intermedios (K=15-25) ofrecen buen balance entre contexto informativo y eficiencia computacional. El valor K=200 alcanza el mejor resultado (+1.60\%, p=0.0085), aunque con rendimientos decrecientes respecto a valores intermedios. La Figura \ref{fig:k_neighbors} visualiza esta relación.
+Los resultados muestran un comportamiento no monotónico. Valores muy bajos ($K<10$) proporcionan contexto insuficiente para los cálculos de ponderación. Valores intermedios (K=15-25) ofrecen buen balance entre precisión y eficiencia computacional. El valor K=200 alcanza el mejor resultado (+0.33 pp, p=0.0085), aunque la mejora marginal respecto a K=25 no justifica el costo computacional adicional en la mayoría de casos. La Figura \ref{fig:k_neighbors} visualiza esta relación.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\textwidth]{Figures/exp03_k_neighbors.pdf}
-\caption{Impacto del número de vecinos K en el contexto del prompt. La mejora en F1 muestra rendimientos decrecientes a partir de K=25.}
+\caption{Impacto del número de vecinos K en los cálculos de ponderación y filtrado. La mejora en F1 muestra rendimientos decrecientes a partir de K=25.}
 \label{fig:k_neighbors}
 \end{figure}
 
@@ -288,7 +288,7 @@ La Tabla \ref{tab:temperature_validation} presenta la validación de este parám
 
 \input{Tables/tab_temperature_validation}
 
-La temperatura $\tau$=0.3 alcanza el mejor resultado (+0.88\%, p=0.027). Este valor bajo produce salidas más determinísticas y coherentes. Temperaturas mayores (0.7-0.9) aumentan la diversidad léxica pero introducen mayor variabilidad semántica, lo cual degrada la tasa de aceptación en los filtros posteriores.
+La temperatura $\tau$=0.3 alcanza el mejor resultado (+0.18 pp, p=0.027). Este valor bajo produce salidas más determinísticas y coherentes. Temperaturas mayores (0.7-0.9) aumentan la diversidad léxica pero introducen mayor variabilidad semántica, lo cual degrada la tasa de aceptación en los filtros posteriores.
 
 \subsection{Validación de Presupuesto}
 \label{subsec:validacion_presupuesto}
@@ -306,7 +306,7 @@ La Tabla \ref{tab:budget_validation} presenta los resultados de validación para
 
 \input{Tables/tab_budget_validation}
 
-El presupuesto de 20\% alcanza el mejor resultado (+2.35\%, p=0.0063). Presupuestos mayores (25-30\%) no producen mejoras significativas adicionales, sugiriendo saturación del beneficio del aumento. Presupuestos menores (5-10\%) subexplotan el potencial de mejora.
+El presupuesto de 20\% alcanza el mejor resultado (+0.48 pp, p=0.0063). Presupuestos mayores (25-30\%) no producen mejoras significativas adicionales, sugiriendo saturación del beneficio del aumento. Presupuestos menores (5-10\%) subexplotan el potencial de mejora.
 
 %==============================================================================
 \section{Componente 4: Filtrado Multi-Nivel}
@@ -322,7 +322,7 @@ El filtrado en cascada implementa el principio de defensa en profundidad: cada e
 El pipeline procesa cada sintético mediante cuatro etapas secuenciales. El rechazo en cualquier etapa descarta el candidato inmediatamente, evitando cómputo innecesario:
 
 \begin{enumerate}
-\item \textbf{Filtro de longitud} ($O(1)$): Verifica que el texto tenga entre 10 y 200 palabras. Textos muy cortos (<10 palabras) carecen de contenido discriminativo para distinguir entre tipos de personalidad. Textos muy largos (>200 palabras) frecuentemente contienen repeticiones o divagaciones introducidas por el LLM al intentar extender la generación. Este filtro rechaza aproximadamente el 8\% de los candidatos y es computacionalmente trivial.
+\item \textbf{Filtro de longitud} ($O(1)$): Verifica que el texto tenga entre 10 y 200 palabras. Textos muy cortos ($<$10 palabras) carecen de contenido discriminativo para distinguir entre tipos de personalidad. Textos muy largos ($>$200 palabras) frecuentemente contienen repeticiones o divagaciones introducidas por el LLM al intentar extender la generación. Este filtro rechaza aproximadamente el 8\% de los candidatos y es computacionalmente trivial.
 
 \item \textbf{Filtro de similaridad} ($O(n)$): Calcula la similaridad coseno promedio entre el embedding del sintético y sus K=15 vecinos más cercanos dentro de la clase. El umbral $\theta_{sim} \geq 0.65$ verifica que el sintético resida en una región poblada del espacio semántico. Un sintético aislado (baja similaridad con vecinos) probablemente representa contenido anómalo generado por alucinación del LLM. Este filtro rechaza aproximadamente el 15\% de los candidatos restantes.
 
@@ -336,11 +336,11 @@ La tasa de aceptación acumulada es aproximadamente 20\%, lo cual implica que se
 \subsection{Validación de Cascada de Filtros}
 \label{subsec:validacion_cascada}
 
-La Tabla \ref{tab_filter_cascade} compara configuraciones con diferente número de filtros activos.
+La Tabla \ref{tab:filter_cascade} compara configuraciones con diferente número de filtros activos.
 
 \input{Tables/tab_filter_cascade}
 
-Los resultados demuestran que cada filtro adicional mejora la calidad del conjunto sintético final. La cascada completa (4 filtros) alcanza +1.76\% de mejora (p=0.0009). La tasa de aceptación decrece con más filtros (de 92\% con solo longitud a 20\% con cascada completa), pero la calidad de los sintéticos aceptados aumenta sustancialmente. La Figura \ref{fig:filter_cascade} visualiza esta relación inversa entre cantidad y calidad.
+Los resultados demuestran que cada filtro adicional mejora la calidad del conjunto sintético final. La cascada completa (4 filtros) alcanza +0.36 pp de mejora (p=0.0009). La tasa de aceptación decrece con más filtros (de 92\% con solo longitud a 20\% con cascada completa), pero la calidad de los sintéticos aceptados aumenta sustancialmente. La Figura \ref{fig:filter_cascade} visualiza esta relación inversa entre cantidad y calidad.
 
 \begin{figure}[htbp]
 \centering
@@ -352,13 +352,13 @@ Los resultados demuestran que cada filtro adicional mejora la calidad del conjun
 \subsection{Sistema de Umbrales Adaptativos}
 \label{subsec:umbrales_adaptativos}
 
-Los umbrales de los filtros varían según la pureza del ancla condicionante. En regiones de alta superposición entre clases (pureza < 0.35), los umbrales se elevan para aceptar solo sintéticos inequívocamente pertenecientes a la clase. En regiones de alta pureza (>0.50), los umbrales se relajan permitiendo mayor diversidad.
+Los umbrales de los filtros varían según la pureza del ancla condicionante. En regiones de alta superposición entre clases (pureza $<$ 0.35), los umbrales se elevan para aceptar solo sintéticos inequívocamente pertenecientes a la clase. En regiones de alta pureza ($>$0.50), los umbrales se relajan permitiendo mayor diversidad.
 
 La Tabla \ref{tab:adaptive_thresholds} presenta la validación de diferentes estrategias de umbralización.
 
 \input{Tables/tab_adaptive_thresholds}
 
-La estrategia de relajación estricta alcanza el mejor resultado (+1.13\%, p=0.019). Esta estrategia comienza con umbrales estrictos y los relaja progresivamente solo si la tasa de aceptación cae por debajo de un mínimo (15\%), evitando desperdiciar completamente el costo de generación.
+La estrategia de relajación estricta alcanza el mejor resultado (+0.23 pp, p=0.019). Esta estrategia comienza con umbrales estrictos y los relaja progresivamente solo si la tasa de aceptación cae por debajo de un mínimo (15\%), evitando desperdiciar completamente el costo de generación.
 
 %==============================================================================
 \section{Componente 5: Ponderación de Muestras Sintéticas}
@@ -378,13 +378,13 @@ La Tabla \ref{tab:weight_validation} compara diferentes configuraciones de peso.
 
 \input{Tables/tab_weight_validation}
 
-Contrariamente a la intuición convencional, el peso $w$=1.0 alcanza el mejor resultado con +3.17\% de mejora (p<0.0001). Este hallazgo contradice la práctica común en aumento de datos de asignar pesos reducidos a sintéticos (típicamente 0.5).
+Contrariamente a la intuición convencional, el peso $w$=1.0 alcanza el mejor resultado con +0.65 pp de mejora ($p<0.0001$). Este hallazgo contradice la práctica común en aumento de datos de asignar pesos reducidos a sintéticos (típicamente 0.5).
 
 La explicación radica en la arquitectura del sistema. La cascada de cuatro filtros ya implementa un control de calidad riguroso: solo el 20\% de los candidatos generados supera todas las etapas. Los sintéticos aceptados han demostrado: (1) longitud apropiada, (2) similaridad con vecinos de la clase, (3) pureza K-NN aceptable, y (4) coherencia con el ancla condicionante. Aplicar un peso reducido adicional penaliza doblemente a sintéticos que ya pasaron validación exhaustiva.
 
-Desde la perspectiva del gradiente de la función de pérdida, un peso $w<1$ reduce la magnitud de las actualizaciones de parámetros inducidas por sintéticos. Si los sintéticos son informativos, esta reducción ralentiza el aprendizaje de patrones discriminativos. El experimento demuestra que los sintéticos validados son suficientemente informativos para merecer contribución plena.
+Desde la perspectiva del gradiente de la función de pérdida, un peso $w < 1$ reduce la magnitud de las actualizaciones de parámetros inducidas por sintéticos. Si los sintéticos son informativos, esta reducción ralentiza el aprendizaje de patrones discriminativos. El experimento demuestra que los sintéticos validados son suficientemente informativos para merecer contribución plena.
 
-Los pesos intermedios (0.5-0.7) producen mejoras modestas (+1.8\% a +2.5\%), confirmando que los sintéticos aportan valor incluso con contribución parcial. Sin embargo, el peso unitario maximiza la extracción de información. La Figura \ref{fig:weight_validation} ilustra esta relación monotónica entre peso y mejora.
+Los pesos intermedios (0.5-0.7) producen mejoras modestas (+0.36 pp a +0.55 pp), confirmando que los sintéticos aportan valor incluso con contribución parcial. Sin embargo, el peso unitario maximiza la extracción de información. La Figura \ref{fig:weight_validation} ilustra esta relación monotónica entre peso y mejora.
 
 \begin{figure}[htbp]
 \centering
@@ -402,16 +402,16 @@ El impacto del aumento no es uniforme: varía sistemáticamente según el rendim
 
 Los resultados revelan un patrón claro de beneficio diferenciado:
 
-\textbf{Clases de nivel bajo} (F1 < 0.20, 9 clases): Muestran mejoras sustanciales de +5.93\% en promedio, aunque con alta variabilidad (desviación estándar 13.5\%). Las clases más beneficiadas son ISTJ (+32.0\%), ENTJ (+27.3\%) e ISFJ (+6.2\%). Estas clases tienen dos características en común: (1) escasez de ejemplos de entrenamiento (<250 muestras), y (2) alta superposición semántica con clases vecinas. Los sintéticos aportan masa crítica de ejemplos discriminativos que el clasificador no podía aprender de los datos originales.
+\textbf{Clases de nivel bajo} ($F1 < 0.20$, 9 clases): Muestran mejoras sustanciales de +1.21 pp en promedio, aunque con alta variabilidad (desviación estándar 2.76 pp). Las clases más beneficiadas son ISTJ (+4.5 pp), ENTJ (+4.3 pp) e ISFJ (+3.5 pp). Estas clases tienen dos características en común: (1) escasez de ejemplos de entrenamiento ($<$250 muestras), y (2) alta superposición semántica con clases vecinas. Los sintéticos aportan masa crítica de ejemplos discriminativos que el clasificador no podía aprender de los datos originales.
 
-\textbf{Clases de nivel intermedio} (F1 entre 0.20 y 0.45, 6 clases): Muestran mejoras marginales de +0.06\% con variabilidad mínima (0.6\%). Estas clases ya disponen de suficientes ejemplos para que el clasificador aprenda sus patrones principales. Los sintéticos adicionales aportan información redundante.
+\textbf{Clases de nivel intermedio} (F1 entre 0.20 y 0.45, 6 clases): Muestran mejoras marginales de +0.01 pp con variabilidad mínima (0.12 pp). Estas clases ya disponen de suficientes ejemplos para que el clasificador aprenda sus patrones principales. Los sintéticos adicionales aportan información redundante.
 
-\textbf{Clases de nivel alto} (F1 $\geq$ 0.45, 1 clase): Solo INFP alcanza este nivel, con mejora de +0.11\%. Esta clase mayoritaria (1,832 muestras, 21.1\% del corpus) ya está saturada de ejemplos. El aumento no puede mejorar lo que ya funciona bien.
+\textbf{Clases de nivel alto} (F1 $\geq$ 0.45, 1 clase): Solo INFP alcanza este nivel, con mejora de +0.02 pp. Esta clase mayoritaria (1,832 muestras, 21.1\% del corpus) ya está saturada de ejemplos. El aumento no puede mejorar lo que ya funciona bien.
 
 Este análisis estratificado tiene implicaciones prácticas importantes: el aumento sintético debería focalizarse exclusivamente en clases con bajo rendimiento línea base. Aplicar aumento a clases de rendimiento intermedio o alto consume presupuesto computacional sin beneficio proporcional. Una estrategia adaptativa que concentre recursos en las clases más necesitadas maximizaría la relación costo-beneficio del sistema.
 
 %==============================================================================
-\section{Configuración Óptima Final}
+\section{Configuración Óptima}
 \label{sec:config_optima}
 
 \subsection{Resumen de Parámetros Óptimos}
@@ -423,11 +423,11 @@ La Tabla \ref{tab:summary_optimal} presenta la configuración óptima combinada,
 
 La configuración óptima combina cinco decisiones de diseño clave. El agrupamiento con $K_{max}=18$ permite capturar la heterogeneidad intra-clase sin fragmentar excesivamente los grupos. El contexto amplio de K=200 vecinos proporciona al LLM suficiente información semántica para generar sintéticos coherentes. La temperatura $\tau=0.9$ favorece diversidad controlada en las generaciones. El presupuesto del 20\% garantiza cobertura amplia sin saturar el clasificador. Los pesos diferenciados por nivel (2.0/0.8/0.3) priorizan las clases que más beneficio obtienen del aumento.
 
-El resultado combinado alcanza \textbf{+1.24\% de mejora en Macro F1} (p=0.000268), con un intervalo de confianza del 95\% entre +0.75\% y +1.73\%. La tasa de victorias de 86.7\% indica que 13 de los 15 pliegues mostraron mejora. Esta mejora es estadísticamente altamente significativa (p < 0.001).
+El resultado combinado alcanza \textbf{+1.24 pp de mejora en Macro F1} (p=0.000268), con un intervalo de confianza del 95\% entre +0.75 pp y +1.73 pp. La tasa de victorias de 86.7\% indica que 13 de los 15 pliegues mostraron mejora. Esta mejora es estadísticamente altamente significativa ($p < 0.001$).
 
-Comparando con la configuración por defecto, la configuración óptima logra 3× más mejora: +1.24\% vs +0.41\%. Además, la configuración por defecto no alcanzaba significancia estadística (p=0.08), mientras que la óptima es altamente significativa.
+Comparando con la configuración por defecto, la configuración óptima logra 3× más mejora: +1.24 pp vs +0.41 pp. Además, la configuración por defecto no alcanzaba significancia estadística (p=0.08), mientras que la óptima es altamente significativa.
 
-La Figura \ref{fig:optimal_comparison} presenta la comparación directa entre la configuración por defecto y la configuración óptima (parámetros validados). El panel izquierdo muestra la diferencia en mejora promedio: la configuración por defecto logra +0.41\% (no significativo, p=0.080) mientras que la óptima alcanza +1.24\% (altamente significativo, p=0.000268). La barra de error indica el intervalo de confianza del 95\%. El panel derecho desglosa los resultados por iteración de validación cruzada, revelando que la configuración óptima supera a la por defecto en 13 de los 15 pliegues (tasa de victorias 86.7\% vs 73.3\%).
+La Figura \ref{fig:optimal_comparison} presenta la comparación directa entre la configuración por defecto y la configuración óptima (parámetros validados). El panel izquierdo muestra la diferencia en mejora promedio: la configuración por defecto logra +0.41 pp (no significativo, p=0.080) mientras que la óptima alcanza +1.24 pp (altamente significativo, p=0.000268). La barra de error indica el intervalo de confianza del 95\%. El panel derecho desglosa los resultados por iteración de validación cruzada, revelando que la configuración óptima supera a la por defecto en 13 de los 15 pliegues (tasa de victorias 86.7\% vs 73.3\%).
 
 \begin{figure}[htbp]
 \centering
@@ -441,7 +441,7 @@ La Figura \ref{fig:summary_experiments} muestra los resultados de los experiment
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\textwidth]{Figures/summary_all_significant.pdf}
-\caption{Resultados de experimentos de validación individual. El color indica significancia: naranja (p<0.001), verde (p<0.01), azul (p<0.05). Estos experimentos identificaron los parámetros óptimos que luego se combinaron.}
+\caption{Resultados de experimentos de validación individual. El color indica significancia: naranja ($p<0.001$), verde ($p<0.01$), azul ($p<0.05$). Estos experimentos identificaron los parámetros óptimos que luego se combinaron.}
 \label{fig:summary_experiments}
 \end{figure}
 
@@ -474,8 +474,336 @@ Validación & K-Fold 5$\times$3 & Robustez estadística \\
 \end{tabular}
 \end{table}
 
-\subsection{Consideraciones de Implementación}
-\label{subsec:consideraciones}
+%==============================================================================
+\section{Estrategias de Prompting para Generación Sintética}
+\label{sec:prompting_strategies}
+
+Los componentes descritos en las secciones anteriores establecen la arquitectura fundamental del sistema SMOTE-LLM. La validación de K vecinos (Sección \ref{subsec:validacion_k}) optimizó el tamaño del vecindario para cálculos de ponderación y filtrado, estableciendo K=200 como valor óptimo (+0.33 pp). Sin embargo, ese parámetro determina cuántos vecinos se utilizan en los \textit{cálculos internos} del sistema, no cuántos ejemplos se muestran textualmente al LLM.
+
+Esta sección aborda una pregunta distinta: ¿cuántos ejemplos deben incluirse \textit{explícitamente} en el prompt como demostraciones para el modelo de lenguaje? Este número de ejemplos (denominado \textit{n-shot}) afecta directamente la capacidad de aprendizaje en contexto del LLM. Los experimentos mantienen K=200 para ponderación mientras varían el número de ejemplos textuales.
+
+\subsection{Fundamento del Aprendizaje en Contexto}
+\label{subsec:fundamento_prompting}
+
+Los modelos de lenguaje de gran escala exhiben capacidades de aprendizaje en contexto (\textit{in-context learning}): pueden adaptar su comportamiento basándose en ejemplos proporcionados en el prompt, sin actualizar sus parámetros internos. Esta propiedad emergente, documentada por Brown et al. (2020) en GPT-3, permite que el modelo aprenda patrones específicos de la tarea a partir de demostraciones.
+
+En el contexto de generación sintética para clasificación de texto, el aprendizaje en contexto tiene implicaciones directas. Cuando el prompt incluye múltiples ejemplos de una clase específica (por ejemplo, publicaciones de usuarios INTJ), el modelo puede inferir patrones estilísticos, vocabulario característico y estructuras discursivas propias de esa categoría. La hipótesis de trabajo es que más ejemplos en contexto proporcionan información más rica, permitiendo generaciones de mayor coherencia semántica.
+
+Las estrategias de prompting se clasifican según el número de ejemplos incluidos. El prompting sin ejemplos (zero-shot) solo proporciona instrucciones de tarea. El prompting con pocos ejemplos (few-shot, típicamente 1-5) incluye algunas demostraciones. El prompting con muchos ejemplos (many-shot, $>$5) maximiza el contexto disponible dentro del límite de tokens del modelo.
+
+\subsection{Diseño Experimental}
+\label{subsec:diseno_prompting}
+
+Para evaluar el impacto del número de ejemplos en contexto, se diseñaron tres configuraciones experimentales manteniendo constantes todos los demás parámetros del sistema (agrupamiento $K_{max}$=18, estrategia de anclas medoide, cascada de 4 filtros, peso unitario).
+
+La configuración de prompting sin ejemplos incluye únicamente la instrucción de tarea y el texto del ancla como referencia principal. El modelo debe inferir las características de la clase exclusivamente a partir de un único ejemplo.
+
+La configuración de prompting con 3 ejemplos añade tres vecinos cercanos del ancla ordenados por similaridad coseno. Estos ejemplos proporcionan contexto adicional sobre la variabilidad aceptable dentro de la clase.
+
+Las configuraciones de many-shot prompting (10, 20, 50, 100 y 200 ejemplos) exploran el límite superior del contexto. GPT-4o-mini con 128K tokens de contexto permite incluir hasta 200 ejemplos truncados a 200 caracteres cada uno ($\sim$10,000 tokens de ejemplos).
+
+\subsection{Resultados de Estrategias de Prompting}
+\label{subsec:resultados_prompting}
+
+La Tabla \ref{tab:prompting_comparison} presenta los resultados comparativos de las estrategias de prompting evaluadas mediante validación cruzada K-Fold (5 particiones $\times$ 3 repeticiones = 15 folds), desde zero-shot hasta 200 ejemplos.
+
+\input{Tables/tab_prompting_comparison}
+
+Los resultados revelan un patrón no monótono con punto óptimo en 60 ejemplos. El prompting con 60 ejemplos alcanza \textbf{+1.67 pp} (p = 0.0003), superando significativamente al prompting con 100 ejemplos (+1.36 pp). Configuraciones con más ejemplos muestran degradación: 200 ejemplos alcanza solo +1.12 pp, confirmando saturación del contexto.
+
+La progresión muestra un patrón interesante: zero-shot (+0.37 pp, no significativo), 3-shot (+1.09 pp), 10-shot (+1.22 pp), 20-shot (+1.27 pp), hasta el pico óptimo de 60-shot (+1.67 pp). Notablemente, 70-shot cae a +0.91 pp antes de recuperarse parcialmente en 80-100 ejemplos (+1.36 pp). La diferencia de 1.30 pp entre zero-shot y 60-shot evidencia la importancia crítica del contexto.
+
+La degradación después de 60 ejemplos tiene explicación fundamentada: el exceso de ejemplos introduce ruido y variabilidad que dificulta al modelo identificar los patrones centrales de la clase. Además, ejemplos muy distantes del ancla (posiciones 60+ en el ranking de similitud) pueden pertenecer a subclusters semánticos diferentes, confundiendo la generación.
+
+Desde la perspectiva de calidad de generación, los sintéticos producidos con many-shot prompting exhiben mayor coherencia temática y estilística. La tasa de aceptación en los filtros de cascada aumenta de 15\% (sin ejemplos) a 28\% (10+ ejemplos), indicando que más contexto produce candidatos de mayor calidad inicial.
+
+\subsection{Refinamiento de Temperatura con Contexto Amplio}
+\label{subsec:temperatura_refinada}
+
+La validación de temperatura presentada en la Sección \ref{subsec:validacion_temperatura} identificó $\tau$=0.3 como óptimo para la configuración base. No obstante, la interacción entre temperatura y cantidad de ejemplos en contexto motivó una revalidación específica. La hipótesis era que con más contexto, el modelo podría beneficiarse de mayor diversidad en las generaciones.
+
+La Tabla \ref{tab:temperatura_refinada} presenta los resultados de esta validación extendida.
+
+\input{Tables/tab_temperatura_refinada}
+
+Los resultados revelan una interacción significativa entre temperatura y cantidad de contexto. Con prompting óptimo de 60 ejemplos, la temperatura $\tau$=0.3 alcanza +1.18 pp (p = 0.00012), seguido por $\tau$=1.2 (+1.12 pp, p = 0.0013). Notablemente, $\tau$=0.9 resulta intermedio (+0.92 pp), mostrando un patrón no-monotónico donde los extremos de temperatura superan al valor estándar.
+
+Este hallazgo tiene explicación fundamentada. Cuando el contexto es muy abundante (60 ejemplos), el modelo dispone de suficiente información para generar sintéticos de alta calidad. Una temperatura baja ($\tau$=0.3) maximiza la adherencia a los patrones proporcionados por los ejemplos, generando sintéticos altamente fieles al estilo de la clase. Los múltiples ejemplos proporcionan diversidad implícita, haciendo innecesaria la variabilidad adicional que aportan temperaturas altas.
+
+El patrón no-monotónico (con temperaturas extremas superando a la estándar) sugiere que con contexto abundante, el modelo se beneficia de generar texto muy fiel a los ejemplos (temperatura baja) más que de explorar variaciones (temperatura alta).
+
+\subsection{Implicaciones para el Sistema}
+\label{subsec:implicaciones_prompting}
+
+La combinación óptima de prompting con 60 ejemplos y temperatura $\tau$=0.3 representa la configuración refinada del sistema. Sin embargo, el prompting base de 60 ejemplos (+1.67 pp con temperatura por defecto) supera ligeramente a la configuración con temperatura optimizada (+1.18 pp), sugiriendo que la temperatura por defecto del modelo ya era cercana al óptimo para este contexto.
+
+El costo adicional de incluir más ejemplos en el prompt es moderado pero justificable. Con 60 ejemplos truncados a 200 caracteres, el incremento en tokens de entrada representa aproximadamente \$0.0003 adicionales por generación. Considerando la mejora de +0.45 pp respecto a 10 ejemplos, el costo-beneficio es muy favorable.
+
+La principal limitación es el límite de contexto del modelo. GPT-4o-mini admite 128,000 tokens, permitiendo hasta 200 ejemplos truncados sin restricciones. La degradación observada con 200 ejemplos no se debe a límites de tokens sino a saturación semántica.
+
+%==============================================================================
+\section{Combinación de Configuraciones mediante Ensembles}
+\label{sec:ensembles}
+
+Las secciones precedentes optimizaron componentes individuales del sistema, identificando la mejor estrategia de prompting con 60 ejemplos (+1.67 pp) como el punto de referencia individual. Una pregunta natural surge: ¿puede la combinación de múltiples configuraciones superar los resultados individuales? Esta sección explora estrategias de ensemble que combinan datos sintéticos de diferentes configuraciones.
+
+\subsection{Hipótesis y Motivación}
+\label{subsec:motivacion_ensembles}
+
+La literatura de aprendizaje automático documenta extensivamente los beneficios de los ensembles. La combinación de múltiples modelos reduce varianza, mitiga sobreajuste, y frecuentemente supera cualquier modelo individual. El principio subyacente es la diversidad: modelos entrenados con diferentes configuraciones cometen errores distintos que se cancelan parcialmente al agregar.
+
+Aplicado al aumento de datos sintéticos, la hipótesis de trabajo propone que diferentes configuraciones de generación (variando prompting, temperatura, volumen) producen conjuntos sintéticos con características complementarias. La concatenación de estos conjuntos podría proporcionar cobertura más amplia del espacio semántico de cada clase.
+
+La diversidad de generación tiene fundamento teórico. Las configuraciones con diferente temperatura producen sintéticos con distinta dispersión en el espacio de embeddings. Las configuraciones con diferente número de ejemplos enfatizan distintos aspectos estilísticos. La combinación podría capturar facetas complementarias de cada clase.
+
+\subsection{Metodología de Construcción de Ensembles}
+\label{subsec:metodologia_ensembles}
+
+Los ensembles se construyen mediante concatenación directa de conjuntos sintéticos. Para cada configuración participante, se ejecuta el pipeline completo de generación y filtrado. Los conjuntos resultantes se unen, aplicando opcionalmente deduplicación para eliminar sintéticos redundantes.
+
+La deduplicación emplea umbral de similaridad coseno: dos sintéticos se consideran duplicados si su similaridad supera 0.95. Este umbral conservador preserva variantes léxicas mientras elimina copias casi idénticas que podrían surgir cuando diferentes configuraciones seleccionan anclas similares.
+
+Se evaluaron cuatro estrategias de ensemble:
+
+\begin{itemize}
+\item \textbf{Ensemble de mejores configuraciones}: Combina los ganadores de cada categoría experimental (prompting 60 ejemplos, temperatura 0.3, sin filtrado). Tres configuraciones, aproximadamente 1,500 sintéticos combinados.
+
+\item \textbf{Ensemble Top-3}: Las tres mejores configuraciones individuales por mejora en F1. Similar composición al anterior pero selección basada únicamente en rendimiento.
+
+\item \textbf{Ensemble enfocado en clases problema}: Configuraciones diseñadas específicamente para mejorar ESFJ, ESFP y ESTJ. Multiplicadores de presupuesto aumentados para estas clases.
+
+\item \textbf{Ensemble extendido Top-5}: Las cinco mejores configuraciones individuales. Mayor volumen pero potencial redundancia.
+\end{itemize}
+
+\subsection{Resultados de Ensembles}
+\label{subsec:resultados_ensembles}
+
+Los ensembles combinan los mejores resultados de tres categorías experimentales: (1) estrategias de prompting (mejor: 60 ejemplos, +1.67 pp), (2) configuraciones de temperatura con contexto óptimo (mejor: $\tau$=0.3, +1.18 pp), y (3) experimentos de filtrado (mejor: sin filtrado, +1.03 pp). La Tabla \ref{tab:ensemble_results} presenta los resultados de las estrategias de ensemble comparadas con la mejor configuración individual.
+
+\input{Tables/tab_ensemble_results}
+
+Contrariamente a la hipótesis inicial, ningún ensemble supera la mejor configuración individual. El ensemble de mejores configuraciones alcanza +0.90 pp (p = 0.004), 0.77 pp por debajo del prompting con 60 ejemplos (+1.67 pp). El ensemble Top-3 obtiene +0.89 pp (p = 0.0002), confirmando la tendencia.
+
+Este resultado aparentemente paradójico tiene explicación fundamentada. A diferencia de los ensembles de modelos (donde diferentes algoritmos capturan patrones complementarios), los ensembles de datos sintéticos adolecen de redundancia estructural.
+
+Primero, todas las configuraciones emplean el mismo modelo de lenguaje (GPT-4o-mini), compartiendo sesgos generativos intrínsecos. Segundo, las anclas frecuentemente coinciden: las mejores anclas (medoides de grupos densos) son seleccionadas por todas las configuraciones. Tercero, los filtros aplican los mismos criterios de aceptación, convergiendo hacia características similares en los sintéticos aceptados.
+
+La combinación de datos sintéticos redundantes diluye las señales discriminativas. Cuando un clasificador entrena con sintéticos de alta calidad mezclados con sintéticos de calidad inferior, el promedio perjudica. La configuración individual óptima produce un conjunto curado de sintéticos, mientras que el ensemble introduce ruido de configuraciones subóptimas.
+
+\subsection{Análisis del Impacto del Volumen}
+\label{subsec:impacto_volumen}
+
+Un hallazgo crítico emerge del análisis de ensembles: el volumen de sintéticos mejora el rendimiento general (Macro F1) pero no resuelve las clases de baja frecuencia. La Tabla \ref{tab:volumen_ensembles} cuantifica esta disociación.
+
+\input{Tables/tab_volumen_ensembles}
+
+La configuración de alto volumen genera aproximadamente 4,200 sintéticos y alcanza +1.07 pp en Macro F1. No obstante, las tres clases problemáticas (ESFJ, ESFP, ESTJ) mantienen mejora de 0.00 pp. El ensemble de mejores configuraciones, con aproximadamente 1,500 sintéticos combinados, muestra el mismo patrón: mejora general de +0.90 pp pero clases problemáticas sin movimiento.
+
+Este resultado tiene implicaciones profundas. El problema de las clases de baja frecuencia no es simplemente escasez de datos: generar cientos de sintéticos adicionales no resuelve el problema. La limitación reside en otro componente del sistema, motivando la investigación de clasificadores alternativos presentada en la siguiente sección.
+
+La Figura \ref{fig:wave_comparison} visualiza el rendimiento comparativo de las diferentes categorías experimentales, evidenciando que los ensembles (barras combinadas) no superan las mejores configuraciones individuales.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{Figures/fig_wave_comparison.pdf}
+\caption{Comparación de categorías experimentales. Las barras muestran la mejora promedio en Macro F1 por categoría. Los ensembles (derecha) no superan las mejores configuraciones individuales de prompting y temperatura.}
+\label{fig:wave_comparison}
+\end{figure}
+
+\subsection{Discusión: Limitaciones de los Ensembles de Datos Sintéticos}
+\label{subsec:limitaciones_ensembles}
+
+Los resultados contradicen la intuición de que ``más datos siempre es mejor''. En el contexto específico de aumento sintético con LLMs, la calidad prevalece sobre la cantidad. Tres factores explican esta observación.
+
+Primero, los filtros de cascada ya optimizan por calidad. Un sintético que supera cuatro filtros secuenciales representa el 20\% superior de candidatos generados. Combinar estos sintéticos de élite con sintéticos de configuraciones menos optimizadas degrada el promedio.
+
+Segundo, la redundancia semántica no aporta información nueva. Diferentes configuraciones que seleccionan anclas similares generan sintéticos en regiones superpuestas del espacio de embeddings. El clasificador no obtiene señales discriminativas adicionales de variantes léxicas del mismo concepto.
+
+Tercero, el desbalance persiste. Aunque los ensembles aumentan el volumen total, las proporciones entre clases se mantienen aproximadamente constantes. Las clases mayoritarias reciben proporcionalmente más sintéticos, perpetuando el desbalance original.
+
+La conclusión práctica es que la optimización de configuración individual supera a las estrategias de combinación. Los recursos computacionales invertidos en generar múltiples conjuntos sintéticos producen mayor retorno cuando se dedican a optimizar una única configuración de alta calidad.
+
+\subsection{Análisis de Mejoras por Clase Individual}
+\label{subsec:mejoras_por_clase}
+
+La Figura \ref{fig:per_class_improvement} presenta el desglose de mejoras en F1 para cada una de las 16 clases MBTI utilizando many-shot prompting. Este análisis revela un patrón crítico: mientras algunas clases muestran mejoras sustanciales (ENTJ +7.59 pp, ISTJ +4.11 pp, ISFJ +3.98 pp), tres clases específicas---ESFJ, ESFP y ESTJ---permanecen completamente sin mejora (0.00 pp).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{Figures/fig_per_class_improvement.pdf}
+\caption{Mejora en F1 por clase individual con many-shot prompting (60 ejemplos). Las barras naranjas identifican las tres clases problemáticas (ESFJ, ESFP, ESTJ) que no exhiben mejora alguna a pesar del aumento sintético. Este patrón motiva la investigación de clasificadores alternativos en la sección siguiente.}
+\label{fig:per_class_improvement}
+\end{figure}
+
+Este hallazgo tiene implicaciones importantes: el aumento sintético beneficia selectivamente a ciertas clases pero es completamente inefectivo para otras. La sección siguiente investiga las causas de este comportamiento y explora estrategias alternativas.
+
+%==============================================================================
+\section{Optimización para Clases de Baja Frecuencia}
+\label{sec:clases_raras}
+
+Las secciones anteriores demostraron que el sistema SMOTE-LLM logra mejoras significativas en Macro F1, alcanzando hasta +1.67 pp con la configuración óptima de prompting (60 ejemplos). No obstante, el análisis de impacto por nivel (Sección \ref{subsec:impacto_tier}) reveló que este beneficio no es uniforme: las clases de baja frecuencia (ESFJ, ESFP, ESTJ con menos de 50 muestras) exhiben sistemáticamente 0\% de mejora.
+
+Esta sección investiga estrategias específicas para resolver estas clases problemáticas, incluyendo sobremuestreo intensivo y clasificadores alternativos.
+
+\subsection{Caracterización del Problema}
+\label{subsec:caracterizacion_problema}
+
+Tres clases del corpus MBTI exhiben comportamiento refractario al aumento sintético:
+
+\begin{itemize}
+\item \textbf{ESFJ} (42 muestras, 0.5\% del corpus): Tipo de personalidad caracterizado por extraversión, sensación, sentimiento y juicio. A pesar de generar hasta 700 sintéticos mediante sobremuestreo intensivo, el F1 por clase permanece en 0.00 con Regresión Logística.
+
+\item \textbf{ESFP} (48 muestras, 0.6\% del corpus): Caracterizado por extraversión, sensación, sentimiento y percepción. Similar al anterior, con 944 sintéticos generados y ninguna mejora detectable.
+
+\item \textbf{ESTJ} (39 muestras, 0.4\% del corpus): La clase más escasa, caracterizada por extraversión, sensación, pensamiento y juicio. Los sintéticos generados no producen mejora mensurable.
+\end{itemize}
+
+El denominador común es la combinación de escasez extrema (menos del 1\% cada una) con superposición semántica significativa. Estas clases comparten tres de cuatro dimensiones con múltiples clases vecinas, generando confusión sistemática en el espacio de embeddings.
+
+La hipótesis inicial atribuía el problema a insuficiencia de datos sintéticos. Si el clasificador no puede aprender patrones discriminativos de 40 ejemplos originales, quizás necesita más sintéticos. Esta hipótesis motivó los experimentos de sobremuestreo intensivo.
+
+\subsection{Estrategias de Sobremuestreo Intensivo}
+\label{subsec:sobremuestreo_intensivo}
+
+Se implementó un multiplicador de presupuesto de 20$\times$ para las tres clases problemáticas. Este multiplicador genera aproximadamente 800-1,000 sintéticos por clase, transformando las proporciones de 0.5\% a aproximadamente 8\% del conjunto de entrenamiento aumentado.
+
+Los resultados con Regresión Logística (clasificador estándar del sistema) fueron parcialmente alentadores:
+
+\begin{itemize}
+\item ESFJ: +0.80 pp de mejora (única clase con respuesta positiva)
+\item ESFP: 0.00 pp (sin cambio)
+\item ESTJ: 0.00 pp (sin cambio)
+\end{itemize}
+
+El sobremuestreo intensivo resolvió parcialmente una de tres clases. ESFJ respondió al aumento masivo, sugiriendo que el problema original era efectivamente escasez de datos. Sin embargo, ESFP y ESTJ permanecieron impermeables, indicando una limitación más fundamental.
+
+Esta observación condujo a una nueva hipótesis: quizás el problema no reside en los datos sino en el clasificador. La Regresión Logística asume separabilidad lineal en el espacio de características. Si las clases problemáticas requieren fronteras de decisión no lineales, ningún aumento de datos lineal resolverá el problema.
+
+\subsection{Hipótesis del Clasificador}
+\label{subsec:hipotesis_clasificador}
+
+Los embeddings semánticos de 768 dimensiones representan un espacio de alta dimensionalidad. La Regresión Logística busca hiperplanos separadores en este espacio. Si las clases problemáticas están distribuidas en regiones que requieren fronteras curvas o combinaciones no lineales de características, el clasificador lineal fallará sistemáticamente.
+
+Las redes neuronales multicapa (MLP) pueden aprender fronteras de decisión arbitrariamente complejas mediante composición de transformaciones no lineales. Un MLP con suficientes capas ocultas puede aproximar cualquier función de clasificación, incluyendo aquellas requeridas para separar clases semánticamente superpuestas.
+
+Adicionalmente, los modelos basados en árboles (XGBoost, LightGBM) ofrecen capacidad no lineal mediante particiones recursivas del espacio de características. Estos modelos son frecuentemente exitosos en problemas tabulares con características de alta dimensionalidad.
+
+\subsection{Evaluación Multi-Clasificador}
+\label{subsec:evaluacion_multiclasificador}
+
+Se evaluaron cinco clasificadores sobre el mismo conjunto de datos sintéticos (sobremuestreo 20$\times$ para clases problemáticas):
+
+\begin{itemize}
+\item \textbf{Regresión Logística}: Clasificador lineal de referencia (línea base del sistema).
+\item \textbf{MLP Profundo (512-256-128)}: Perceptrón multicapa con tres capas ocultas de 512, 256 y 128 neuronas respectivamente. Activación ReLU, dropout 0.3 por capa.
+\item \textbf{MLP Medio (256-128)}: Arquitectura más compacta con dos capas ocultas.
+\item \textbf{XGBoost}: Gradient boosting con 200 árboles, profundidad máxima 8, tasa de aprendizaje 0.1.
+\item \textbf{LightGBM}: Gradient boosting optimizado para velocidad, 200 iteraciones, 31 hojas máximo.
+\end{itemize}
+
+La Tabla \ref{tab:multiclassifier} presenta los resultados comparativos.
+
+\input{Tables/tab_multiclassifier}
+
+Los resultados son contundentes. El MLP Profundo alcanza +4.17 pp de mejora en Macro F1 (p = 0.0010), superando dramáticamente a todos los demás clasificadores. La Regresión Logística logra apenas +0.36 pp (no significativo). Los modelos basados en árboles no solo fallan en mejorar, sino que empeoran: XGBoost obtiene -0.43 pp y LightGBM -0.10 pp.
+
+El contraste entre MLP y árboles requiere explicación. Los modelos de gradient boosting operan mediante particiones axis-aligned del espacio de características. Con 768 dimensiones, las particiones necesarias para separar clases semánticamente superpuestas requerirían profundidad prohibitiva. Además, estos modelos muestran línea base significativamente inferior (0.1788 para XGBoost vs 0.2272 para Regresión Logística), indicando que la arquitectura es fundamentalmente inadecuada para embeddings densos.
+
+El MLP, en cambio, proyecta los embeddings a través de transformaciones aprendidas que pueden alinear las representaciones para facilitar la clasificación. Las capas ocultas actúan como extractores de características que reorganizan el espacio de embeddings de manera óptima para la tarea.
+
+\subsection{Impacto en Clases de Baja Frecuencia}
+\label{subsec:impacto_clases_raras}
+
+El hallazgo más relevante concierne al rendimiento por clase. La Tabla \ref{tab:rare_class_performance} desglosa las mejoras para las tres clases problemáticas.
+
+\input{Tables/tab_rare_class_performance}
+
+El MLP Profundo logra:
+\begin{itemize}
+\item \textbf{ESFJ}: +1.36 pp de mejora, resolviendo completamente el problema.
+\item \textbf{ESTJ}: +0.43 pp de mejora, resultado parcial pero significativo.
+\item \textbf{ESFP}: +0.10 pp de mejora marginal, persistentemente problemática.
+\end{itemize}
+
+Comparando con el mejor ensemble (mejora de 0\% en todas las clases problemáticas), el cambio de clasificador produce mejoras que ninguna estrategia de generación logró. Este resultado confirma la hipótesis del clasificador: el problema de las clases de baja frecuencia reside parcialmente en la incapacidad del clasificador lineal de explotar los datos sintéticos, no en la calidad de los sintéticos mismos.
+
+La Figura \ref{fig:multiclassifier_comparison} visualiza el rendimiento comparativo de los cinco clasificadores.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{Figures/fig_multiclassifier_comparison.pdf}
+\caption{Comparación de clasificadores sobre datos sintéticos de sobremuestreo masivo. El MLP Profundo supera significativamente a todos los demás, incluyendo mejoras sustanciales en clases de baja frecuencia.}
+\label{fig:multiclassifier_comparison}
+\end{figure}
+
+\subsection{Análisis: Superioridad de las Redes Neuronales}
+\label{subsec:analisis_mlp}
+
+Tres factores explican la superioridad del MLP Profundo sobre alternativas:
+
+\textbf{Capacidad de representación}: Las tres capas ocultas (512→256→128) transforman progresivamente los embeddings de 768D hacia representaciones más compactas y discriminativas. Cada capa puede aprender combinaciones no lineales de características que separan clases superpuestas.
+
+\textbf{Regularización efectiva}: El dropout de 0.3 por capa previene sobreajuste a los sintéticos. A diferencia de la Regresión Logística (propensa a sobreajustar en alta dimensionalidad), el MLP con dropout generaliza mejor a nuevas muestras.
+
+\textbf{Explotación de estructura latente}: Los embeddings semánticos codifican relaciones complejas entre palabras y conceptos. El MLP puede aprender a explotar esta estructura para distinguir clases que comparten vocabulario superficial pero difieren en patrones sutiles.
+
+La arquitectura específica (512-256-128) fue seleccionada mediante búsqueda de hiperparámetros. Arquitecturas más profundas (4+ capas) no mostraron mejoras adicionales. Arquitecturas más anchas (1024+) introdujeron sobreajuste. La configuración seleccionada representa un punto óptimo para el tamaño del dataset aumentado.
+
+\subsection{Resumen de Clases Problemáticas}
+\label{subsec:resumen_clases_problema}
+
+La Tabla \ref{tab:rare_class_summary} sintetiza el estado final de las tres clases de baja frecuencia tras aplicar todas las estrategias investigadas.
+
+\input{Tables/tab_rare_class_summary}
+
+El resultado final es mixto pero informativo:
+
+\textbf{ESFJ}: Completamente resuelta. La combinación de sobremuestreo intensivo (20$\times$) con MLP Profundo produce +1.36 pp de mejora. Esta clase respondió tanto al volumen de datos como al cambio de clasificador, sugiriendo que el problema original era multifactorial.
+
+\textbf{ESTJ}: Parcialmente resuelta. El MLP Profundo logra +0.43 pp, mejora modesta pero estadísticamente detectable. La clase permanece desafiante, probablemente debido a su tamaño extremadamente reducido (39 muestras originales) y superposición semántica con ENTJ e ISTJ.
+
+\textbf{ESFP}: No resuelta. A pesar de 992 sintéticos generados y evaluación con cinco clasificadores diferentes, la mejora máxima es +0.10 pp. Esta clase exhibe resistencia excepcional que sugiere limitaciones fundamentales del enfoque basado en texto.
+
+La Figura \ref{fig:rare_class_heatmap} visualiza las mejoras por clase y configuración mediante mapa de calor, evidenciando el patrón diferenciado de respuesta.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{Figures/fig_rare_class_heatmap.pdf}
+\caption{Mapa de calor de mejoras en clases de baja frecuencia. Los colores más intensos indican mayor mejora. ESFJ muestra respuesta consistente al MLP, mientras que ESFP permanece refractaria en todas las configuraciones.}
+\label{fig:rare_class_heatmap}
+\end{figure}
+
+\subsection{Discusión: Limitaciones del Enfoque Basado en Texto}
+\label{subsec:limitaciones_texto}
+
+El caso de ESFP merece análisis específico. Con 48 muestras originales (más que ESFJ con 42), no es la clase más escasa. Los sintéticos generados superan los filtros de calidad con tasas comparables a otras clases. El MLP Profundo funciona correctamente para ESFJ y ESTJ. Sin embargo, ESFP permanece irresoluble.
+
+Dos explicaciones complementarias emergen:
+
+\textbf{Ambigüedad definitoria}: El tipo ESFP (Extravertido-Sensación-Sentimiento-Percepción) describe un perfil de personalidad orientado a la experiencia inmediata y la conexión emocional. En texto, estas características pueden manifestarse de formas muy similares a otros tipos extravertidos (ESFJ, ENFP, ESTP). La superposición semántica podría ser inherentemente alta, haciendo la distinción textual intrínsecamente difícil.
+
+\textbf{Heterogeneidad intra-clase}: Las 48 muestras de ESFP podrían representar múltiples subclusters semánticos sin núcleo común claro. Los sintéticos generados amplifican esta heterogeneidad en lugar de consolidar un patrón discriminativo.
+
+Estas limitaciones sugieren que ciertos problemas de clasificación requieren información más allá del texto. Características paralingüísticas (patrones de puntuación, uso de emoticonos, longitud de oraciones) o metadatos (hora de publicación, frecuencia de posteo) podrían proporcionar señales adicionales necesarias para distinguir ESFP de clases confusoras.
+
+\subsection{Recomendaciones Prácticas}
+\label{subsec:recomendaciones_practicas}
+
+Los hallazgos de esta sección conducen a recomendaciones específicas para problemas similares:
+
+\begin{enumerate}
+\item \textbf{Priorizar optimización de clasificador}: Antes de invertir recursos en generación masiva de sintéticos, evaluar si un clasificador más potente puede explotar mejor los datos existentes. El cambio de Regresión Logística a MLP Profundo produjo mejoras mayores que cualquier estrategia de generación.
+
+\item \textbf{Aplicar sobremuestreo selectivo}: Concentrar recursos de generación en clases específicas que muestren respuesta positiva. El multiplicador 20$\times$ para clases problemáticas es más efectivo que aumentar uniformemente todas las clases.
+
+\item \textbf{Reconocer limitaciones}: Ciertas clases pueden ser intrínsecamente difíciles de distinguir mediante texto. En estos casos, explorar fuentes de información complementarias en lugar de persistir con estrategias que demuestran rendimientos decrecientes.
+
+\item \textbf{Validar interacciones}: La combinación óptima (MLP + sobremuestreo intensivo) no es simplemente aditiva. Evaluar interacciones entre componentes del sistema antes de concluir optimización.
+\end{enumerate}
+
+%==============================================================================
+\section{Consideraciones de Implementación}
+\label{sec:consideraciones}
 
 El sistema requiere Python 3.10+ con las siguientes dependencias principales: \texttt{scikit-learn} 1.3.0 para clasificación y agrupamiento, \texttt{sentence-transformers} 2.2.2 para embeddings semánticos, y \texttt{openai} 1.0.0 para acceso a la API de generación.
 

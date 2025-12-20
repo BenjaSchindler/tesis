@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+\centering
+\caption{Clustering ($K_{max}$) Validation (PyTorch MLP)}
+\label{tab:pytorch_clustering}
+\begin{tabular}{ccccccc}
+\toprule
+$K_{max}$ & Baseline & Augmented & $\Delta$ (pp) & p-value & Win\% & Synth \\
+\midrule
+1 & 0.2468 & 0.2495 & +0.28 & 0.4815 & 53\% & 86 \\
+3 & 0.2458 & 0.2501 & +0.43 & 0.4178 & 53\% & 239 \\
+6 & 0.2454 & 0.2461 & +0.06 & 0.8431 & 67\% & 448 \\
+12 & 0.2448 & 0.2469 & +0.21 & 0.7117 & 53\% & 700 \\
+18 & 0.2452 & 0.2460 & +0.07 & 0.8739 & 60\% & 907 \\
+24 & 0.2465 & 0.2502 & +0.37 & 0.4254 & 53\% & 1087 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,27 @@
+% Tabla: Refinamiento de temperatura con contexto óptimo (n_shot=60)
+% Validación K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Impacto de la temperatura del LLM con prompting óptimo (60 ejemplos)}
+\label{tab:temperatura_refinada}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Configuración} & \textbf{Temperatura ($\tau$)} & \textbf{$\Delta$ F1 (pp)} & \textbf{p-valor} & \textbf{Sig.} \\
+\midrule
+\rowcolor{green!20}
+\textbf{Temperatura baja} & \textbf{0.3} & \textbf{+1.18} & \textbf{0.00012} & \checkmark \\
+Temperatura media-alta & 1.2 & +1.12 & 0.0013 & \checkmark \\
+Temperatura estándar & 0.9 & +0.92 & 0.00073 & \checkmark \\
+Temperatura alta & 1.5 & +0.82 & 0.00015 & \checkmark \\
+Temperatura media & 0.6 & +0.61 & 0.0104 & \checkmark \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Línea base Macro F1: 0.2045. Todas las configuraciones son significativas ($p < 0.05$).
+
+\textbullet\ \textbf{Hallazgo clave}: Con 60 ejemplos de contexto, $\tau$=0.3 logra el mejor rendimiento (+1.18 pp), seguido por $\tau$=1.2 (+1.12 pp).
+
+\textbullet\ Patrón no-monotónico: temperaturas extremas (0.3 y 1.2) superan a la estándar (0.9), sugiriendo que con más contexto el modelo puede beneficiarse tanto de mayor precisión como de mayor creatividad.
+
+\end{table}

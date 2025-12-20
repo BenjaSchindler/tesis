@@ -1,33 +1,33 @@
-% Tabla: Validación de K Vecinos para Contexto del Prompt
+% Tabla: Validación de K Vecinos para Cálculos Internos
 % Experimento 03 - K-Fold CV (5×3 = 15 folds)
 \begin{table}[htbp]
 \centering
-\caption{Validación de K vecinos para contexto del prompt (Experimento 03)}
+\caption{Validación de K vecinos para ponderación y filtrado}
 \label{tab:k_neighbors_validation}
 \begin{tabular}{cccccl}
 \toprule
-\textbf{K} & \textbf{Macro F1} & \textbf{$\Delta$ F1} & \textbf{p-valor} & \textbf{Tasa Acept.} & \textbf{Contexto} \\
+\textbf{K} & \textbf{Macro F1} & \textbf{$\Delta$ F1 (pp)} & \textbf{p-valor} & \textbf{Tasa Acept.} & \textbf{Contexto} \\
 \midrule
-5   & 0.2063 & +0.84\% & 0.042 & 99\% & Insuficiente \\
-8   & 0.2064 & +0.90\% & 0.038 & 96\% & Limitado \\
-10  & 0.2056 & +0.51\% & 0.089 & 95\% & Limitado \\
-12  & 0.2055 & +0.49\% & 0.095 & 98\% & Óptimo \\
-15  & 0.2059 & +0.68\% & 0.061 & 96\% & Óptimo \\
-18  & 0.2065 & +0.99\% & 0.028 & 96\% & Óptimo \\
-20  & 0.2060 & +0.73\% & 0.054 & 97\% & Óptimo \\
-25  & 0.2062 & +0.82\% & 0.045 & 96\% & Redundante \\
-50  & 0.2046 & +0.04\% & 0.621 & 97\% & Redundante \\
-100 & 0.2063 & +0.84\% & 0.043 & 96\% & Ruidoso \\
+5   & 0.2063 & +0.18 & 0.042 & 99\% & Insuficiente \\
+8   & 0.2064 & +0.19 & 0.038 & 96\% & Limitado \\
+10  & 0.2056 & +0.11 & 0.089 & 95\% & Limitado \\
+12  & 0.2055 & +0.10 & 0.095 & 98\% & Óptimo \\
+15  & 0.2059 & +0.14 & 0.061 & 96\% & Óptimo \\
+18  & 0.2065 & +0.20 & 0.028 & 96\% & Óptimo \\
+20  & 0.2060 & +0.15 & 0.054 & 97\% & Óptimo \\
+25  & 0.2062 & +0.17 & 0.045 & 96\% & Redundante \\
+50  & 0.2046 & +0.01 & 0.621 & 97\% & Redundante \\
+100 & 0.2063 & +0.18 & 0.043 & 96\% & Ruidoso \\
 \rowcolor{green!20}
-\textbf{200} & \textbf{0.2078} & \textbf{+1.60\%} & \textbf{0.0085} & \textbf{97\%} & \textbf{Excesivo} \\
+\textbf{200} & \textbf{0.2078} & \textbf{+0.33} & \textbf{0.0085} & \textbf{97\%} & \textbf{Amplio} \\
 \bottomrule
 \end{tabular}
 \vspace{0.5em}\footnotesize
 
-\textbullet\ Mejor configuración: K=200 (+1.60\%, p=0.0085).
+\textbullet\ K determina el tamaño del vecindario para cálculos de ponderación y filtrado (Ecuación \ref{eq:weight_neighbors}).
 
-\textbullet\ Valores K en rango 15-25 ofrecen buen balance entre contexto y eficiencia.
+\textbullet\ \textbf{Nota}: Este parámetro es distinto al número de ejemplos en el prompt (Sección \ref{sec:prompting_strategies}).
 
-\textbullet\ Línea base Macro F1: 0.2045.
+\textbullet\ Línea base Macro F1: 0.2045. Mejor configuración: K=200 (+0.33 pp, p=0.0085).
 
 \end{table}

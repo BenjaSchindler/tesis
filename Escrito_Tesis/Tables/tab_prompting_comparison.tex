@@ -1,0 +1,32 @@
+% Tabla: Comparación de estrategias de prompting
+% Validación K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Comparación de estrategias de prompting para generación sintética}
+\label{tab:prompting_comparison}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Estrategia} & \textbf{Ejemplos} & \textbf{$\Delta$ F1 (pp)} & \textbf{p-valor} & \textbf{Sig.} \\
+\midrule
+\rowcolor{green!20}
+\textbf{Many-shot (60 ejemplos)} & \textbf{60} & \textbf{+1.67} & \textbf{0.0003} & \checkmark \\
+Many-shot (80 ejemplos) & 80 & +1.36 & 0.00009 & \checkmark \\
+Many-shot (100 ejemplos) & 100 & +1.36 & 0.0004 & \checkmark \\
+Many-shot (140 ejemplos) & 140 & +1.32 & 0.000004 & \checkmark \\
+Many-shot (20 ejemplos) & 20 & +1.27 & 0.0014 & \checkmark \\
+Many-shot (10 ejemplos) & 10 & +1.22 & 0.00005 & \checkmark \\
+Many-shot (50 ejemplos) & 50 & +1.20 & 0.00004 & \checkmark \\
+Many-shot (200 ejemplos) & 200 & +1.12 & 0.0005 & \checkmark \\
+Few-shot (3 ejemplos) & 3 & +1.09 & 0.0005 & \checkmark \\
+Zero-shot (sin ejemplos) & 0 & +0.37 & 0.1247 & \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Línea base Macro F1: 0.2045 (Regresión Logística sobre embeddings MPNet 768D).
+
+\textbullet\ \textbf{Hallazgo clave}: el rendimiento óptimo se alcanza con 60 ejemplos (+1.67 pp), mostrando un patrón no-monotónico con picos secundarios en 80-100 ejemplos.
+
+\textbullet\ La mejora de zero-shot a 60-shot representa un incremento de +1.30 pp (+351\% relativo).
+
+\end{table}
