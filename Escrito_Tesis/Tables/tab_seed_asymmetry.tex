@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\caption{Impacto de la asimetría de semillas en las pruebas estadísticas (pond. suave vs SMOTE)}
+\label{tab:seed_asymmetry}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Subconjunto} & \textbf{$N$ pares} & \textbf{$\bar{\Delta}$ (pp)} & \textbf{$t$} & \textbf{$p$} & \textbf{$d$ de Cohen} & \textbf{Vic.\%} \\
+\midrule
+Todos los clasif.       & 105 & +2.25 & 7.63  & $<$0.0001 & 0.745 & 83.8\% \\
+Solo estocásticos (MLP+RF)  & 42  & +1.79 & 3.39  & 0.0015    & 0.523 & 78.6\% \\
+Determinísticos (LR+SVC+Ridge) & 63  & +2.55 & 7.49  & $<$0.0001 & 0.943 & 87.3\% \\
+\midrule
+\multicolumn{7}{l}{\small 80\% de los grupos LLM + clasificador determinístico tienen varianza cero entre semillas.} \\
+\multicolumn{7}{l}{\small \textbf{El resultado sigue siendo significativo con solo clasificadores estocásticos} ($p=0.0015$).} \\
+\bottomrule
+\end{tabular}
+\end{table}

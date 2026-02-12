@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+\centering
+\caption{Dimensionalidad de embeddings vs efectividad del filtrado}
+\label{tab:embedding_dimension}
+\begin{tabular}{lllr}
+\toprule
+\textbf{Dimensión} & \textbf{Modelos} & \textbf{$\bar{\Delta}$ (pp)} & \textbf{$\bar{d}$ de Cohen} \\
+\midrule
+384  & bge-small           & +2.00 & 0.123 \\
+768  & mpnet-base          & \textbf{+2.74} & \textbf{0.154} \\
+1024 & bge-large, e5-large & +1.51 & 0.100 \\
+\midrule
+\multicolumn{4}{l}{\small Sin relación monotónica: 768d obtiene el mejor rendimiento.} \\
+\multicolumn{4}{l}{\small La calidad geométrica del espacio importa más que la dimensionalidad.} \\
+\bottomrule
+\end{tabular}
+\end{table}

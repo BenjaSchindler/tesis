@@ -1,0 +1,37 @@
+% Tabla: Resumen de configuración óptima combinada
+% Experimento óptimo - K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Configuración óptima combinada: resultados de validación}
+\label{tab:summary_optimal}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Parámetro} & \textbf{Valor Óptimo} & \textbf{Justificación} \\
+\midrule
+Agrupamiento $K_{max}$ & 18 & Balance heterogeneidad/cohesión \\
+K vecinos contexto & 200 & Contexto amplio para LLM \\
+Temperatura LLM $\tau$ & 0.9 & Diversidad controlada \\
+Presupuesto & 20\% & Cobertura sin saturación \\
+Pesos por nivel & 2.0 / 0.8 / 0.3 & Priorizar clases difíciles \\
+\midrule
+\multicolumn{3}{c}{\textbf{Resultados de Validación}} \\
+\midrule
+Línea base Macro F1 & \multicolumn{2}{c}{0.2045} \\
+F1 aumentado & \multicolumn{2}{c}{0.2169} \\
+\rowcolor{green!20}
+\textbf{$\Delta$ Macro F1 (pp)} & \multicolumn{2}{c}{\textbf{+1.24}} \\
+IC 95\% (pp) & \multicolumn{2}{c}{[+0.75, +1.73]} \\
+p-valor & \multicolumn{2}{c}{0.000268 (***)} \\
+Tasa de victorias & \multicolumn{2}{c}{86.7\% (13/15 folds)} \\
+Sintéticos generados & \multicolumn{2}{c}{1,116 promedio} \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Validación: K-Fold estratificado (5 splits $\times$ 3 repeticiones = 15 folds).
+
+\textbullet\ Significancia: (***) indica p $<$ 0.001, altamente significativo.
+
+\textbullet\ Los pesos por nivel priorizan clases de bajo rendimiento (LOW=2.0) sobre intermedias (MID=0.8) y altas (HIGH=0.3).
+
+\end{table}

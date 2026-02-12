@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\caption{Convergencia y modos de fallo del ciclo iterativo}
+\label{tab:closed_loop_convergence}
+\begin{tabular}{llr}
+\toprule
+\textbf{Categoría} & \textbf{Tipo} & \textbf{Porcentaje} \\
+\midrule
+\multirow{3}{*}{Razón de convergencia}
+ & Objetivo alcanzado     & 62.1\% \\
+ & Máximo de iteraciones  & 21.0\% \\
+ & Meseta de aceptación   & 16.9\% \\
+\midrule
+\multirow{2}{*}{Modo de rechazo}
+ & Outlier por distancia   & 77.1\% \\
+ & Contaminación de clase  & 22.9\% \\
+\midrule
+\multicolumn{3}{l}{\small Iteraciones promedio por clase: 3.82 (mediana: 4, rango: 2--5)} \\
+\multicolumn{3}{l}{\small Tasa de aceptación: 71.2\% (iter. 0) $\to$ 58.9\% (iter. 4): $-$12.3pp} \\
+\bottomrule
+\end{tabular}
+\end{table}

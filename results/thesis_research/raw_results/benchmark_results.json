@@ -1,0 +1,1361 @@
+{
+  "timestamp": "2026-01-26T15:42:31.011855",
+  "results": {
+    "20newsgroups_10shot": {
+      "dataset": "20newsgroups_10shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.748074073930749,
+          "augmented_f1": 0.7889141118462816,
+          "delta_pp": 4.084003791553259,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.748074073930749,
+          "augmented_f1": 0.8136673013705125,
+          "delta_pp": 6.559322743976348,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.748074073930749,
+          "augmented_f1": 0.814877827208574,
+          "delta_pp": 6.680375327782507,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.748074073930749,
+          "augmented_f1": 0.7637599589308949,
+          "delta_pp": 1.5685885000145894,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.748074073930749,
+        "augmented_f1": 0.749275511139526,
+        "delta_pp": 0.12014372087769676,
+        "n_synthetic": 200
+      }
+    },
+    "ag_news_synthetic_50shot": {
+      "dataset": "ag_news_synthetic_50shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 1.0,
+        "augmented_f1": 1.0,
+        "delta_pp": 0.0,
+        "n_synthetic": 200
+      }
+    },
+    "ag_news_synthetic_10shot": {
+      "dataset": "ag_news_synthetic_10shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 1.0,
+        "augmented_f1": 1.0,
+        "delta_pp": 0.0,
+        "n_synthetic": 200
+      }
+    },
+    "hate_speech_davidson_10shot": {
+      "dataset": "hate_speech_davidson_10shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.5429930127374679,
+          "augmented_f1": 0.5239164721767033,
+          "delta_pp": -1.9076540560764577,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.5429930127374679,
+          "augmented_f1": 0.48698377313623614,
+          "delta_pp": -5.600923960123177,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.5429930127374679,
+          "augmented_f1": 0.508,
+          "delta_pp": -3.499301273746791,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.5429930127374679,
+          "augmented_f1": 0.5083161158675177,
+          "delta_pp": -3.4676896869950236,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.5429930127374679,
+        "augmented_f1": 0.5249257084873523,
+        "delta_pp": -1.8067304250115601,
+        "n_synthetic": 150
+      }
+    },
+    "ag_news_synthetic_25shot": {
+      "dataset": "ag_news_synthetic_25shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 1.0,
+          "augmented_f1": 1.0,
+          "delta_pp": 0.0,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "Business": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "Sci/Tech": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "World": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "Sports": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 1.0,
+        "augmented_f1": 1.0,
+        "delta_pp": 0.0,
+        "n_synthetic": 200
+      }
+    },
+    "sms_spam_25shot": {
+      "dataset": "sms_spam_25shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.9131098367220497,
+          "augmented_f1": 0.926692440061424,
+          "delta_pp": 1.3582603339374333,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.9131098367220497,
+          "augmented_f1": 0.8968738029994991,
+          "delta_pp": -1.6236033722550558,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.9131098367220497,
+          "augmented_f1": 0.9032738095238095,
+          "delta_pp": -0.9836027198240171,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.9131098367220497,
+          "augmented_f1": 0.8057015448319795,
+          "delta_pp": -10.740829189007018,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.9131098367220497,
+        "augmented_f1": 0.926692440061424,
+        "delta_pp": 1.3582603339374333,
+        "n_synthetic": 100
+      }
+    },
+    "sms_spam_10shot": {
+      "dataset": "sms_spam_10shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.8772066684002195,
+          "augmented_f1": 0.9171917759603783,
+          "delta_pp": 3.9985107560158717,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.8772066684002195,
+          "augmented_f1": 0.9162619326745938,
+          "delta_pp": 3.9055264274374224,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.8772066684002195,
+          "augmented_f1": 0.8414722171628248,
+          "delta_pp": -3.5734451237394715,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.8772066684002195,
+          "augmented_f1": 0.9097988514387083,
+          "delta_pp": 3.2592183038488765,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.8772066684002195,
+        "augmented_f1": 0.8682702098419954,
+        "delta_pp": -0.8936458558224114,
+        "n_synthetic": 100
+      }
+    },
+    "sms_spam_50shot": {
+      "dataset": "sms_spam_50shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.940187094767567,
+          "augmented_f1": 0.9513239875389408,
+          "delta_pp": 1.1136892771373752,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.940187094767567,
+          "augmented_f1": 0.940187094767567,
+          "delta_pp": 0.0,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.940187094767567,
+          "augmented_f1": 0.9189758548047318,
+          "delta_pp": -2.121123996283525,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.940187094767567,
+          "augmented_f1": 0.9097988514387083,
+          "delta_pp": -3.03882433288587,
+          "n_synthetic": 100,
+          "generation_stats": {
+            "spam": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "ham": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.940187094767567,
+        "augmented_f1": 0.947570074611817,
+        "delta_pp": 0.738297984424996,
+        "n_synthetic": 100
+      }
+    },
+    "20newsgroups_25shot": {
+      "dataset": "20newsgroups_25shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.838670442877931,
+          "augmented_f1": 0.839652339278461,
+          "delta_pp": 0.09818964005299247,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.838670442877931,
+          "augmented_f1": 0.851277682815288,
+          "delta_pp": 1.2607239937357018,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.838670442877931,
+          "augmented_f1": 0.8413394621962937,
+          "delta_pp": 0.266901931836272,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.838670442877931,
+          "augmented_f1": 0.8234218529082336,
+          "delta_pp": -1.5248589969697468,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.838670442877931,
+        "augmented_f1": 0.8322117776216754,
+        "delta_pp": -0.6458665256255602,
+        "n_synthetic": 200
+      }
+    },
+    "hate_speech_davidson_50shot": {
+      "dataset": "hate_speech_davidson_50shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.6122361106224803,
+          "augmented_f1": 0.6043196388380349,
+          "delta_pp": -0.7916471784445434,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.6122361106224803,
+          "augmented_f1": 0.6075045082535718,
+          "delta_pp": -0.4731602368908461,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.6122361106224803,
+          "augmented_f1": 0.5863189064574729,
+          "delta_pp": -2.5917204165007424,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.6122361106224803,
+          "augmented_f1": 0.5669851455821185,
+          "delta_pp": -4.525096504036174,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.6122361106224803,
+        "augmented_f1": 0.5958285795594189,
+        "delta_pp": -1.6407531063061365,
+        "n_synthetic": 150
+      }
+    },
+    "hate_speech_davidson_25shot": {
+      "dataset": "hate_speech_davidson_25shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.598660978788956,
+          "augmented_f1": 0.5855487232122462,
+          "delta_pp": -1.3112255576709808,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.598660978788956,
+          "augmented_f1": 0.611888111888112,
+          "delta_pp": 1.3227133099156019,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.598660978788956,
+          "augmented_f1": 0.5785934131385567,
+          "delta_pp": -2.0067565650399244,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.598660978788956,
+          "augmented_f1": 0.5959188796490713,
+          "delta_pp": -0.2742099139884657,
+          "n_synthetic": 150,
+          "generation_stats": {
+            "hate_speech": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "offensive": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "neither": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.598660978788956,
+        "augmented_f1": 0.5854672522550174,
+        "delta_pp": -1.3193726533938577,
+        "n_synthetic": 150
+      }
+    },
+    "20newsgroups_50shot": {
+      "dataset": "20newsgroups_50shot",
+      "configs": [
+        {
+          "llm_pct": 5,
+          "baseline_f1": 0.8412958761462089,
+          "augmented_f1": 0.8370417792583413,
+          "delta_pp": -0.4254096887867598,
+          "n_synthetic": 199,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 1,
+              "smote_samples": 48,
+              "total": 49
+            },
+            "alt.atheism": {
+              "llm_samples": 2,
+              "smote_samples": 48,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 25,
+          "baseline_f1": 0.8412958761462089,
+          "augmented_f1": 0.8417828209166308,
+          "delta_pp": 0.04869447704218821,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 12,
+              "smote_samples": 38,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 50,
+          "baseline_f1": 0.8412958761462089,
+          "augmented_f1": 0.8420957187759454,
+          "delta_pp": 0.07998426297364247,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 25,
+              "smote_samples": 25,
+              "total": 50
+            }
+          }
+        },
+        {
+          "llm_pct": 100,
+          "baseline_f1": 0.8412958761462089,
+          "augmented_f1": 0.8506081131260995,
+          "delta_pp": 0.9312236979890587,
+          "n_synthetic": 200,
+          "generation_stats": {
+            "soc.religion.christian": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "sci.med": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "comp.graphics": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            },
+            "alt.atheism": {
+              "llm_samples": 50,
+              "smote_samples": 0,
+              "total": 50
+            }
+          }
+        }
+      ],
+      "smote_baseline": {
+        "llm_pct": 0,
+        "baseline_f1": 0.8412958761462089,
+        "augmented_f1": 0.8353288802303845,
+        "delta_pp": -0.5966995915824391,
+        "n_synthetic": 200
+      }
+    }
+  }
+}

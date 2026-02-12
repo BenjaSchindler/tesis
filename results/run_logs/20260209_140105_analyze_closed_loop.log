@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/benja/Desktop/Tesis/filters/experiments/analyze_closed_loop.py", line 13, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

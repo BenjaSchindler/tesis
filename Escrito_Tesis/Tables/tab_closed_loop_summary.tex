@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{Mejora iterativa de prompts: resumen de rendimiento}
+\label{tab:closed_loop_summary}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Comparación} & \textbf{$\bar{\Delta}$ (pp)} & \textbf{Vic.\%} & \textbf{Valor $p$} & \textbf{$d$ de Cohen} \\
+\midrule
+Iterativo vs SMOTE         & +1.12 & 51.7\% & 0.0001 & 0.360 \\
+Iterativo vs pasada única  & +2.08 & 40.8\% & 0.0021 & 0.287 \\
+\midrule
+\multicolumn{5}{l}{\small $N=120$ experimentos. 2 filtros (cascade\_l1, LOF) $\times$ 5 semillas $\times$ 12 conjuntos.} \\
+\multicolumn{5}{l}{\small Ambas comparaciones significativas, pero el filtrado de pasada única es competitivo.} \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,4045 @@
+{
+  "completed": [
+    "multinerd_10shot",
+    "multinerd_25shot",
+    "multinerd_50shot",
+    "wikiann_10shot",
+    "wikiann_25shot",
+    "wikiann_50shot",
+    "fewnerd_10shot",
+    "fewnerd_25shot",
+    "fewnerd_50shot"
+  ],
+  "results": [
+    {
+      "dataset": "multinerd_10shot",
+      "entity_types": [
+        "DIS",
+        "EVE",
+        "LOC",
+        "ORG",
+        "PER"
+      ],
+      "n_train_sentences": 25,
+      "baseline_mean_f1": 0.24683295400834657,
+      "baseline_std_f1": 0.02369378266487051,
+      "baseline_per_type_f1": {
+        "DIS": 0.0,
+        "EVE": 0.10958904109589042,
+        "LOC": 0.4752475247524752,
+        "ORG": 0.2543859649122807,
+        "PER": 0.532258064516129
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.39266008301986294,
+          "std_f1": 0.018568035299050104,
+          "f1_delta_vs_baseline": 14.582712901151638,
+          "total_llm_calls": 22,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 662.8505864159835,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.1348314606741573,
+            "EVE": 0.1702127659574468,
+            "LOC": 0.6209262435677531,
+            "ORG": 0.3142857142857143,
+            "PER": 0.6120218579234973
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.42598464974917355,
+          "std_f1": 0.023328150954949202,
+          "f1_delta_vs_baseline": 17.915169574082697,
+          "total_llm_calls": 22,
+          "avg_acceptance_rate": 0.8376462873284908,
+          "efficiency_score": 814.3258897310317,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.21917808219178084,
+            "EVE": 0.2033898305084746,
+            "LOC": 0.632375189107413,
+            "ORG": 0.4265734265734266,
+            "PER": 0.6444444444444445
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.4099738096583603,
+          "std_f1": 0.02079462676103156,
+          "f1_delta_vs_baseline": 16.31408556500137,
+          "total_llm_calls": 25,
+          "avg_acceptance_rate": 0.8777252567693743,
+          "efficiency_score": 652.5634226000549,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.17073170731707316,
+            "EVE": 0.1923076923076923,
+            "LOC": 0.6030534351145038,
+            "ORG": 0.34532374100719426,
+            "PER": 0.6699029126213591
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.40698163575770013,
+          "std_f1": 0.008193991655366361,
+          "f1_delta_vs_baseline": 16.014868174935355,
+          "total_llm_calls": 21,
+          "avg_acceptance_rate": 0.8724137931034482,
+          "efficiency_score": 762.6127702350169,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 58,
+              "acceptance_rate": 0.8620689655172413,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.17073170731707316,
+            "EVE": 0.3243243243243243,
+            "LOC": 0.6292834890965733,
+            "ORG": 0.34482758620689663,
+            "PER": 0.5204819277108435
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.38134275576778515,
+          "std_f1": 0.008381912748977361,
+          "f1_delta_vs_baseline": 13.450980175943858,
+          "total_llm_calls": 25,
+          "avg_acceptance_rate": 0.8714015151515152,
+          "efficiency_score": 538.0392070377543,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.125,
+            "EVE": 0.26666666666666666,
+            "LOC": 0.6222222222222222,
+            "ORG": 0.39660056657223797,
+            "PER": 0.5552560646900269
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.42874230602223845,
+          "std_f1": 0.01878829433886111,
+          "f1_delta_vs_baseline": 18.190935201389188,
+          "total_llm_calls": 24,
+          "avg_acceptance_rate": 0.9038307604345339,
+          "efficiency_score": 757.9556333912162,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.20289855072463767,
+            "EVE": 0.1851851851851852,
+            "LOC": 0.6593059936908517,
+            "ORG": 0.39568345323741005,
+            "PER": 0.5885558583106266
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.33749860545933136,
+          "std_f1": 0.006639640958036003,
+          "f1_delta_vs_baseline": 9.06656514509848,
+          "total_llm_calls": 44,
+          "avg_acceptance_rate": 0.17628476084538375,
+          "efficiency_score": 206.05829875223816,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 6,
+              "llm_calls": 25,
+              "total_generated": 310,
+              "acceptance_rate": 0.01935483870967742,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "EVE": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 52,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "LOC": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 58,
+              "acceptance_rate": 0.8620689655172413,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 0,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.11320754716981132,
+            "EVE": 0.16,
+            "LOC": 0.5152129817444218,
+            "ORG": 0.3341772151898734,
+            "PER": 0.558139534883721
+          },
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-06T16:17:24.204301"
+    },
+    {
+      "dataset": "multinerd_25shot",
+      "entity_types": [
+        "DIS",
+        "EVE",
+        "LOC",
+        "ORG",
+        "PER"
+      ],
+      "n_train_sentences": 63,
+      "baseline_mean_f1": 0.31516814498231555,
+      "baseline_std_f1": 0.017397227278594694,
+      "baseline_per_type_f1": {
+        "DIS": 0.12,
+        "EVE": 0.16,
+        "LOC": 0.4957627118644068,
+        "ORG": 0.2628571428571429,
+        "PER": 0.5388349514563107
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.4190957002565381,
+          "std_f1": 0.02421139853777449,
+          "f1_delta_vs_baseline": 10.392755527422255,
+          "total_llm_calls": 25,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 415.71022109689017,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.15384615384615385,
+            "EVE": 0.16666666666666666,
+            "LOC": 0.6603475513428121,
+            "ORG": 0.3565891472868217,
+            "PER": 0.603448275862069
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.43063979548611075,
+          "std_f1": 0.010410594171049337,
+          "f1_delta_vs_baseline": 11.54716505037952,
+          "total_llm_calls": 26,
+          "avg_acceptance_rate": 0.8147280770231591,
+          "efficiency_score": 444.12173270690465,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 61,
+              "acceptance_rate": 0.819672131147541,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.22916666666666669,
+            "EVE": 0.16,
+            "LOC": 0.6928571428571428,
+            "ORG": 0.3831168831168831,
+            "PER": 0.6463104325699746
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.4331666476838161,
+          "std_f1": 0.030944811903268688,
+          "f1_delta_vs_baseline": 11.799850270150053,
+          "total_llm_calls": 52,
+          "avg_acceptance_rate": 0.677774064171123,
+          "efficiency_score": 226.92019750288563,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 14,
+              "total_generated": 102,
+              "acceptance_rate": 0.49019607843137253,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 25,
+              "total_generated": 320,
+              "acceptance_rate": 0.15625,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.18461538461538463,
+            "EVE": 0.11627906976744186,
+            "LOC": 0.6415094339622642,
+            "ORG": 0.4083333333333333,
+            "PER": 0.6511627906976745
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.438159836517967,
+          "std_f1": 0.004462907531252878,
+          "f1_delta_vs_baseline": 12.299169153565149,
+          "total_llm_calls": 24,
+          "avg_acceptance_rate": 0.9131421744324971,
+          "efficiency_score": 512.465381398548,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 62,
+              "acceptance_rate": 0.8064516129032258,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.2376237623762376,
+            "EVE": 0.20512820512820512,
+            "LOC": 0.6616541353383459,
+            "ORG": 0.4225352112676056,
+            "PER": 0.6804597701149425
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.4203893269916166,
+          "std_f1": 0.02296863701314566,
+          "f1_delta_vs_baseline": 10.522118200930104,
+          "total_llm_calls": 25,
+          "avg_acceptance_rate": 0.8723489126833529,
+          "efficiency_score": 420.8847280372041,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 62,
+              "acceptance_rate": 0.8064516129032258,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.1391304347826087,
+            "EVE": 0.15151515151515152,
+            "LOC": 0.6508474576271186,
+            "ORG": 0.40625000000000006,
+            "PER": 0.6097560975609756
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.3957688319672388,
+          "std_f1": 0.01417782704961272,
+          "f1_delta_vs_baseline": 8.060068698492323,
+          "total_llm_calls": 25,
+          "avg_acceptance_rate": 0.8997945557267591,
+          "efficiency_score": 322.4027479396929,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.10309278350515463,
+            "EVE": 0.14545454545454545,
+            "LOC": 0.6484641638225256,
+            "ORG": 0.3128491620111732,
+            "PER": 0.6963906581740976
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.31516814498231555,
+          "std_f1": 0.017397227278594694,
+          "f1_delta_vs_baseline": 0.0,
+          "total_llm_calls": 28,
+          "avg_acceptance_rate": 0.0,
+          "efficiency_score": 0.0,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 65,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "EVE": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 59,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "LOC": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 52,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "ORG": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 64,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "PER": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 54,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {},
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-06T17:58:09.682704"
+    },
+    {
+      "dataset": "multinerd_50shot",
+      "entity_types": [
+        "DIS",
+        "EVE",
+        "LOC",
+        "ORG",
+        "PER"
+      ],
+      "n_train_sentences": 142,
+      "baseline_mean_f1": 0.415388930607065,
+      "baseline_std_f1": 0.015409599999896436,
+      "baseline_per_type_f1": {
+        "DIS": 0.18390804597701152,
+        "EVE": 0.19354838709677416,
+        "LOC": 0.5841392649903289,
+        "ORG": 0.35897435897435903,
+        "PER": 0.7109207708779443
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.4859674997076937,
+          "std_f1": 0.029857585171945103,
+          "f1_delta_vs_baseline": 7.0578569100628705,
+          "total_llm_calls": 21,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 336.0884242887081,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.19277108433734938,
+            "EVE": 0.2222222222222222,
+            "LOC": 0.7223974763406938,
+            "ORG": 0.42718446601941745,
+            "PER": 0.6987341772151899
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.4951195863421738,
+          "std_f1": 0.026464083964548864,
+          "f1_delta_vs_baseline": 7.973065573510879,
+          "total_llm_calls": 25,
+          "avg_acceptance_rate": 0.848313492063492,
+          "efficiency_score": 318.9226229404352,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.2285714285714286,
+            "EVE": 0.3,
+            "LOC": 0.697080291970803,
+            "ORG": 0.37499999999999994,
+            "PER": 0.695067264573991
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.4762177217216772,
+          "std_f1": 0.027083276129107506,
+          "f1_delta_vs_baseline": 6.08287911146122,
+          "total_llm_calls": 27,
+          "avg_acceptance_rate": 0.782193958664547,
+          "efficiency_score": 225.29181894300814,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 74,
+              "acceptance_rate": 0.6756756756756757,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 85,
+              "acceptance_rate": 0.5882352941176471,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.275,
+            "EVE": 0.2181818181818182,
+            "LOC": 0.7001862197392924,
+            "ORG": 0.4186046511627907,
+            "PER": 0.7721822541966428
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.4545555863665897,
+          "std_f1": 0.010652928271325073,
+          "f1_delta_vs_baseline": 3.9166655759524716,
+          "total_llm_calls": 23,
+          "avg_acceptance_rate": 0.8804182360326429,
+          "efficiency_score": 170.28980765010746,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.20000000000000004,
+            "EVE": 0.23529411764705882,
+            "LOC": 0.7038216560509554,
+            "ORG": 0.3718592964824121,
+            "PER": 0.7311320754716981
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.45811846501949516,
+          "std_f1": 0.022342298818039105,
+          "f1_delta_vs_baseline": 4.272953441243016,
+          "total_llm_calls": 21,
+          "avg_acceptance_rate": 0.85625,
+          "efficiency_score": 203.47397339252456,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.23529411764705882,
+            "EVE": 0.21428571428571425,
+            "LOC": 0.6885813148788928,
+            "ORG": 0.3977272727272727,
+            "PER": 0.7066115702479339
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.46014440804842316,
+          "std_f1": 0.008390197990714261,
+          "f1_delta_vs_baseline": 4.475547744135816,
+          "total_llm_calls": 24,
+          "avg_acceptance_rate": 0.8524531024531024,
+          "efficiency_score": 186.481156005659,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "EVE": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.2222222222222222,
+            "EVE": 0.22727272727272727,
+            "LOC": 0.7058823529411765,
+            "ORG": 0.3771929824561403,
+            "PER": 0.7175925925925926
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.3788925631514937,
+          "std_f1": 0.01343692642646913,
+          "f1_delta_vs_baseline": -3.6496367455571277,
+          "total_llm_calls": 29,
+          "avg_acceptance_rate": 0.003389830508474576,
+          "efficiency_score": -125.84954295024578,
+          "per_type_stats": {
+            "DIS": {
+              "n_valid": 1,
+              "llm_calls": 4,
+              "total_generated": 59,
+              "acceptance_rate": 0.01694915254237288,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "EVE": {
+              "n_valid": 0,
+              "llm_calls": 8,
+              "total_generated": 64,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "LOC": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 65,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "ORG": {
+              "n_valid": 0,
+              "llm_calls": 4,
+              "total_generated": 56,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "PER": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 65,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {
+            "DIS": 0.17073170731707316,
+            "EVE": 0.18181818181818182,
+            "LOC": 0.5935727788279773,
+            "ORG": 0.3070175438596491,
+            "PER": 0.6967741935483871
+          },
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-06T19:24:31.041612"
+    },
+    {
+      "dataset": "wikiann_10shot",
+      "entity_types": [
+        "PER",
+        "ORG",
+        "LOC"
+      ],
+      "n_train_sentences": 10,
+      "baseline_mean_f1": 0.16177181945696215,
+      "baseline_std_f1": 0.02196155108940146,
+      "baseline_per_type_f1": {
+        "LOC": 0.14732965009208102,
+        "ORG": 0.05524861878453039,
+        "PER": 0.3454833597464343
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.26779334850564657,
+          "std_f1": 0.006687574056766798,
+          "f1_delta_vs_baseline": 10.602152904868442,
+          "total_llm_calls": 24,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 441.7563710361851,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 12,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.32258064516129037,
+            "ORG": 0.14795918367346939,
+            "PER": 0.32967032967032966
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.3016089720506674,
+          "std_f1": 0.025540912472902206,
+          "f1_delta_vs_baseline": 13.983715259370525,
+          "total_llm_calls": 20,
+          "avg_acceptance_rate": 0.9624881291547959,
+          "efficiency_score": 699.1857629685263,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.35247524752475246,
+            "ORG": 0.24878048780487805,
+            "PER": 0.3839285714285715
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.2871367564165767,
+          "std_f1": 0.013775320492249714,
+          "f1_delta_vs_baseline": 12.536493695961456,
+          "total_llm_calls": 19,
+          "avg_acceptance_rate": 0.9267738434405102,
+          "efficiency_score": 659.8154576821819,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.31596638655462184,
+            "ORG": 0.2241758241758242,
+            "PER": 0.3454231433506045
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.30274287131174044,
+          "std_f1": 0.013201068096897972,
+          "f1_delta_vs_baseline": 14.09710518547783,
+          "total_llm_calls": 21,
+          "avg_acceptance_rate": 0.980643539467069,
+          "efficiency_score": 671.2907231179919,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.34800000000000003,
+            "ORG": 0.2557077625570776,
+            "PER": 0.35943060498220636
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.2852306712286478,
+          "std_f1": 0.006731534778843951,
+          "f1_delta_vs_baseline": 12.345885177168567,
+          "total_llm_calls": 21,
+          "avg_acceptance_rate": 0.9336604552446599,
+          "efficiency_score": 587.8992941508842,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 57,
+              "acceptance_rate": 0.8771929824561403,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.30963665086887837,
+            "ORG": 0.14606741573033707,
+            "PER": 0.37142857142857144
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.2949314828131256,
+          "std_f1": 0.012085378111921247,
+          "f1_delta_vs_baseline": 13.315966335616345,
+          "total_llm_calls": 24,
+          "avg_acceptance_rate": 0.9267738434405102,
+          "efficiency_score": 554.831930650681,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.3202725724020443,
+            "ORG": 0.15249266862170086,
+            "PER": 0.3671766342141864
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.27139336813957327,
+          "std_f1": 0.023790396651436653,
+          "f1_delta_vs_baseline": 10.962154868261113,
+          "total_llm_calls": 18,
+          "avg_acceptance_rate": 0.6363636363636364,
+          "efficiency_score": 609.008603792284,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 51,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.34034416826003827,
+            "ORG": 0.1593830334190231,
+            "PER": 0.40810810810810805
+          },
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-06T20:33:54.393775"
+    },
+    {
+      "dataset": "wikiann_25shot",
+      "entity_types": [
+        "PER",
+        "ORG",
+        "LOC"
+      ],
+      "n_train_sentences": 25,
+      "baseline_mean_f1": 0.25246863183862756,
+      "baseline_std_f1": 0.006457637695931015,
+      "baseline_per_type_f1": {
+        "LOC": 0.29889298892988925,
+        "ORG": 0.17204301075268819,
+        "PER": 0.3036649214659686
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.27212825773430577,
+          "std_f1": 0.009887582212451939,
+          "f1_delta_vs_baseline": 1.9659625895678212,
+          "total_llm_calls": 16,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 122.87266184798882,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.34716981132075475,
+            "ORG": 0.10126582278481014,
+            "PER": 0.34054834054834054
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.27611666468471086,
+          "std_f1": 0.004293091354435198,
+          "f1_delta_vs_baseline": 2.36480328460833,
+          "total_llm_calls": 21,
+          "avg_acceptance_rate": 0.914141414141414,
+          "efficiency_score": 112.60968021944429,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.3201376936316695,
+            "ORG": 0.13664596273291924,
+            "PER": 0.3806818181818181
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.2929452363957962,
+          "std_f1": 0.0150833566476584,
+          "f1_delta_vs_baseline": 4.047660455716867,
+          "total_llm_calls": 20,
+          "avg_acceptance_rate": 0.7858682266009852,
+          "efficiency_score": 202.38302278584337,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 58,
+              "acceptance_rate": 0.8620689655172413,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 70,
+              "acceptance_rate": 0.7142857142857143,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.35059760956175295,
+            "ORG": 0.21505376344086022,
+            "PER": 0.37707390648567124
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.2992872097936045,
+          "std_f1": 0.016126429984003446,
+          "f1_delta_vs_baseline": 4.681857795497696,
+          "total_llm_calls": 19,
+          "avg_acceptance_rate": 0.9426165946604631,
+          "efficiency_score": 246.41356818408926,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.33891992551210426,
+            "ORG": 0.20948616600790512,
+            "PER": 0.39597315436241604
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.3004098338555845,
+          "std_f1": 0.013018044007870721,
+          "f1_delta_vs_baseline": 4.794120201695695,
+          "total_llm_calls": 22,
+          "avg_acceptance_rate": 0.9227956827686374,
+          "efficiency_score": 217.9145546225316,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 58,
+              "acceptance_rate": 0.8620689655172413,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.36772983114446534,
+            "ORG": 0.19599109131403117,
+            "PER": 0.3870967741935484
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.3155766928150103,
+          "std_f1": 0.005591133167964525,
+          "f1_delta_vs_baseline": 6.310806097638272,
+          "total_llm_calls": 19,
+          "avg_acceptance_rate": 0.8958560275962237,
+          "efficiency_score": 332.1476893493827,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.32216905901116427,
+            "ORG": 0.23140495867768596,
+            "PER": 0.3893249607535322
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.25246863183862756,
+          "std_f1": 0.006457637695931015,
+          "f1_delta_vs_baseline": 0.0,
+          "total_llm_calls": 23,
+          "avg_acceptance_rate": 0.0,
+          "efficiency_score": 0.0,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 0,
+              "llm_calls": 9,
+              "total_generated": 59,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "ORG": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 54,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "LOC": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 54,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {},
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-06T21:39:32.306799"
+    },
+    {
+      "dataset": "wikiann_50shot",
+      "entity_types": [
+        "PER",
+        "ORG",
+        "LOC"
+      ],
+      "n_train_sentences": 50,
+      "baseline_mean_f1": 0.24397270060873363,
+      "baseline_std_f1": 0.013265442189079423,
+      "baseline_per_type_f1": {
+        "LOC": 0.3155893536121673,
+        "ORG": 0.11368421052631579,
+        "PER": 0.35530085959885394
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.2944728785839063,
+          "std_f1": 0.010821723659379784,
+          "f1_delta_vs_baseline": 5.050017797517267,
+          "total_llm_calls": 16,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 315.62611234482915,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.308529945553539,
+            "ORG": 0.1895261845386534,
+            "PER": 0.3802612481857765
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.2925799446834469,
+          "std_f1": 0.004636120288414964,
+          "f1_delta_vs_baseline": 4.860724407471325,
+          "total_llm_calls": 20,
+          "avg_acceptance_rate": 0.8967671672589707,
+          "efficiency_score": 243.03622037356627,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 61,
+              "acceptance_rate": 0.819672131147541,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.32659932659932656,
+            "ORG": 0.1592039800995025,
+            "PER": 0.3731587561374795
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.298526362742147,
+          "std_f1": 0.013089719219206767,
+          "f1_delta_vs_baseline": 5.455366213341336,
+          "total_llm_calls": 35,
+          "avg_acceptance_rate": 0.7654320987654321,
+          "efficiency_score": 155.86760609546675,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 21,
+              "total_generated": 135,
+              "acceptance_rate": 0.37037037037037035,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.32172470978441126,
+            "ORG": 0.14910025706940874,
+            "PER": 0.3763955342902711
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.2872080586030774,
+          "std_f1": 0.004362306136261439,
+          "f1_delta_vs_baseline": 4.323535799434378,
+          "total_llm_calls": 24,
+          "avg_acceptance_rate": 0.9741075917546506,
+          "efficiency_score": 180.1473249764324,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.31629392971246006,
+            "ORG": 0.15730337078651685,
+            "PER": 0.37931034482758624
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.2992860376506565,
+          "std_f1": 0.01143929880011332,
+          "f1_delta_vs_baseline": 5.531333704192284,
+          "total_llm_calls": 22,
+          "avg_acceptance_rate": 0.9590643274853802,
+          "efficiency_score": 251.42425928146744,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 57,
+              "acceptance_rate": 0.8771929824561403,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.311864406779661,
+            "ORG": 0.2381852551984877,
+            "PER": 0.381625441696113
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.28506560463870284,
+          "std_f1": 0.0029238098768163655,
+          "f1_delta_vs_baseline": 4.109290402996921,
+          "total_llm_calls": 24,
+          "avg_acceptance_rate": 0.980643539467069,
+          "efficiency_score": 171.22043345820504,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ORG": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "LOC": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "LOC": 0.3104693140794224,
+            "ORG": 0.19238476953907815,
+            "PER": 0.36212624584717606
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.24397270060873363,
+          "std_f1": 0.013265442189079423,
+          "f1_delta_vs_baseline": 0.0,
+          "total_llm_calls": 19,
+          "avg_acceptance_rate": 0.0,
+          "efficiency_score": 0.0,
+          "per_type_stats": {
+            "PER": {
+              "n_valid": 0,
+              "llm_calls": 8,
+              "total_generated": 52,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "ORG": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 65,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "LOC": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {},
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-06T22:57:57.767501"
+    },
+    {
+      "dataset": "fewnerd_10shot",
+      "entity_types": [
+        "art",
+        "building",
+        "event",
+        "location",
+        "organization",
+        "other",
+        "person",
+        "product"
+      ],
+      "n_train_sentences": 19,
+      "baseline_mean_f1": 0.10246897479134953,
+      "baseline_std_f1": 0.018263401798973254,
+      "baseline_per_type_f1": {
+        "art": 0.1590909090909091,
+        "building": 0.13888888888888887,
+        "event": 0.08856088560885608,
+        "location": 0.3452527743526511,
+        "organization": 0.07823960880195599,
+        "other": 0.0,
+        "person": 0.20118343195266275,
+        "product": 0.015151515151515152
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.2341108741114468,
+          "std_f1": 0.010262066696534733,
+          "f1_delta_vs_baseline": 13.164189932009727,
+          "total_llm_calls": 56,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 235.0748202144594,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.19834710743801653,
+            "building": 0.24193548387096772,
+            "event": 0.14723926380368096,
+            "location": 0.453024453024453,
+            "organization": 0.22011385199240988,
+            "other": 0.07627118644067796,
+            "person": 0.3571428571428571,
+            "product": 0.11851851851851851
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.21660079128352674,
+          "std_f1": 0.010287717513930851,
+          "f1_delta_vs_baseline": 11.413181649217721,
+          "total_llm_calls": 58,
+          "avg_acceptance_rate": 0.8795210349641149,
+          "efficiency_score": 196.77899395202965,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 58,
+              "acceptance_rate": 0.8620689655172413,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 62,
+              "acceptance_rate": 0.8064516129032258,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 61,
+              "acceptance_rate": 0.819672131147541,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.1939393939393939,
+            "building": 0.232258064516129,
+            "event": 0.16993464052287582,
+            "location": 0.4759427828348504,
+            "organization": 0.22047244094488186,
+            "other": 0.0769230769230769,
+            "person": 0.3545816733067729,
+            "product": 0.05025125628140703
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.22631945834460432,
+          "std_f1": 0.008751807071835496,
+          "f1_delta_vs_baseline": 12.385048355325479,
+          "total_llm_calls": 68,
+          "avg_acceptance_rate": 0.8835513444888445,
+          "efficiency_score": 182.1330640489041,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 11,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.16326530612244897,
+            "building": 0.24999999999999994,
+            "event": 0.11510791366906474,
+            "location": 0.43617021276595747,
+            "organization": 0.2636203866432338,
+            "other": 0.05291005291005291,
+            "person": 0.34317343173431736,
+            "product": 0.10294117647058824
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.22031315403903898,
+          "std_f1": 0.0026377989861666325,
+          "f1_delta_vs_baseline": 11.784417924768945,
+          "total_llm_calls": 54,
+          "avg_acceptance_rate": 0.8866212067955521,
+          "efficiency_score": 218.2299615697953,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 57,
+              "acceptance_rate": 0.8771929824561403,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.16580310880829016,
+            "building": 0.23841059602649006,
+            "event": 0.16216216216216217,
+            "location": 0.44845360824742275,
+            "organization": 0.23360655737704916,
+            "other": 0.07725321888412018,
+            "person": 0.37073170731707317,
+            "product": 0.06060606060606061
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.2302866322918374,
+          "std_f1": 0.007771288857695766,
+          "f1_delta_vs_baseline": 12.781765750048788,
+          "total_llm_calls": 52,
+          "avg_acceptance_rate": 0.9368187532854716,
+          "efficiency_score": 245.8031875009382,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 57,
+              "acceptance_rate": 0.8771929824561403,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.25615763546798026,
+            "building": 0.2303030303030303,
+            "event": 0.14772727272727273,
+            "location": 0.4325068870523416,
+            "organization": 0.21315192743764172,
+            "other": 0.0642857142857143,
+            "person": 0.3557312252964427,
+            "product": 0.06857142857142857
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.2257388950013346,
+          "std_f1": 0.002755203512742825,
+          "f1_delta_vs_baseline": 12.326992020998507,
+          "total_llm_calls": 53,
+          "avg_acceptance_rate": 0.920836529737058,
+          "efficiency_score": 232.58475511317937,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 62,
+              "acceptance_rate": 0.8064516129032258,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 57,
+              "acceptance_rate": 0.8771929824561403,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.1588785046728972,
+            "building": 0.3064516129032258,
+            "event": 0.18181818181818182,
+            "location": 0.46246973365617433,
+            "organization": 0.21487603305785125,
+            "other": 0.09523809523809523,
+            "person": 0.35946462715105165,
+            "product": 0.052631578947368425
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.10246897479134953,
+          "std_f1": 0.018263401798973254,
+          "f1_delta_vs_baseline": 0.0,
+          "total_llm_calls": 62,
+          "avg_acceptance_rate": 0.0,
+          "efficiency_score": 0.0,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 62,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "building": {
+              "n_valid": 0,
+              "llm_calls": 9,
+              "total_generated": 52,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "event": {
+              "n_valid": 0,
+              "llm_calls": 8,
+              "total_generated": 60,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "location": {
+              "n_valid": 0,
+              "llm_calls": 9,
+              "total_generated": 59,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "organization": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "other": {
+              "n_valid": 0,
+              "llm_calls": 8,
+              "total_generated": 62,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "person": {
+              "n_valid": 0,
+              "llm_calls": 9,
+              "total_generated": 61,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "product": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {},
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-07T02:21:07.648218"
+    },
+    {
+      "dataset": "fewnerd_25shot",
+      "entity_types": [
+        "art",
+        "building",
+        "event",
+        "location",
+        "organization",
+        "other",
+        "person",
+        "product"
+      ],
+      "n_train_sentences": 50,
+      "baseline_mean_f1": 0.16074146798692476,
+      "baseline_std_f1": 0.014335959935315942,
+      "baseline_per_type_f1": {
+        "art": 0.2535211267605634,
+        "building": 0.09523809523809523,
+        "event": 0.15384615384615385,
+        "location": 0.29173989455184535,
+        "organization": 0.15734265734265734,
+        "other": 0.037209302325581395,
+        "person": 0.2705479452054794,
+        "product": 0.06862745098039216
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.24033304281674617,
+          "std_f1": 0.00611875923851769,
+          "f1_delta_vs_baseline": 7.959157482982141,
+          "total_llm_calls": 57,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 139.6343418067042,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.23715415019762848,
+            "building": 0.233502538071066,
+            "event": 0.15555555555555553,
+            "location": 0.4875,
+            "organization": 0.24824355971896953,
+            "other": 0.08181818181818182,
+            "person": 0.37913043478260866,
+            "product": 0.15037593984962408
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.23485570249895993,
+          "std_f1": 0.009656704818262007,
+          "f1_delta_vs_baseline": 7.411423451203516,
+          "total_llm_calls": 61,
+          "avg_acceptance_rate": 0.9265475649265682,
+          "efficiency_score": 121.49874510169698,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 57,
+              "acceptance_rate": 0.8771929824561403,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.14545454545454548,
+            "building": 0.24354243542435428,
+            "event": 0.11764705882352941,
+            "location": 0.4657534246575342,
+            "organization": 0.2718446601941747,
+            "other": 0.09937888198757763,
+            "person": 0.367112810707457,
+            "product": 0.09090909090909093
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.21908341745615814,
+          "std_f1": 0.005757245859068001,
+          "f1_delta_vs_baseline": 5.834194946923338,
+          "total_llm_calls": 65,
+          "avg_acceptance_rate": 0.836121956424619,
+          "efficiency_score": 89.75684533728212,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 62,
+              "acceptance_rate": 0.8064516129032258,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 12,
+              "total_generated": 66,
+              "acceptance_rate": 0.7575757575757576,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 77,
+              "acceptance_rate": 0.6493506493506493,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 11,
+              "total_generated": 61,
+              "acceptance_rate": 0.819672131147541,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 61,
+              "acceptance_rate": 0.819672131147541,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.18823529411764706,
+            "building": 0.2434782608695652,
+            "event": 0.1258741258741259,
+            "location": 0.45833333333333337,
+            "organization": 0.20382165605095542,
+            "other": 0.06694560669456068,
+            "person": 0.3610619469026549,
+            "product": 0.04285714285714286
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.25092492814617257,
+          "std_f1": 0.012478108280711954,
+          "f1_delta_vs_baseline": 9.01834601592478,
+          "total_llm_calls": 59,
+          "avg_acceptance_rate": 0.8713368399587662,
+          "efficiency_score": 152.85332230380985,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 61,
+              "acceptance_rate": 0.819672131147541,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 11,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.16233766233766236,
+            "building": 0.28571428571428575,
+            "event": 0.19417475728155342,
+            "location": 0.4373177842565598,
+            "organization": 0.30103806228373703,
+            "other": 0.04926108374384236,
+            "person": 0.3201581027667984,
+            "product": 0.16176470588235295
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.23950794191508398,
+          "std_f1": 0.009210508045794284,
+          "f1_delta_vs_baseline": 7.876647392815922,
+          "total_llm_calls": 58,
+          "avg_acceptance_rate": 0.9203139404591476,
+          "efficiency_score": 135.804265393378,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 62,
+              "acceptance_rate": 0.8064516129032258,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 55,
+              "acceptance_rate": 0.9090909090909091,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.18918918918918917,
+            "building": 0.2585034013605442,
+            "event": 0.13043478260869565,
+            "location": 0.4817320703653586,
+            "organization": 0.2655601659751037,
+            "other": 0.057692307692307696,
+            "person": 0.33333333333333337,
+            "product": 0.097165991902834
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.23765317803691163,
+          "std_f1": 0.009007670673795614,
+          "f1_delta_vs_baseline": 7.6911710049986866,
+          "total_llm_calls": 66,
+          "avg_acceptance_rate": 0.8947070527890462,
+          "efficiency_score": 116.53289401513162,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 57,
+              "acceptance_rate": 0.8771929824561403,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 62,
+              "acceptance_rate": 0.8064516129032258,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 12,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.18340611353711792,
+            "building": 0.22580645161290322,
+            "event": 0.13986013986013987,
+            "location": 0.45885286783042395,
+            "organization": 0.2407766990291262,
+            "other": 0.10227272727272728,
+            "person": 0.3203285420944558,
+            "product": 0.12987012987012989
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.16074146798692476,
+          "std_f1": 0.014335959935315942,
+          "f1_delta_vs_baseline": 0.0,
+          "total_llm_calls": 52,
+          "avg_acceptance_rate": 0.0,
+          "efficiency_score": 0.0,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "building": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "event": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "location": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 54,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "organization": {
+              "n_valid": 0,
+              "llm_calls": 9,
+              "total_generated": 64,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "other": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 65,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "person": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 57,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "product": {
+              "n_valid": 0,
+              "llm_calls": 9,
+              "total_generated": 58,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {},
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-07T05:32:30.192406"
+    },
+    {
+      "dataset": "fewnerd_50shot",
+      "entity_types": [
+        "art",
+        "building",
+        "event",
+        "location",
+        "organization",
+        "other",
+        "person",
+        "product"
+      ],
+      "n_train_sentences": 102,
+      "baseline_mean_f1": 0.20007327414920736,
+      "baseline_std_f1": 0.009838403837201306,
+      "baseline_per_type_f1": {
+        "art": 0.27027027027027023,
+        "building": 0.08928571428571427,
+        "event": 0.19354838709677416,
+        "location": 0.4136125654450262,
+        "organization": 0.23509933774834438,
+        "other": 0.07142857142857142,
+        "person": 0.3101391650099404,
+        "product": 0.11640211640211641
+      },
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "mean_f1": 0.2480708417562382,
+          "std_f1": 0.011670400017753269,
+          "f1_delta_vs_baseline": 4.799756760703083,
+          "total_llm_calls": 59,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 81.35180950344208,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.21621621621621623,
+            "building": 0.304,
+            "event": 0.20168067226890757,
+            "location": 0.4772727272727273,
+            "organization": 0.29571984435797666,
+            "other": 0.04901960784313726,
+            "person": 0.3983572895277207,
+            "product": 0.1724137931034483
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "mean_f1": 0.2608323496121878,
+          "std_f1": 0.0026849570968308666,
+          "f1_delta_vs_baseline": 6.075907546298046,
+          "total_llm_calls": 54,
+          "avg_acceptance_rate": 0.9452522063439313,
+          "efficiency_score": 112.51680641292677,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.2573099415204678,
+            "building": 0.25806451612903225,
+            "event": 0.17582417582417584,
+            "location": 0.4291970802919708,
+            "organization": 0.325508607198748,
+            "other": 0.09243697478991596,
+            "person": 0.38305709023941065,
+            "product": 0.13559322033898305
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "mean_f1": 0.24395073010751478,
+          "std_f1": 0.005965243005157129,
+          "f1_delta_vs_baseline": 4.387745595830742,
+          "total_llm_calls": 89,
+          "avg_acceptance_rate": 0.7594325773293557,
+          "efficiency_score": 49.30051231270497,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 74,
+              "acceptance_rate": 0.6756756756756757,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 53,
+              "acceptance_rate": 0.9433962264150944,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 12,
+              "total_generated": 72,
+              "acceptance_rate": 0.6944444444444444,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 36,
+              "total_generated": 219,
+              "acceptance_rate": 0.228310502283105,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 69,
+              "acceptance_rate": 0.7246376811594203,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.18000000000000002,
+            "building": 0.24324324324324326,
+            "event": 0.16352201257861637,
+            "location": 0.4646983311938383,
+            "organization": 0.27164685908319186,
+            "other": 0.08144796380090498,
+            "person": 0.4029574861367837,
+            "product": 0.1527777777777778
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.27220498423827016,
+          "std_f1": 0.0029250641746135526,
+          "f1_delta_vs_baseline": 7.21317100890628,
+          "total_llm_calls": 60,
+          "avg_acceptance_rate": 0.9619632910385653,
+          "efficiency_score": 120.21951681510467,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 59,
+              "acceptance_rate": 0.847457627118644,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 11,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.2485875706214689,
+            "building": 0.3098591549295775,
+            "event": 0.20634920634920634,
+            "location": 0.44628099173553715,
+            "organization": 0.275,
+            "other": 0.08045977011494253,
+            "person": 0.45245901639344266,
+            "product": 0.1267605633802817
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.2533869836165199,
+          "std_f1": 0.009149008032462777,
+          "f1_delta_vs_baseline": 5.331370946731254,
+          "total_llm_calls": 69,
+          "avg_acceptance_rate": 0.9202459019269363,
+          "efficiency_score": 77.26624560480077,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 58,
+              "acceptance_rate": 0.8620689655172413,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 63,
+              "acceptance_rate": 0.7936507936507936,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 12,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.22335025380710657,
+            "building": 0.16969696969696965,
+            "event": 0.2255639097744361,
+            "location": 0.45673758865248226,
+            "organization": 0.25792811839323465,
+            "other": 0.11650485436893206,
+            "person": 0.41165048543689325,
+            "product": 0.10958904109589043
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "mean_f1": 0.25686409355708717,
+          "std_f1": 0.010704547108747384,
+          "f1_delta_vs_baseline": 5.679081940787981,
+          "total_llm_calls": 60,
+          "avg_acceptance_rate": 0.899863055946664,
+          "efficiency_score": 94.65136567979968,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 64,
+              "acceptance_rate": 0.78125,
+              "status": "SUCCESS"
+            },
+            "building": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "event": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 58,
+              "acceptance_rate": 0.8620689655172413,
+              "status": "SUCCESS"
+            },
+            "location": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            },
+            "organization": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            },
+            "other": {
+              "n_valid": 50,
+              "llm_calls": 6,
+              "total_generated": 60,
+              "acceptance_rate": 0.8333333333333334,
+              "status": "SUCCESS"
+            },
+            "person": {
+              "n_valid": 50,
+              "llm_calls": 8,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "product": {
+              "n_valid": 50,
+              "llm_calls": 9,
+              "total_generated": 52,
+              "acceptance_rate": 0.9615384615384616,
+              "status": "SUCCESS"
+            }
+          },
+          "per_type_f1": {
+            "art": 0.2347417840375587,
+            "building": 0.23463687150837992,
+            "event": 0.16666666666666666,
+            "location": 0.47414880201765447,
+            "organization": 0.26126126126126126,
+            "other": 0.11594202898550725,
+            "person": 0.4168126094570928,
+            "product": 0.06956521739130435
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "mean_f1": 0.20007327414920736,
+          "std_f1": 0.009838403837201306,
+          "f1_delta_vs_baseline": 0.0,
+          "total_llm_calls": 58,
+          "avg_acceptance_rate": 0.0,
+          "efficiency_score": 0.0,
+          "per_type_stats": {
+            "art": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "building": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "event": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 54,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "location": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 53,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "organization": {
+              "n_valid": 0,
+              "llm_calls": 10,
+              "total_generated": 52,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "other": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 60,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "person": {
+              "n_valid": 0,
+              "llm_calls": 9,
+              "total_generated": 55,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "product": {
+              "n_valid": 0,
+              "llm_calls": 7,
+              "total_generated": 52,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "per_type_f1": {},
+          "all_reached_target": false
+        }
+      ],
+      "timestamp": "2026-02-07T08:57:00.099652"
+    }
+  ]
+}

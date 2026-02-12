@@ -1,0 +1,191 @@
+% LaTeX Tables for Embedding Ablation Study
+% Copy-paste these into your thesis document
+
+% ============================================================================
+% Table 1: Overall Performance Summary
+% ============================================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Overall Performance of Geometric Filtering Across Embedding Models}
+\label{tab:embedding_overall}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Model} & \textbf{Dim} & \textbf{SMOTE F1} & \textbf{Soft F1} & \textbf{$\Delta$ (pp)} & \textbf{Cohen's d} & \textbf{Win Rate} \\
+\midrule
+mpnet-base     & 768  & 0.7243 & 0.7517 & \textbf{+2.74***} & 0.154 & \textbf{92.1\%} \\
+bge-large      & 1024 & 0.7468 & 0.7672 & +2.04***          & 0.140 & 69.8\%          \\
+e5-large       & 1024 & 0.7572 & 0.7669 & +0.97*            & 0.059 & 68.3\%          \\
+bge-small      & 384  & 0.7134 & 0.7334 & +2.00***          & 0.123 & 76.2\%          \\
+\midrule
+\multicolumn{7}{l}{\small $n=63$ paired comparisons per model (7 datasets $\times$ 3 n-shots $\times$ 3 seeds)} \\
+\multicolumn{7}{l}{\small Significance: * $p<0.05$, ** $p<0.01$, *** $p<0.001$ (paired t-test)} \\
+\multicolumn{7}{l}{\small \textbf{Best result in bold.} All models show statistically significant gains.} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% Table 2: N-Shot Breakdown
+% ============================================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Geometric Filtering Gains by N-Shot and Embedding Model}
+\label{tab:embedding_nshot}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Model} & \textbf{10-shot $\Delta$ (pp)} & \textbf{25-shot $\Delta$ (pp)} & \textbf{50-shot $\Delta$ (pp)} \\
+\midrule
+mpnet-base     & \textbf{+5.37***} & \textbf{+2.11***} & +0.75**  \\
+bge-large      & +5.05***          & +0.75**           & +0.32    \\
+e5-large       & +1.42             & +1.09***          & +0.42*   \\
+bge-small      & +4.07***          & +1.38**           & +0.54    \\
+\midrule
+\multicolumn{4}{l}{\small Significance: * $p<0.05$, ** $p<0.01$, *** $p<0.001$ (paired t-test)} \\
+\multicolumn{4}{l}{\small All models show diminishing returns with increased data availability} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% Table 3: Dimensionality Analysis
+% ============================================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Embedding Dimensionality vs Filtering Effectiveness}
+\label{tab:embedding_dimension}
+\begin{tabular}{lllr}
+\toprule
+\textbf{Dimension} & \textbf{Models} & \textbf{Mean $\Delta$ (pp)} & \textbf{Mean Cohen's d} \\
+\midrule
+384  & bge-small           & +2.00 & 0.123 \\
+768  & mpnet-base          & \textbf{+2.74} & \textbf{0.154} \\
+1024 & bge-large, e5-large & +1.51 & 0.100 \\
+\midrule
+\multicolumn{4}{l}{\small No monotonic relationship: 768d achieves best performance} \\
+\multicolumn{4}{l}{\small Suggests geometric quality matters more than dimensionality} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% Table 4: Best and Worst Cases
+% ============================================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Top-5 Best and Worst Dataset-Model-NShot Combinations}
+\label{tab:embedding_extremes}
+\begin{tabular}{llrr}
+\toprule
+\multicolumn{4}{c}{\textbf{Top-5 Best Combinations}} \\
+\midrule
+\textbf{Dataset} & \textbf{Model} & \textbf{N-shot} & \textbf{$\Delta$ (pp)} \\
+\midrule
+emotion          & mpnet-base     & 10 & \textbf{+10.52} \\
+emotion          & bge-small      & 10 & +9.56 \\
+hate\_speech     & bge-large      & 10 & +8.08 \\
+20newsgroups     & mpnet-base     & 10 & +7.00 \\
+emotion          & e5-large       & 10 & +6.71 \\
+\midrule
+\multicolumn{4}{c}{\textbf{Top-5 Worst Combinations}} \\
+\midrule
+\textbf{Dataset} & \textbf{Model} & \textbf{N-shot} & \textbf{$\Delta$ (pp)} \\
+\midrule
+hate\_speech     & e5-large       & 10 & \textbf{-9.39} \\
+sms\_spam        & bge-small      & 25 & -2.09 \\
+20news\_20class  & bge-large      & 50 & -1.18 \\
+ag\_news         & bge-small      & 50 & -0.99 \\
+sms\_spam        & bge-large      & 50 & -0.96 \\
+\midrule
+\multicolumn{4}{l}{\small All top-5 best are 10-shot; 4/5 worst are 50-shot} \\
+\multicolumn{4}{l}{\small e5-large catastrophic failure on hate\_speech\_10shot is notable outlier} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% Table 5: Cross-Model Consistency Summary
+% ============================================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Cross-Model Consistency: How Often Models Agree}
+\label{tab:embedding_consistency}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Agreement Type} & \textbf{Count (out of 21)} & \textbf{Percentage} \\
+\midrule
+Full (all 4 models improve)      & 11 & 52.4\% \\
+Majority ($\geq$2 models improve) & 19 & \textbf{90.5\%} \\
+Minority (<2 models improve)      & 2  & 9.5\% \\
+\midrule
+\multicolumn{3}{l}{\small 21 configurations = 7 datasets $\times$ 3 n-shots} \\
+\multicolumn{3}{l}{\small 90.5\% majority agreement demonstrates strong cross-model robustness} \\
+\multicolumn{3}{l}{\small 2 minority cases are ag\_news\_50shot and dbpedia14\_50shot} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% Table 6: Dataset-Specific Best Models
+% ============================================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Best-Performing Embedding Model by Dataset (Averaged Across N-Shots)}
+\label{tab:embedding_dataset_best}
+\begin{tabular}{llrr}
+\toprule
+\textbf{Dataset} & \textbf{Best Model} & \textbf{$\Delta$ (pp)} & \textbf{Runner-Up} \\
+\midrule
+20newsgroups                    & mpnet-base & +2.71 & e5-large \\
+20newsgroups\_20class           & mpnet-base & +2.81 & bge-small \\
+ag\_news                        & mpnet-base & +1.67 & e5-large \\
+dbpedia14                       & mpnet-base & +0.83 & bge-small \\
+emotion                         & mpnet-base & +5.29 & bge-large \\
+hate\_speech\_davidson          & bge-large  & +2.89 & mpnet-base \\
+sms\_spam                       & mpnet-base & +2.27 & e5-large \\
+\midrule
+\multicolumn{4}{l}{\small mpnet-base wins on 6/7 datasets, confirming broad applicability} \\
+\multicolumn{4}{l}{\small bge-large excels on hate\_speech (nuanced 3-class task)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% Inline Statistics for Text
+% ============================================================================
+
+% Use these in your thesis narrative:
+
+% All models show positive gains:
+% mpnet-base: +2.74pp (p<0.001, d=0.154, win=92.1%)
+% bge-large:  +2.04pp (p<0.001, d=0.140, win=69.8%)
+% e5-large:   +0.97pp (p=0.013, d=0.059, win=68.3%)
+% bge-small:  +2.00pp (p<0.001, d=0.123, win=76.2%)
+
+% Dimensionality finding:
+% 768d outperforms 1024d by +1.23pp on average (2.74pp vs 1.51pp)
+
+% N-shot pattern (mpnet-base as example):
+% 10-shot: +5.37pp (100% win rate, p<0.001)
+% 25-shot: +2.11pp (100% win rate, p<0.001)
+% 50-shot: +0.75pp (76.2% win rate, p=0.003)
+
+% Cross-model consistency:
+% 52.4% of configs show full agreement (all 4 models improve)
+% 90.5% show majority agreement (≥2 models improve)
+% Only 9.5% show filtering is unhelpful (both are 50-shot configs)
+
+% Best single result:
+% emotion_10shot with mpnet-base: +10.52pp (largest gain observed)
+
+% Worst single result:
+% hate_speech_davidson_10shot with e5-large: -9.39pp (catastrophic failure)
+
+% Model-task alignment matters:
+% 17.47pp spread on hate_speech_davidson_10shot across models
+% Demonstrates importance of evaluation on representative tasks

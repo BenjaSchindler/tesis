@@ -1,0 +1,64 @@
+% Chapter 4 - Hipótesis y Objetivos
+
+\chapter{Hipótesis y Objetivos}
+\label{ch:hipotesis}
+
+Las deficiencias metodológicas identificadas en el Capítulo~\ref{ch:problema}---ausencia de validación post-generación, ponderación uniforme de muestras sintéticas, y falta de validación multi-tarea---motivan el planteamiento de hipótesis específicas y objetivos de investigación que guían el diseño experimental de esta tesis.
+
+\section{Hipótesis Principal}
+\label{sec:hipotesis_principal}
+
+La hipótesis central de esta investigación se formula como sigue.
+
+\textbf{H1}: El filtrado geométrico de muestras de texto generadas por modelos de lenguaje de gran escala en el espacio de embeddings produce mejoras estadísticamente significativas en macro F1 respecto a SMOTE y otros métodos de aumentación, en escenarios de clasificación de texto con pocos ejemplos por clase.
+
+Esta hipótesis propone que la calidad de las muestras sintéticas puede evaluarse mediante su posición en el espacio de representación vectorial. Una muestra generada por un LLM que se ubica en una región consistente con la distribución real de su clase aporta mayor valor al clasificador que una muestra periférica o ambigua. El filtrado geométrico actúa como mecanismo de control de calidad que selecciona las muestras más informativas, descartando aquellas que podrían confundir las fronteras de decisión del clasificador.
+
+\section{Hipótesis Secundarias}
+\label{sec:hipotesis_secundarias}
+
+Las siguientes hipótesis secundarias descomponen la hipótesis principal en componentes verificables de manera independiente.
+
+\textbf{H1a} (Filtrado): El filtrado geométrico basado en distancia mejora la calidad de las muestras sintéticas respecto a la incorporación sin filtrado. Esta hipótesis evalúa si la selección de candidatos mediante su proximidad euclidiana a los ejemplos reales de la clase produce un conjunto de entrenamiento más efectivo. La métrica de evaluación es el impacto en macro F1 del clasificador entrenado con muestras filtradas frente al clasificador entrenado con muestras sin filtrar.
+
+\textbf{H1b} (Ponderación suave): La ponderación continua basada en la puntuación del filtro geométrico iguala o supera al filtrado binario con peso uniforme. En lugar de la decisión discreta aceptar/rechazar, esta hipótesis propone que asignar pesos proporcionales a la calidad geométrica de cada muestra permite al clasificador aprovechar información gradual sobre la confiabilidad de cada ejemplo sintético. Las muestras de mayor calidad geométrica merecen mayor contribución al entrenamiento.
+
+\textbf{H1c} (Generalización entre tareas): El filtrado geométrico generaliza a través de tareas de procesamiento de lenguaje natural. Los mismos filtros diseñados para clasificación de texto mejoran también el reconocimiento de entidades nombradas, sin modificación alguna. Esta hipótesis evalúa si las propiedades geométricas del espacio de embeddings capturan características de calidad que son agnósticas a la tarea específica.
+
+\textbf{H1d} (Efecto del clasificador): La elección del clasificador modula significativamente el beneficio de la aumentación filtrada. Los clasificadores lineales aprovechan las muestras filtradas de manera más efectiva que los ensambles de árboles. Esta hipótesis aborda la interacción entre el tipo de modelo supervisado y la calidad del aumento de datos, evaluando si los beneficios del filtrado geométrico dependen de la arquitectura del clasificador.
+
+\section{Objetivo General}
+\label{sec:objetivo_general}
+
+El objetivo general de esta investigación es desarrollar, implementar y validar experimentalmente un sistema de filtrado geométrico para muestras de texto generadas por modelos de lenguaje de gran escala, que mejore el rendimiento de clasificadores de texto en escenarios de pocos ejemplos por clase. El sistema debe operar exclusivamente en el espacio de embeddings, de manera desacoplada del modelo generativo, permitiendo su aplicación independientemente del LLM utilizado.
+
+\section{Objetivos Específicos}
+\label{sec:objetivos_especificos}
+
+El primer objetivo específico consiste en diseñar e implementar un sistema de filtros geométricos multi-nivel que evalúe la calidad de muestras sintéticas en el espacio de embeddings. El sistema debe incluir filtros basados en distancia, densidad local y coherencia con la distribución de clase, organizados en una arquitectura de cascada configurable.
+
+El segundo objetivo busca evaluar la ponderación suave como alternativa al filtrado binario. En lugar de la decisión discreta aceptar/rechazar, se propone utilizar las puntuaciones del filtro geométrico como pesos de muestra durante el entrenamiento del clasificador, permitiendo una contribución gradual según la calidad estimada de cada ejemplo sintético.
+
+El tercer objetivo consiste en comparar el sistema propuesto contra 9 métodos de aumentación de datos, incluyendo técnicas clásicas (SMOTE, sobremuestreo aleatorio, EDA, traducción inversa), líneas base modernas (paráfrasis con T5, aumentación contextual con BERT, mixup en embeddings) y la ausencia de aumentación. Esta comparación debe realizarse sobre múltiples conjuntos de datos que abarquen dominios textuales distintos.
+
+El cuarto objetivo busca demostrar la generalización del filtrado geométrico a la tarea de reconocimiento de entidades nombradas. Los mismos filtros desarrollados para clasificación de texto deben aplicarse sin modificación a la selección de oraciones sintéticas para entrenamiento de modelos de NER.
+
+El quinto objetivo consiste en validar estadísticamente todos los resultados mediante un protocolo riguroso que incluya múltiples semillas aleatorias, corrección de Bonferroni para comparaciones múltiples, tamaños de efecto (d de Cohen) e intervalos de confianza al 95\%.
+
+\section{Métricas de Evaluación}
+\label{sec:metricas_evaluacion}
+
+La métrica primaria de evaluación es el macro F1, que asigna peso unitario a cada clase independientemente de su frecuencia en el conjunto de datos. Esta elección refleja el objetivo de mejorar el rendimiento en clases minoritarias sin sacrificar el desempeño en las mayoritarias. El macro F1 promedia la puntuación F1 de cada clase, penalizando equitativamente los errores en todas las categorías.
+
+Las métricas secundarias complementan la evaluación primaria desde múltiples perspectivas. El delta respecto a SMOTE ($\Delta$F1) cuantifica la diferencia entre el macro F1 obtenido con el método evaluado y el obtenido con SMOTE, expresada en puntos porcentuales. Esta métrica permite comparaciones directas entre todos los métodos utilizando SMOTE como línea base común.
+
+La significancia estadística se evalúa mediante prueba t pareada sobre los deltas observados, con corrección de Bonferroni para comparaciones múltiples. El intervalo de confianza al 95\% se calcula mediante bootstrap, proporcionando un rango que contiene la mejora verdadera con probabilidad del 95\%.
+
+El tamaño de efecto se cuantifica mediante la d de Cohen, que normaliza la diferencia media por la desviación estándar combinada. Valores de 0.2 se interpretan como efectos pequeños, 0.5 como medianos y 0.8 como grandes. La tasa de victoria representa la fracción de configuraciones experimentales donde el método evaluado supera a SMOTE, proporcionando una medida de consistencia independiente de la magnitud de las diferencias.
+
+\section{Criterios de Aceptación}
+\label{sec:criterios_aceptacion}
+
+Una hipótesis se considera confirmada cuando la evidencia experimental satisface tres condiciones simultáneas. La primera es magnitud positiva: el delta promedio respecto a SMOTE debe ser mayor que cero. La segunda es significancia estadística: el valor p corregido por Bonferroni debe ser menor que 0.05. La tercera es consistencia: la tasa de victoria debe superar el 50\%, indicando que la mejora se manifiesta en la mayoría de las configuraciones evaluadas.
+
+Una hipótesis se considera parcialmente confirmada cuando la magnitud y la consistencia son favorables pero la significancia estadística es marginal ($0.05 \leq p < 0.10$). Se considera rechazada cuando la mejora no alcanza significancia estadística o cuando la magnitud observada es negativa.

@@ -1,0 +1,63 @@
+# Environment and secrets
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Cache (LLM generations, backtranslations, paraphrases)
+cache/
+
+# Large data files
+data/benchmarks/
+mbti_1.csv
+
+# IDE and tools
+.claude/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Deep research PDFs (not part of the thesis)
+Deep Literature Review*.pdf
+Tesis_ Aumentaci*.pdf
+
+# Logs
+overnight_log.txt
+overnight_v2_log.txt
+selective_mbti_log.txt
+
+# Temporary runners and scripts
+run_overnight.py
+run_overnight_v2.py
+run_all_analyses.sh
+experiments/quick_*.py
+
+# Backup files
+*_backup_*
+
+# Thesis LaTeX build artifacts
+Escrito_Tesis/*.aux
+Escrito_Tesis/*.log
+Escrito_Tesis/*.out
+Escrito_Tesis/*.toc
+Escrito_Tesis/*.lof
+Escrito_Tesis/*.lot
+Escrito_Tesis/*.bbl
+Escrito_Tesis/*.blg
+Escrito_Tesis/*.fls
+Escrito_Tesis/*.fdb_latexmk
+Escrito_Tesis/*.synctex.gz
+Escrito_Tesis/*.pdf
+Escrito_Tesis/metodologia_overleaf.zip

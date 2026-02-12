@@ -1,0 +1,45 @@
+{
+  "timestamp": "20260127_003520",
+  "config": {
+    "synthetic_per_class": 25,
+    "n_shot": 25,
+    "llm_filter": {
+      "type": "cascade",
+      "params": {
+        "filter_level": 1,
+        "k_neighbors": 10
+      }
+    },
+    "llm_model": "gemini-3-flash-preview"
+  },
+  "results": [
+    {
+      "dataset": "sms_spam",
+      "scale": 10,
+      "n_train": 20,
+      "n_classes": 2,
+      "baseline_f1": 0.778870725492995,
+      "smote_f1": 0.8046238073645449,
+      "llm_f1": 0.7975477159366422,
+      "smote_delta": 2.57530818715499,
+      "llm_delta": 1.8676990443647234,
+      "llm_vs_smote": -0.7076091427902664,
+      "llm_calls": 2,
+      "llm_acceptance_rate": 1.0
+    },
+    {
+      "dataset": "sms_spam",
+      "scale": 50,
+      "n_train": 100,
+      "n_classes": 2,
+      "baseline_f1": 0.866295732255705,
+      "smote_f1": 0.8785579436537903,
+      "llm_f1": 0.8614939605096597,
+      "smote_delta": 1.2262211398085254,
+      "llm_delta": -0.4801771746045347,
+      "llm_vs_smote": -1.7063983144130601,
+      "llm_calls": 3,
+      "llm_acceptance_rate": 0.8676470588235294
+    }
+  ]
+}

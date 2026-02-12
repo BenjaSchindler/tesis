@@ -1,0 +1,136 @@
+======================================================================
+CLOSED-LOOP PROMPT IMPROVEMENT — RESULTS ANALYSIS
+======================================================================
+
+Configuration:
+  Target per class: 50
+  Max iterations: 5
+  Batch size: 25
+  Filters: ['cascade_l1', 'lof']
+  Seeds: [42, 123, 456, 789, 1024]
+  Total results: 120
+
+======================================================================
+1. OVERALL PERFORMANCE
+======================================================================
+
+  Closed-loop vs SMOTE:       mean=+1.12pp, win rate=51.7%
+  Closed-loop vs single-pass: mean=+2.08pp, win rate=40.8%
+
+======================================================================
+2. PERFORMANCE BY FILTER
+======================================================================
+
+Filter              vs SMOTE    Win%    vs Single    Win%
+-------------------------------------------------------
+cascade_l1            +1.14p   55.0%       +1.50p   38.3%
+lof                   +1.09p   48.3%       +2.67p   43.3%
+
+======================================================================
+3. PERFORMANCE BY DATASET
+======================================================================
+
+Dataset                                 vs SMOTE    Win%      CL F1      SP F1
+---------------------------------------------------------------------------
+20newsgroups_10shot                       +3.79p   90.0%     0.7871     0.6221
+20newsgroups_25shot                       -0.98p   40.0%     0.8225     0.8105
+20newsgroups_50shot                       +1.57p  100.0%     0.8511     0.8478
+ag_news_synthetic_10shot                  -0.44p    0.0%     0.9956     1.0000
+ag_news_synthetic_25shot                  +0.00p    0.0%     1.0000     1.0000
+ag_news_synthetic_50shot                  +0.00p    0.0%     1.0000     1.0000
+hate_speech_davidson_10shot               +4.84p  100.0%     0.5733     0.4996
+hate_speech_davidson_25shot               +2.22p  100.0%     0.6077     0.6067
+hate_speech_davidson_50shot               +4.11p  100.0%     0.6369     0.6382
+sms_spam_10shot                           +0.01p   50.0%     0.8684     0.8536
+sms_spam_25shot                           -0.35p   40.0%     0.9232     0.9291
+sms_spam_50shot                           -1.38p    0.0%     0.9337     0.9421
+
+======================================================================
+4. CONVERGENCE ANALYSIS
+======================================================================
+
+  Convergence reasons (total class-level runs: 390):
+    TARGET_REACHED           :  242 (62.1%)
+    MAX_ITERATIONS           :   82 (21.0%)
+    ACCEPTANCE_PLATEAU       :   66 (16.9%)
+
+  Iterations per class:
+    Mean: 3.82
+    Median: 4.0
+    Max: 5
+    Min: 2
+
+======================================================================
+5. FAILURE MODE ANALYSIS
+======================================================================
+
+  Overall failure distribution (total rejections: 6934):
+    DISTANCE_OUTLIER         :  5349 (77.1%)
+    CROSS_CLASS              :  1585 (22.9%)
+
+======================================================================
+6. ACCEPTANCE RATE BY ITERATION
+======================================================================
+
+ Iteration    Mean Accept      Std      N
+----------------------------------------
+         0          71.2%    27.7%    390
+         1          74.7%    27.5%    390
+         2          73.0%    26.1%    359
+         3          62.1%    28.7%    212
+         4          58.9%    27.7%    139
+
+  Acceptance rate change (iteration 0 -> 4): -12.3pp
+  >> Prompt improvement did NOT increase acceptance rates
+
+======================================================================
+7. LLM CALL EFFICIENCY
+======================================================================
+
+  Total LLM calls per experiment:
+    Mean: 12.4
+    Median: 12.0
+    Min: 5
+    Max: 20
+
+  F1 improvement per LLM call (vs SMOTE):
+    Mean: 0.0849pp/call
+    Std:  0.3243
+
+======================================================================
+8. STATISTICAL TESTS
+======================================================================
+
+  Closed-loop vs SMOTE:
+    Mean delta: +1.12pp
+    t-statistic: 3.947
+    p-value: 0.000134
+    Cohen's d: 0.360
+    Significant: YES
+
+  Closed-loop vs single-pass:
+    Mean delta: +2.08pp
+    t-statistic: 3.141
+    p-value: 0.002123
+    Cohen's d: 0.287
+    Significant: YES
+
+======================================================================
+CONCLUSION
+======================================================================
+
+  Overall Assessment:
+    - Closed-loop vs SMOTE: +1.12pp, 52% win rate
+    - Closed-loop vs single-pass: +2.08pp, 41% win rate
+
+  Dominant failure mode: DISTANCE_OUTLIER (5349/6934 = 77%)
+  Convergence: 242/390 classes reached target (62%)
+
+  The closed-loop approach shows modest improvement over single-pass
+  (+2.08pp) but limited advantage over SMOTE
+  (+1.12pp with only 52% win rate).
+
+  Key insight: Simple single-pass filtering with top-N selection is
+  competitive with iterative prompt improvement, suggesting that the
+  initial LLM generations are already reasonably well-targeted.
+

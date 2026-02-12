@@ -1,0 +1,31 @@
+% Tabla: Resultados de configuraciones ensemble
+% Validación K-Fold CV (5×3 = 15 folds) y Hold-out correcto
+\begin{table}[htbp]
+\centering
+\caption{Resultados de configuraciones ensemble}
+\label{tab:ensemble_results}
+\begin{tabular}{llccc}
+\toprule
+\textbf{Ensemble} & \textbf{Estrategia} & \textbf{$\Delta$ F1 (pp)} & \textbf{p-valor} & \textbf{Sig.} \\
+\midrule
+\multicolumn{5}{l}{\textit{Hold-out correcto (sin data leakage):}} \\
+\rowcolor{green!20}
+\textbf{ENS\_TopG5\_Extended} & Top-5 extendido Phase G & \textbf{+2.78} & $<$0.001 & \checkmark \\
+ENS\_SUPER\_G5\_F7\_v2 & Super ensemble v2 & +2.70 & $<$0.001 & \checkmark \\
+\midrule
+\multicolumn{5}{l}{\textit{K-Fold CV (5$\times$3):}} \\
+ENS\_SUPER\_G5\_F7\_v2 & Super ensemble v2 & +2.05 & 0.000003 & \checkmark \\
+TOP\_all\_common & Mejores configs comunes & +1.61 & $<$0.05 & \checkmark \\
+\midrule
+\textit{Mejor individual} & \textit{W5\_shot\_140} & \textit{+1.32} & \textit{$<$0.05} & \checkmark \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Línea base Macro F1: 0.2045. Todos los ensembles son significativos (p $<$ 0.05).
+
+\textbullet\ \textbf{Hallazgo clave}: Los ensembles \textbf{sí superan} la mejor configuración individual (+1.61 vs +1.32 pp).
+
+\textbullet\ La metodología hold-out correcta muestra mejoras mayores (+2.78 pp) al evitar data leakage.
+
+\end{table}

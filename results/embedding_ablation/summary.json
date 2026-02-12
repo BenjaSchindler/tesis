@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-02-07T11:52:32.439921",
+  "n_experiments": 504,
+  "models": [
+    "mpnet-base",
+    "bge-large",
+    "e5-large",
+    "bge-small"
+  ]
+}

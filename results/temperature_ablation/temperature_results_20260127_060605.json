@@ -1,0 +1,124 @@
+{
+  "timestamp": "20260127_060605",
+  "config": {
+    "temperatures": [
+      0.5,
+      0.7,
+      0.8,
+      0.9,
+      1.0
+    ],
+    "datasets": [
+      "sms_spam_10shot",
+      "20newsgroups_10shot"
+    ],
+    "synthetic_per_class": 50,
+    "llm_filter": {
+      "filter_level": 1,
+      "k_neighbors": 10
+    },
+    "llm_model": "gemini-3-flash-preview"
+  },
+  "results": [
+    {
+      "dataset": "sms_spam_10shot",
+      "temperature": 0.5,
+      "baseline_f1": 0.8772066684002195,
+      "llm_f1": 0.8765510479052476,
+      "llm_delta": -0.06556204949719202,
+      "llm_calls": 11,
+      "acceptance_rate": 0.9044980443285529,
+      "n_synthetic": 100
+    },
+    {
+      "dataset": "sms_spam_10shot",
+      "temperature": 0.7,
+      "baseline_f1": 0.8772066684002195,
+      "llm_f1": 0.8916529427060761,
+      "llm_delta": 1.4446274305856543,
+      "llm_calls": 6,
+      "acceptance_rate": 0.962962962962963,
+      "n_synthetic": 100
+    },
+    {
+      "dataset": "sms_spam_10shot",
+      "temperature": 0.8,
+      "baseline_f1": 0.8772066684002195,
+      "llm_f1": 0.8665880238175486,
+      "llm_delta": -1.0618644582670922,
+      "llm_calls": 11,
+      "acceptance_rate": 0.8424657534246576,
+      "n_synthetic": 100
+    },
+    {
+      "dataset": "sms_spam_10shot",
+      "temperature": 0.9,
+      "baseline_f1": 0.8772066684002195,
+      "llm_f1": 0.8753907390397255,
+      "llm_delta": -0.18159293604940174,
+      "llm_calls": 6,
+      "acceptance_rate": 0.9027325959661678,
+      "n_synthetic": 100
+    },
+    {
+      "dataset": "sms_spam_10shot",
+      "temperature": 1.0,
+      "baseline_f1": 0.8772066684002195,
+      "llm_f1": 0.926692440061424,
+      "llm_delta": 4.948577166120449,
+      "llm_calls": 5,
+      "acceptance_rate": 0.9032258064516129,
+      "n_synthetic": 100
+    },
+    {
+      "dataset": "20newsgroups_10shot",
+      "temperature": 0.5,
+      "baseline_f1": 0.748074073930749,
+      "llm_f1": 0.7984425854028283,
+      "llm_delta": 5.0368511472079325,
+      "llm_calls": 15,
+      "acceptance_rate": 0.9236694677871149,
+      "n_synthetic": 200
+    },
+    {
+      "dataset": "20newsgroups_10shot",
+      "temperature": 0.7,
+      "baseline_f1": 0.748074073930749,
+      "llm_f1": 0.7896651024817782,
+      "llm_delta": 4.159102855102925,
+      "llm_calls": 13,
+      "acceptance_rate": 0.931275287892935,
+      "n_synthetic": 200
+    },
+    {
+      "dataset": "20newsgroups_10shot",
+      "temperature": 0.8,
+      "baseline_f1": 0.748074073930749,
+      "llm_f1": 0.8084649853182087,
+      "llm_delta": 6.039091138745967,
+      "llm_calls": 19,
+      "acceptance_rate": 0.835653361887531,
+      "n_synthetic": 200
+    },
+    {
+      "dataset": "20newsgroups_10shot",
+      "temperature": 0.9,
+      "baseline_f1": 0.748074073930749,
+      "llm_f1": 0.8106092645444762,
+      "llm_delta": 6.253519061372725,
+      "llm_calls": 11,
+      "acceptance_rate": 0.9043737060041408,
+      "n_synthetic": 200
+    },
+    {
+      "dataset": "20newsgroups_10shot",
+      "temperature": 1.0,
+      "baseline_f1": 0.748074073930749,
+      "llm_f1": 0.8225206307102859,
+      "llm_delta": 7.444655677953693,
+      "llm_calls": 13,
+      "acceptance_rate": 0.9140540831717303,
+      "n_synthetic": 200
+    }
+  ]
+}

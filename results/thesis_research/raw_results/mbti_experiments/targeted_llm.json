@@ -1,0 +1,533 @@
+{
+  "experiment": "targeted_llm",
+  "timestamp": "2026-01-26T14:09:46.694394",
+  "hypothesis": "Targeted LLM generation for gap classes complements SMOTE",
+  "smote_baseline": {
+    "delta_mean_pp": 0.127,
+    "delta_pct": 62.0,
+    "baseline_f1": 0.205,
+    "augmented_f1": 0.332,
+    "description": "SMOTE on embedding space with k=5 neighbors"
+  },
+  "target_description": "delta_mean must be > 0.127 (12.7 pp) to beat SMOTE",
+  "config": {
+    "n_shot": 50,
+    "lof_threshold": -0.5,
+    "oversample_factor": 2.0,
+    "smote_n_per_class": 100
+  },
+  "result": {
+    "config_name": "targeted_llm",
+    "config_params": {
+      "fixed_n_per_class": 100,
+      "oversample_factor": 2.0,
+      "fixed_n_selection_strategy": "similarity",
+      "max_clusters": 12,
+      "anchor_strategy": "medoid",
+      "auto_anchor_margin": 0.05,
+      "anchor_selection_ratio": 0.8,
+      "anchor_outlier_threshold": 1.5,
+      "k_neighbors": 50,
+      "filter_cascade_level": 4,
+      "similarity_threshold": 0.65,
+      "min_classifier_confidence": 0.05,
+      "contamination_threshold": 0.95,
+      "filter_mode": "hybrid",
+      "synthetic_weight": 1.0,
+      "budget_pct": 0.2,
+      "n_shot": 50,
+      "temperature": 0.7,
+      "prompts_per_cluster": 9,
+      "samples_per_prompt": 5,
+      "use_f1_budget_scaling": true,
+      "f1_budget_thresholds": [
+        0.35,
+        0.2
+      ],
+      "f1_budget_multipliers": [
+        0.0,
+        0.5,
+        2.5
+      ],
+      "use_val_gating": true,
+      "val_size": 0.15,
+      "val_tolerance": 0.02,
+      "cap_class_ratio": 0.15,
+      "llm_provider": "google",
+      "llm_model": "gemini-3-flash-preview",
+      "method": "targeted_llm",
+      "lof_threshold": -0.5,
+      "smote_n_per_class": 100,
+      "n_gap_classes": 14,
+      "total_recommended": 626
+    },
+    "n_folds": 15,
+    "baseline_mean": 0.20481519791318537,
+    "baseline_std": 0.014365262301148384,
+    "augmented_mean": 0.2939748359858894,
+    "augmented_std": 0.019910227648347028,
+    "delta_mean": 0.08915963807270404,
+    "delta_std": 0.015462373410482889,
+    "delta_pct": 43.53174909925189,
+    "ci_95_lower": 0.0805968610891987,
+    "ci_95_upper": 0.09772241505620938,
+    "t_statistic": 22.33252193840786,
+    "p_value": 2.398758425213982e-12,
+    "significant": true,
+    "win_rate": 1.0,
+    "n_synthetic": 1600,
+    "method": "targeted_llm",
+    "per_class_delta": {
+      "ENFJ": 0.05916281550427893,
+      "ENFP": 0.0019557419244124463,
+      "ENTJ": 0.09973109393923836,
+      "ENTP": 0.015002647654960732,
+      "ESFJ": 0.3748013825413206,
+      "ESFP": 0.14060606060606062,
+      "ESTJ": 0.19592592592592595,
+      "ESTP": 0.24610817202121552,
+      "INFJ": 0.011486621214830961,
+      "INFP": 0.004997190387815653,
+      "INTJ": -9.559926191454737e-05,
+      "INTP": 0.007746208896888318,
+      "ISFJ": 0.1002073181678913,
+      "ISFP": 0.05488810456061266,
+      "ISTJ": 0.059071550672637585,
+      "ISTP": 0.05495897440708966
+    },
+    "problem_class_delta": {
+      "ENFJ": 0.05916281550427893,
+      "ESFJ": 0.3748013825413206,
+      "ESFP": 0.14060606060606062,
+      "ESTJ": 0.19592592592592595,
+      "ISTJ": 0.059071550672637585
+    },
+    "timestamp": "2026-01-26T14:09:46.674536"
+  },
+  "detailed_stats": {
+    "generation_stats": {
+      "ISTJ": {
+        "generated": 81,
+        "target": 50,
+        "priority": 1,
+        "gap_score": 0.537597683114273,
+        "tokens_used": 9305
+      },
+      "ISFJ": {
+        "generated": 72,
+        "target": 48,
+        "priority": 2,
+        "gap_score": 0.3680107917975301,
+        "tokens_used": 9601
+      },
+      "INFJ": {
+        "generated": 65,
+        "target": 50,
+        "priority": 3,
+        "gap_score": 0.3266614077396221,
+        "tokens_used": 9492
+      },
+      "INTJ": {
+        "generated": 80,
+        "target": 50,
+        "priority": 4,
+        "gap_score": 0.4222216063304339,
+        "tokens_used": 9543
+      },
+      "ISTP": {
+        "generated": 80,
+        "target": 50,
+        "priority": 5,
+        "gap_score": 0.40438593545075097,
+        "tokens_used": 9571
+      },
+      "ISFP": {
+        "generated": 76,
+        "target": 50,
+        "priority": 6,
+        "gap_score": 0.45709919726193526,
+        "tokens_used": 9453
+      },
+      "INFP": {
+        "generated": 75,
+        "target": 50,
+        "priority": 7,
+        "gap_score": 0.17764293831662478,
+        "tokens_used": 9271
+      },
+      "INTP": {
+        "generated": 68,
+        "target": 50,
+        "priority": 8,
+        "gap_score": 0.29701715083408425,
+        "tokens_used": 9354
+      },
+      "ESTP": {
+        "generated": 36,
+        "target": 18,
+        "priority": 9,
+        "gap_score": 0.3088322673197383,
+        "tokens_used": 8426
+      },
+      "ENFP": {
+        "generated": 62,
+        "target": 50,
+        "priority": 10,
+        "gap_score": 0.32836277112438955,
+        "tokens_used": 9312
+      },
+      "ENTP": {
+        "generated": 64,
+        "target": 50,
+        "priority": 11,
+        "gap_score": 0.3832156934741621,
+        "tokens_used": 9271
+      },
+      "ESTJ": {
+        "generated": 24,
+        "target": 12,
+        "priority": 12,
+        "gap_score": 0.19180620714757565,
+        "tokens_used": 6952
+      },
+      "ENFJ": {
+        "generated": 72,
+        "target": 48,
+        "priority": 13,
+        "gap_score": 0.5026248415028549,
+        "tokens_used": 9205
+      },
+      "ENTJ": {
+        "generated": 78,
+        "target": 50,
+        "priority": 14,
+        "gap_score": 0.5155067805810158,
+        "tokens_used": 9250
+      }
+    },
+    "filter_stats": {
+      "ISTJ": {
+        "original": 81,
+        "after_lof": 81,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.1328539103269577,
+        "target": 50
+      },
+      "ISFJ": {
+        "original": 72,
+        "after_lof": 72,
+        "kept": 48,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.13706085085868835,
+        "target": 48
+      },
+      "INFJ": {
+        "original": 65,
+        "after_lof": 65,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.04594250023365021,
+        "target": 50
+      },
+      "INTJ": {
+        "original": 80,
+        "after_lof": 80,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.0724404975771904,
+        "target": 50
+      },
+      "ISTP": {
+        "original": 80,
+        "after_lof": 80,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.1398293673992157,
+        "target": 50
+      },
+      "ISFP": {
+        "original": 76,
+        "after_lof": 76,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.10847751796245575,
+        "target": 50
+      },
+      "INFP": {
+        "original": 75,
+        "after_lof": 75,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.062430329620838165,
+        "target": 50
+      },
+      "INTP": {
+        "original": 68,
+        "after_lof": 68,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.08270646631717682,
+        "target": 50
+      },
+      "ESTP": {
+        "original": 36,
+        "after_lof": 36,
+        "kept": 18,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.12217479199171066,
+        "target": 18
+      },
+      "ENFP": {
+        "original": 62,
+        "after_lof": 62,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.0697903260588646,
+        "target": 50
+      },
+      "ENTP": {
+        "original": 64,
+        "after_lof": 64,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.07213420420885086,
+        "target": 50
+      },
+      "ESTJ": {
+        "original": 24,
+        "after_lof": 24,
+        "kept": 12,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.059759050607681274,
+        "target": 12
+      },
+      "ENFJ": {
+        "original": 72,
+        "after_lof": 72,
+        "kept": 48,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.0971698984503746,
+        "target": 48
+      },
+      "ENTJ": {
+        "original": 78,
+        "after_lof": 78,
+        "kept": 50,
+        "pct_kept_lof": 100.0,
+        "mean_lof_score": -0.0983908474445343,
+        "target": 50
+      }
+    },
+    "per_class_stats": {
+      "ENFJ": {
+        "type": "gap_class",
+        "llm_samples": 48,
+        "smote_samples": 52,
+        "total": 100,
+        "filter_stats": {
+          "original": 72,
+          "after_lof": 72,
+          "kept": 48,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.0971698984503746,
+          "target": 48
+        }
+      },
+      "ENFP": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 62,
+          "after_lof": 62,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.0697903260588646,
+          "target": 50
+        }
+      },
+      "ENTJ": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 78,
+          "after_lof": 78,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.0983908474445343,
+          "target": 50
+        }
+      },
+      "ENTP": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 64,
+          "after_lof": 64,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.07213420420885086,
+          "target": 50
+        }
+      },
+      "ESFJ": {
+        "type": "non_gap_class",
+        "llm_samples": 0,
+        "smote_samples": 100,
+        "total": 100
+      },
+      "ESFP": {
+        "type": "non_gap_class",
+        "llm_samples": 0,
+        "smote_samples": 100,
+        "total": 100
+      },
+      "ESTJ": {
+        "type": "gap_class",
+        "llm_samples": 12,
+        "smote_samples": 88,
+        "total": 100,
+        "filter_stats": {
+          "original": 24,
+          "after_lof": 24,
+          "kept": 12,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.059759050607681274,
+          "target": 12
+        }
+      },
+      "ESTP": {
+        "type": "gap_class",
+        "llm_samples": 18,
+        "smote_samples": 82,
+        "total": 100,
+        "filter_stats": {
+          "original": 36,
+          "after_lof": 36,
+          "kept": 18,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.12217479199171066,
+          "target": 18
+        }
+      },
+      "INFJ": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 65,
+          "after_lof": 65,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.04594250023365021,
+          "target": 50
+        }
+      },
+      "INFP": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 75,
+          "after_lof": 75,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.062430329620838165,
+          "target": 50
+        }
+      },
+      "INTJ": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 80,
+          "after_lof": 80,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.0724404975771904,
+          "target": 50
+        }
+      },
+      "INTP": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 68,
+          "after_lof": 68,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.08270646631717682,
+          "target": 50
+        }
+      },
+      "ISFJ": {
+        "type": "gap_class",
+        "llm_samples": 48,
+        "smote_samples": 52,
+        "total": 100,
+        "filter_stats": {
+          "original": 72,
+          "after_lof": 72,
+          "kept": 48,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.13706085085868835,
+          "target": 48
+        }
+      },
+      "ISFP": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 76,
+          "after_lof": 76,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.10847751796245575,
+          "target": 50
+        }
+      },
+      "ISTJ": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 81,
+          "after_lof": 81,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.1328539103269577,
+          "target": 50
+        }
+      },
+      "ISTP": {
+        "type": "gap_class",
+        "llm_samples": 50,
+        "smote_samples": 50,
+        "total": 100,
+        "filter_stats": {
+          "original": 80,
+          "after_lof": 80,
+          "kept": 50,
+          "pct_kept_lof": 100.0,
+          "mean_lof_score": -0.1398293673992157,
+          "target": 50
+        }
+      }
+    }
+  }
+}

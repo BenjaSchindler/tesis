@@ -1,0 +1,40 @@
+% Chapter 2 - Definición del Problema
+
+\chapter{Definición del Problema}
+\label{ch:problema}
+
+\section{El Problema de la Escasez de Datos Etiquetados}
+
+La clasificación supervisada de texto requiere ejemplos etiquetados en cantidad suficiente para que el modelo aprenda los patrones distintivos de cada clase. En la práctica, muchas tareas disponen de conjuntos de entrenamiento extremadamente reducidos. Un investigador que desea construir un detector de discurso de odio para una plataforma nueva, o un clasificador de intenciones para un dominio especializado, puede contar con apenas 10 a 50 ejemplos etiquetados por categoría. Esta situación, denominada escenario de pocos ejemplos, impide que los algoritmos de aprendizaje estadístico estimen con precisión las fronteras de decisión entre clases.
+
+La degradación del rendimiento es especialmente severa en problemas multiclase. Cuando el espacio de categorías se amplía, cada clase necesita masa crítica independiente para que el modelo capture sus características. Con 10 ejemplos por clase y 6 categorías, el conjunto de entrenamiento completo contiene apenas 60 muestras, una cifra que resulta insuficiente para la mayoría de los algoritmos. Los clasificadores entrenados bajo estas condiciones convergen hacia estrategias que favorecen las clases mejor representadas, produciendo una caída pronunciada en la métrica macro F1 \cite{gopali2024applicability}. Esta métrica, al ponderar equitativamente el rendimiento de cada clase, refleja con fidelidad la incapacidad del modelo para tratar adecuadamente las categorías con menos ejemplos.
+
+El problema no se limita a un dominio particular. Conjuntos de datos ampliamente utilizados en la comunidad, como Stanford Sentiment Treebank 2, AG News, 20 Newsgroups y datasets de detección de spam, presentan distribuciones desiguales entre sus clases \cite{whitehouse2023llm}. La escasez de datos etiquetados y el desbalance entre categorías constituyen así un obstáculo transversal que afecta a múltiples áreas del procesamiento de lenguaje natural.
+
+\section{Limitaciones de las Soluciones Existentes}
+
+La comunidad ha propuesto diversas estrategias de aumentación de datos para mitigar la escasez, pero cada una presenta limitaciones que restringen su efectividad. A continuación se identifican tres deficiencias críticas en los enfoques actuales que motivan esta investigación.
+
+\subsection{Deficiencia 1: Ausencia de Validación Post-Generación}
+
+Los métodos actuales que utilizan LLMs para aumentación de datos aceptan todas las muestras generadas sin evaluar su calidad en el espacio de representación. Un LLM puede producir una oración gramaticalmente correcta que, al ser proyectada al espacio de embeddings, se ubique en una región que corresponde a una clase diferente de la solicitada. De manera análoga, el modelo puede generar texto que cae en zonas periféricas del espacio, alejadas de la distribución real de la clase objetivo.
+
+Esta ausencia de control de calidad geométrico permite que muestras defectuosas contaminen el conjunto de entrenamiento. SMOTExT, por ejemplo, genera texto correspondiente a puntos interpolados en el espacio de embeddings, pero no verifica si el texto producido mantiene coherencia semántica con su ubicación geométrica pretendida \cite{smotext2025arxiv}. La literatura carece de protocolos estandarizados para cuantificar y filtrar estas inconsistencias antes de incorporar las muestras al entrenamiento.
+
+\subsection{Deficiencia 2: Ponderación Uniforme de Muestras Sintéticas}
+
+Los métodos existentes asignan peso idéntico a todas las muestras sintéticas durante el entrenamiento del clasificador. Esta práctica ignora información geométrica disponible que podría mejorar la calidad del aprendizaje. Una muestra sintética ubicada en una región densa del espacio de embeddings, rodeada de múltiples ejemplos reales de su clase, posee mayor probabilidad de ser representativa y confiable. En contraste, una muestra ubicada en una zona dispersa, con pocos vecinos de la misma clase, podría corresponder a un caso atípico o a un error de generación.
+
+Asignar peso uniforme a ambas muestras desaprovecha la señal que proporciona el contexto geométrico local. La información sobre la densidad del vecindario, la distancia a los ejemplos reales más cercanos y la proporción de vecinos de la misma clase constituyen indicadores de calidad que los métodos actuales no explotan. ImbLLM reconoce implícitamente este problema al enfatizar la diversidad durante la generación \cite{imbllm2024arxiv}, pero no implementa esquemas de ponderación adaptativa basados en métricas geométricas locales.
+
+\subsection{Deficiencia 3: Falta de Validación Multi-Tarea y Multi-Dominio}
+
+La mayoría de los estudios que evalúan la aumentación con LLMs se limitan a un solo conjunto de datos o a un único tipo de tarea. Los resultados obtenidos en un corpus particular no garantizan que el método funcione en otros dominios textuales con características diferentes. Esta falta de validación cruzada impide determinar si las ganancias observadas son genuinamente atribuibles al método propuesto o si dependen de particularidades del conjunto de datos empleado.
+
+La carencia es aún más pronunciada cuando se considera la generalización entre tareas. Un mecanismo de control de calidad diseñado para clasificación de texto podría no funcionar para reconocimiento de entidades nombradas, generación de preguntas u otras tareas de procesamiento de lenguaje natural. Hasta la fecha, no se ha demostrado que los filtros de calidad basados en propiedades geométricas del espacio de embeddings mantengan su efectividad a través de tareas y dominios distintos.
+
+\section{Oportunidad de Investigación}
+
+Las deficiencias identificadas revelan una oportunidad en la intersección de tres dimensiones metodológicas. La primera dimensión consiste en integrar mecanismos de validación post-generación que evalúen cada muestra sintética según su posición en el espacio de embeddings, filtrando aquellas que no satisfacen criterios geométricos de calidad. La segunda dimensión propone desarrollar esquemas de ponderación adaptativa que asignen a cada muestra un peso proporcional a su calidad geométrica, en lugar de la decisión binaria de aceptar o rechazar. La tercera dimensión busca demostrar que estos mecanismos de control de calidad generalizan a través de múltiples conjuntos de datos y tareas del procesamiento de lenguaje natural.
+
+Esta tesis aborda sistemáticamente estas tres dimensiones. El sistema propuesto implementa filtros geométricos que operan sobre el espacio de embeddings, un mecanismo de ponderación suave basado en las puntuaciones de dichos filtros, y una validación experimental que abarca 7 dominios textuales y 2 tareas distintas (clasificación y reconocimiento de entidades nombradas). El diseño enfatiza la eficiencia operacional, utilizando LLMs pre-entrenados sin requerir fine-tuning, lo que facilita su aplicación en entornos con recursos computacionales limitados.

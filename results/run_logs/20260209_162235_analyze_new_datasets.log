@@ -1,0 +1,114 @@
+======================================================================
+NEW DATASETS ANALYSIS: BANKING77, CLINC150, TREC6
+======================================================================
+
+Loaded 324 results
+Datasets (9): banking77_10shot, banking77_25shot, banking77_50shot, clinc150_10shot, clinc150_25shot, clinc150_50shot, trec6_10shot, trec6_25shot, trec6_50shot
+Methods (4): binary_filter, no_augmentation, smote, soft_weighted
+Classifiers (3): logistic_regression, ridge, svc_linear
+Seeds (3): [42, 123, 456]
+
+======================================================================
+ANALYSIS 1: METHOD RANKING (Delta vs SMOTE)
+======================================================================
+
+Method                 Mean Delta      Std   Win Rate      N
+----------------------------------------------------------
+binary_filter               +2.87pp     5.54      59.3%     81
+soft_weighted               +1.97pp     4.04      51.9%     81
+no_augmentation             -0.45pp     1.46      27.2%     81
+
+======================================================================
+ANALYSIS 2: STATISTICAL SIGNIFICANCE (vs SMOTE)
+======================================================================
+
+Method                 Mean Delta     t-stat      p-value    Cohen d    Sig
+------------------------------------------------------------------------
+binary_filter               +2.87pp      2.656     0.013316      0.511      *
+no_augmentation             -0.45pp     -1.730     0.095443     -0.333   n.s.
+soft_weighted               +1.97pp      2.508     0.018736      0.483      *
+
+======================================================================
+ANALYSIS 3: PER-DATASET BREAKDOWN (soft_weighted vs SMOTE)
+======================================================================
+
+Dataset                         N_cls      SMOTE     Soft_W      Delta     Binary     No_Aug
+----------------------------------------------------------------------------------------
+banking77_10shot                   77     0.8437     0.8376      -0.61pp     0.8425     0.8313
+banking77_25shot                   77     0.8976     0.8846      -1.30pp     0.8815     0.8915
+banking77_50shot                   77     0.9090     0.8984      -1.05pp     0.8965     0.9048
+clinc150_10shot                   150     0.9157     0.9208      +0.51pp     0.9244     0.9125
+clinc150_25shot                   150     0.9382     0.9339      -0.43pp     0.9368     0.9355
+clinc150_50shot                   150     0.9488     0.9482      -0.06pp     0.9476     0.9491
+trec6_10shot                        6     0.6354     0.7365     +10.12pp     0.7931     0.6190
+trec6_25shot                        6     0.7286     0.7887      +6.02pp     0.7997     0.7318
+trec6_50shot                        6     0.7401     0.7851      +4.50pp     0.7932     0.7407
+
+======================================================================
+ANALYSIS 4: N-CLASSES PATTERN (New Datasets + Thesis Final)
+======================================================================
+
+ N_Classes   Mean Delta      Std   Win Rate    N Pairs Source Datasets
+--------------------------------------------------------------------------------
+         2        +3.18pp     3.24      93.3%         15 sms_spam
+         3        +1.86pp     2.97      66.7%         15 hate_speech_davidson
+         4        +1.70pp     3.02      73.3%         30 20newsgroups, ag_news
+         6        +5.42pp     3.63     100.0%         24 emotion, trec6
+        14        +0.40pp     0.61      80.0%         15 dbpedia14
+        20        +2.36pp     1.55     100.0%         15 20newsgroups_20class
+        77        -0.99pp     0.52       0.0%          9 banking77
+       150        +0.01pp     0.53      44.4%          9 clinc150
+
+Spearman correlation (n_classes vs delta): r=-0.260, p=0.0026
+  >> SIGNIFICANT: MORE classes = SMALLER gains
+
+======================================================================
+ANALYSIS 5: N-SHOT IMPACT
+======================================================================
+
+N-shot        binary_filter    soft_weighted      N
+--------------------------------------------------
+10                    +5.51pp            +3.34pp     27
+25                    +1.79pp            +1.43pp     27
+50                    +1.32pp            +1.13pp     27
+
+======================================================================
+ANALYSIS 6: SEED VARIANCE CHECK
+======================================================================
+(Checking for identical F1 across seeds — known issue in thesis_final)
+
+  Total (dataset, classifier, method) groups: 108
+  Zero variance across seeds: 66 (61%)
+  Nonzero variance: 42 (39%)
+
+  Method                 Zero Var  Nonzero Var   % Zero
+  ----------------------------------------------------
+  binary_filter                21            6      78%
+  no_augmentation              22            5      81%
+  smote                         0           27       0%
+  soft_weighted                23            4      85%
+
+  Zero-variance groups by classifier (LLM methods only):
+  Classifier                  Zero Var  Nonzero Var
+  -------------------------------------------------
+  logistic_regression               14            4
+  ridge                             14            4
+  svc_linear                        16            2
+
+  >> WARNING: Seed variance issue CONFIRMED for new datasets.
+     LLM-based methods with deterministic classifiers produce identical
+     results across seeds because cached LLM generations are seed-independent.
+
+======================================================================
+ANALYSIS 7: PER-CLASSIFIER BREAKDOWN (soft_weighted vs SMOTE)
+======================================================================
+
+Classifier                  Mean Delta   Win Rate      N
+-------------------------------------------------------
+svc_linear                       +2.66pp      63.0%     27
+ridge                            +2.42pp      51.9%     27
+logistic_regression              +0.82pp      40.7%     27
+
+======================================================================
+ANALYSIS COMPLETE
+======================================================================

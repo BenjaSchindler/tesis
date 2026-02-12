@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\caption{N-shot Validation (PyTorch MLP)}
+\label{tab:pytorch_nshot}
+\begin{tabular}{ccccccc}
+\toprule
+$n_{shot}$ & Baseline & Augmented & $\Delta$ (pp) & p-value & Win\% & Synth \\
+\midrule
+0 & 0.2435 & 0.2485 & +0.49 & 0.3337 & 60\% & 270 \\
+10 & 0.2452 & 0.2414 & -0.38 & 0.4426 & 47\% & 249 \\
+30 & 0.2443 & 0.2455 & +0.12 & 0.7678 & 53\% & 244 \\
+60 & 0.2449 & 0.2482 & +0.34 & 0.4276 & 53\% & 242 \\
+100 & 0.2421 & 0.2447 & +0.26 & 0.5083 & 53\% & 237 \\
+150 & 0.2470 & 0.2438 & -0.32 & 0.5106 & 33\% & 250 \\
+200 & 0.2439 & 0.2421 & -0.17 & 0.6527 & 27\% & 246 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\caption{Consistencia entre modelos: frecuencia de acuerdo}
+\label{tab:embedding_consistency}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Tipo de acuerdo} & \textbf{Conteo (de 21)} & \textbf{Porcentaje} \\
+\midrule
+Total (4 modelos mejoran)          & 11 & 52.4\% \\
+Mayoritario ($\geq$2 modelos)      & 19 & \textbf{90.5\%} \\
+Minoritario ($<$2 modelos)          & 2  & 9.5\% \\
+\midrule
+\multicolumn{3}{l}{\small 21 configuraciones = 7 conjuntos $\times$ 3 n-shot.} \\
+\multicolumn{3}{l}{\small 90.5\% de acuerdo mayoritario confirma robustez entre modelos.} \\
+\multicolumn{3}{l}{\small 2 casos minoritarios: ag\_news\_50shot y dbpedia14\_50shot.} \\
+\bottomrule
+\end{tabular}
+\end{table}

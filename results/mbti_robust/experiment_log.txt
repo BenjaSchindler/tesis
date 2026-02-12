@@ -1,0 +1,235 @@
+2026-02-07 01:11:55.208371: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+================================================================================
+MBTI ROBUST EXPERIMENT: SMOTE vs LLM+SMOTE (Soft Weighted)
+Threshold: 150 | Seeds: [42, 123, 456] | Classifiers: ['ridge', 'svc_linear', 'logistic_regression']
+================================================================================
+
+Loading MBTI data...
+  Total: 8675 samples, 16 classes
+    ESTJ  :    39
+    ESFJ  :    42
+    ESFP  :    48
+    ESTP  :    89
+    ISFJ  :   166
+    ENFJ  :   190
+    ISTJ  :   205
+    ENTJ  :   231
+    ISFP  :   271
+    ISTP  :   337
+    ENFP  :   675
+    ENTP  :   685
+    INTJ  :  1091
+    INTP  :  1304
+    INFJ  :  1470
+    INFP  :  1832
+
+Loading embedding model...
+/home/benja/miniconda3/lib/python3.13/site-packages/huggingface_hub/file_download.py:1150: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Initializing LLM provider...
+
+================================================================================
+SEED 42 (1/3)
+================================================================================
+  Train: 6940, Test: 1735
+  Small classes (< 150): [np.str_('ESFJ'), np.str_('ESFP'), np.str_('ESTJ'), np.str_('ESTP'), np.str_('ISFJ')]
+    ESFJ: 33 samples
+    ESFP: 38 samples
+    ESTJ: 31 samples
+    ESTP: 71 samples
+    ISFJ: 133 samples
+
+  Computing embeddings...
+Batches:   0%|          | 0/28 [00:00<?, ?it/s]Batches:   4%|▎         | 1/28 [00:02<01:09,  2.57s/it]Batches:   7%|▋         | 2/28 [00:04<00:51,  1.97s/it]Batches:  11%|█         | 3/28 [00:05<00:44,  1.78s/it]Batches:  14%|█▍        | 4/28 [00:07<00:40,  1.68s/it]Batches:  18%|█▊        | 5/28 [00:08<00:37,  1.62s/it]Batches:  21%|██▏       | 6/28 [00:10<00:34,  1.58s/it]Batches:  25%|██▌       | 7/28 [00:11<00:32,  1.56s/it]Batches:  29%|██▊       | 8/28 [00:13<00:30,  1.55s/it]Batches:  32%|███▏      | 9/28 [00:14<00:29,  1.57s/it]Batches:  36%|███▌      | 10/28 [00:16<00:28,  1.59s/it]Batches:  39%|███▉      | 11/28 [00:18<00:27,  1.60s/it]Batches:  43%|████▎     | 12/28 [00:19<00:25,  1.60s/it]Batches:  46%|████▋     | 13/28 [00:21<00:24,  1.60s/it]Batches:  50%|█████     | 14/28 [00:22<00:22,  1.61s/it]Batches:  54%|█████▎    | 15/28 [00:24<00:20,  1.61s/it]Batches:  57%|█████▋    | 16/28 [00:26<00:19,  1.60s/it]Batches:  61%|██████    | 17/28 [00:27<00:17,  1.60s/it]Batches:  64%|██████▍   | 18/28 [00:29<00:16,  1.61s/it]Batches:  68%|██████▊   | 19/28 [00:30<00:14,  1.61s/it]Batches:  71%|███████▏  | 20/28 [00:32<00:12,  1.60s/it]Batches:  75%|███████▌  | 21/28 [00:34<00:11,  1.59s/it]Batches:  79%|███████▊  | 22/28 [00:35<00:09,  1.58s/it]Batches:  82%|████████▏ | 23/28 [00:37<00:07,  1.57s/it]Batches:  86%|████████▌ | 24/28 [00:38<00:06,  1.58s/it]Batches:  89%|████████▉ | 25/28 [00:40<00:04,  1.58s/it]Batches:  93%|█████████▎| 26/28 [00:42<00:03,  1.58s/it]Batches:  96%|█████████▋| 27/28 [00:43<00:01,  1.57s/it]Batches: 100%|██████████| 28/28 [00:43<00:00,  1.15s/it]Batches: 100%|██████████| 28/28 [00:43<00:00,  1.56s/it]
+Batches:   0%|          | 0/7 [00:00<?, ?it/s]Batches:  14%|█▍        | 1/7 [00:01<00:09,  1.63s/it]Batches:  29%|██▊       | 2/7 [00:03<00:08,  1.63s/it]Batches:  43%|████▎     | 3/7 [00:04<00:06,  1.63s/it]Batches:  57%|█████▋    | 4/7 [00:06<00:04,  1.63s/it]Batches:  71%|███████▏  | 5/7 [00:08<00:03,  1.62s/it]Batches:  86%|████████▌ | 6/7 [00:09<00:01,  1.61s/it]Batches: 100%|██████████| 7/7 [00:10<00:00,  1.49s/it]Batches: 100%|██████████| 7/7 [00:10<00:00,  1.57s/it]
+
+  Generating LLM samples for small classes...
+    ESFJ: 33 → 150 (need 117 LLM samples)
+      Generated 292 candidates → kept 117 (accept: 40.1%, weight range: [0.000, 1.000])
+    ESFP: 38 → 150 (need 112 LLM samples)
+      Generated 280 candidates → kept 112 (accept: 40.0%, weight range: [0.000, 1.000])
+    ESTJ: 31 → 150 (need 119 LLM samples)
+      Generated 297 candidates → kept 119 (accept: 40.1%, weight range: [0.000, 1.000])
+    ESTP: 71 → 150 (need 79 LLM samples)
+      Generated 197 candidates → kept 79 (accept: 40.1%, weight range: [0.000, 1.000])
+    ISFJ: 133 → 150 (need 17 LLM samples)
+      Generated 42 candidates → kept 17 (accept: 40.5%, weight range: [0.000, 1.000])
+
+  [ridge/baseline] F1=0.1926 (small=0.0114, large=0.2749)
+
+  [ridge/smote_only] F1=0.2322 (small=0.0813, large=0.3008)
+
+  [ridge/llm_binary_smote] F1=0.2458 (small=0.0947, large=0.3146)
+
+  [ridge/llm_soft_smote] F1=0.2485 (small=0.1010, large=0.3156)
+
+  [svc_linear/baseline] F1=0.2232 (small=0.0724, large=0.2917)
+
+  [svc_linear/smote_only] F1=0.2550 (small=0.0767, large=0.3360)
+
+  [svc_linear/llm_binary_smote] F1=0.2643 (small=0.1145, large=0.3324)
+
+  [svc_linear/llm_soft_smote] F1=0.2625 (small=0.1136, large=0.3302)
+
+  [logistic_regression/baseline] F1=0.2026 (small=0.0114, large=0.2895)
+
+  [logistic_regression/smote_only] F1=0.2593 (small=0.1058, large=0.3291)
+
+  [logistic_regression/llm_binary_smote] F1=0.2608 (small=0.1053, large=0.3315)
+
+  [logistic_regression/llm_soft_smote] F1=0.2612 (small=0.1075, large=0.3311)
+
+================================================================================
+SEED 123 (2/3)
+================================================================================
+  Train: 6940, Test: 1735
+  Small classes (< 150): [np.str_('ESFJ'), np.str_('ESFP'), np.str_('ESTJ'), np.str_('ESTP'), np.str_('ISFJ')]
+    ESFJ: 33 samples
+    ESFP: 38 samples
+    ESTJ: 31 samples
+    ESTP: 71 samples
+    ISFJ: 133 samples
+
+  Computing embeddings...
+Batches:   0%|          | 0/28 [00:00<?, ?it/s]Batches:   4%|▎         | 1/28 [00:01<00:44,  1.64s/it]Batches:   7%|▋         | 2/28 [00:03<00:41,  1.60s/it]Batches:  11%|█         | 3/28 [00:04<00:39,  1.58s/it]Batches:  14%|█▍        | 4/28 [00:06<00:38,  1.59s/it]Batches:  18%|█▊        | 5/28 [00:08<00:37,  1.63s/it]Batches:  21%|██▏       | 6/28 [00:09<00:35,  1.64s/it]Batches:  25%|██▌       | 7/28 [00:11<00:33,  1.62s/it]Batches:  29%|██▊       | 8/28 [00:12<00:32,  1.61s/it]Batches:  32%|███▏      | 9/28 [00:14<00:30,  1.62s/it]Batches:  36%|███▌      | 10/28 [00:16<00:31,  1.73s/it]Batches:  39%|███▉      | 11/28 [00:18<00:30,  1.78s/it]Batches:  43%|████▎     | 12/28 [00:20<00:29,  1.82s/it]Batches:  46%|████▋     | 13/28 [00:22<00:28,  1.87s/it]Batches:  50%|█████     | 14/28 [00:24<00:26,  1.86s/it]Batches:  54%|█████▎    | 15/28 [00:26<00:24,  1.92s/it]Batches:  57%|█████▋    | 16/28 [00:28<00:23,  1.94s/it]Batches:  61%|██████    | 17/28 [00:30<00:21,  1.97s/it]Batches:  64%|██████▍   | 18/28 [00:32<00:19,  1.99s/it]Batches:  68%|██████▊   | 19/28 [00:34<00:18,  2.03s/it]Batches:  71%|███████▏  | 20/28 [00:36<00:16,  2.01s/it]Batches:  75%|███████▌  | 21/28 [00:38<00:13,  1.99s/it]Batches:  79%|███████▊  | 22/28 [00:40<00:11,  1.99s/it]Batches:  82%|████████▏ | 23/28 [00:42<00:09,  1.99s/it]Batches:  86%|████████▌ | 24/28 [00:44<00:08,  2.01s/it]Batches:  89%|████████▉ | 25/28 [00:46<00:06,  2.03s/it]Batches:  93%|█████████▎| 26/28 [00:48<00:04,  2.01s/it]Batches:  96%|█████████▋| 27/28 [00:50<00:02,  2.00s/it]Batches: 100%|██████████| 28/28 [00:50<00:00,  1.45s/it]Batches: 100%|██████████| 28/28 [00:50<00:00,  1.80s/it]
+Batches:   0%|          | 0/7 [00:00<?, ?it/s]Batches:  14%|█▍        | 1/7 [00:01<00:09,  1.58s/it]Batches:  29%|██▊       | 2/7 [00:03<00:07,  1.57s/it]Batches:  43%|████▎     | 3/7 [00:04<00:06,  1.57s/it]Batches:  57%|█████▋    | 4/7 [00:06<00:04,  1.57s/it]Batches:  71%|███████▏  | 5/7 [00:07<00:03,  1.56s/it]Batches:  86%|████████▌ | 6/7 [00:09<00:01,  1.56s/it]Batches: 100%|██████████| 7/7 [00:10<00:00,  1.44s/it]Batches: 100%|██████████| 7/7 [00:10<00:00,  1.51s/it]
+
+  Generating LLM samples for small classes...
+    ESFJ: 33 → 150 (need 117 LLM samples)
+      Generated 292 candidates → kept 117 (accept: 40.1%, weight range: [0.000, 1.000])
+    ESFP: 38 → 150 (need 112 LLM samples)
+      Generated 280 candidates → kept 112 (accept: 40.0%, weight range: [0.000, 1.000])
+    ESTJ: 31 → 150 (need 119 LLM samples)
+      Generated 297 candidates → kept 119 (accept: 40.1%, weight range: [0.000, 1.000])
+    ESTP: 71 → 150 (need 79 LLM samples)
+      Generated 197 candidates → kept 79 (accept: 40.1%, weight range: [0.000, 1.000])
+    ISFJ: 133 → 150 (need 17 LLM samples)
+      Generated 42 candidates → kept 17 (accept: 40.5%, weight range: [0.000, 1.000])
+
+  [ridge/baseline] F1=0.1907 (small=0.0222, large=0.2673)
+
+  [ridge/smote_only] F1=0.2334 (small=0.0784, large=0.3039)
+
+  [ridge/llm_binary_smote] F1=0.2347 (small=0.0712, large=0.3089)
+
+  [ridge/llm_soft_smote] F1=0.2338 (small=0.0724, large=0.3072)
+
+  [svc_linear/baseline] F1=0.2134 (small=0.0688, large=0.2791)
+
+  [svc_linear/smote_only] F1=0.2499 (small=0.1008, large=0.3176)
+
+  [svc_linear/llm_binary_smote] F1=0.2472 (small=0.0940, large=0.3168)
+
+  [svc_linear/llm_soft_smote] F1=0.2507 (small=0.1019, large=0.3183)
+
+  [logistic_regression/baseline] F1=0.2001 (small=0.0222, large=0.2809)
+
+  [logistic_regression/smote_only] F1=0.2518 (small=0.0894, large=0.3256)
+
+  [logistic_regression/llm_binary_smote] F1=0.2596 (small=0.1002, large=0.3321)
+
+  [logistic_regression/llm_soft_smote] F1=0.2594 (small=0.1002, large=0.3318)
+
+================================================================================
+SEED 456 (3/3)
+================================================================================
+  Train: 6940, Test: 1735
+  Small classes (< 150): [np.str_('ESFJ'), np.str_('ESFP'), np.str_('ESTJ'), np.str_('ESTP'), np.str_('ISFJ')]
+    ESFJ: 33 samples
+    ESFP: 38 samples
+    ESTJ: 31 samples
+    ESTP: 71 samples
+    ISFJ: 133 samples
+
+  Computing embeddings...
+Batches:   0%|          | 0/28 [00:00<?, ?it/s]Batches:   4%|▎         | 1/28 [00:01<00:43,  1.61s/it]Batches:   7%|▋         | 2/28 [00:03<00:40,  1.57s/it]Batches:  11%|█         | 3/28 [00:04<00:38,  1.55s/it]Batches:  14%|█▍        | 4/28 [00:06<00:36,  1.54s/it]Batches:  18%|█▊        | 5/28 [00:07<00:35,  1.53s/it]Batches:  21%|██▏       | 6/28 [00:09<00:33,  1.53s/it]Batches:  25%|██▌       | 7/28 [00:10<00:32,  1.54s/it]Batches:  29%|██▊       | 8/28 [00:12<00:30,  1.54s/it]Batches:  32%|███▏      | 9/28 [00:13<00:29,  1.54s/it]Batches:  36%|███▌      | 10/28 [00:15<00:27,  1.54s/it]Batches:  39%|███▉      | 11/28 [00:16<00:26,  1.54s/it]Batches:  43%|████▎     | 12/28 [00:18<00:24,  1.54s/it]Batches:  46%|████▋     | 13/28 [00:20<00:22,  1.53s/it]Batches:  50%|█████     | 14/28 [00:21<00:21,  1.54s/it]Batches:  54%|█████▎    | 15/28 [00:23<00:20,  1.54s/it]Batches:  57%|█████▋    | 16/28 [00:24<00:18,  1.54s/it]Batches:  61%|██████    | 17/28 [00:26<00:16,  1.53s/it]Batches:  64%|██████▍   | 18/28 [00:27<00:15,  1.52s/it]Batches:  68%|██████▊   | 19/28 [00:29<00:13,  1.52s/it]Batches:  71%|███████▏  | 20/28 [00:30<00:12,  1.52s/it]Batches:  75%|███████▌  | 21/28 [00:32<00:10,  1.51s/it]Batches:  79%|███████▊  | 22/28 [00:33<00:09,  1.50s/it]Batches:  82%|████████▏ | 23/28 [00:35<00:07,  1.53s/it]Batches:  86%|████████▌ | 24/28 [00:36<00:06,  1.52s/it]Batches:  89%|████████▉ | 25/28 [00:38<00:04,  1.51s/it]Batches:  93%|█████████▎| 26/28 [00:39<00:02,  1.50s/it]Batches:  96%|█████████▋| 27/28 [00:41<00:01,  1.50s/it]Batches: 100%|██████████| 28/28 [00:41<00:00,  1.10s/it]Batches: 100%|██████████| 28/28 [00:41<00:00,  1.48s/it]
+Batches:   0%|          | 0/7 [00:00<?, ?it/s]Batches:  14%|█▍        | 1/7 [00:01<00:09,  1.56s/it]Batches:  29%|██▊       | 2/7 [00:03<00:07,  1.55s/it]Batches:  43%|████▎     | 3/7 [00:04<00:06,  1.55s/it]Batches:  57%|█████▋    | 4/7 [00:06<00:04,  1.54s/it]Batches:  71%|███████▏  | 5/7 [00:07<00:03,  1.54s/it]Batches:  86%|████████▌ | 6/7 [00:09<00:01,  1.54s/it]Batches: 100%|██████████| 7/7 [00:10<00:00,  1.44s/it]Batches: 100%|██████████| 7/7 [00:10<00:00,  1.50s/it]
+
+  Generating LLM samples for small classes...
+    ESFJ: 33 → 150 (need 117 LLM samples)
+      Generated 292 candidates → kept 117 (accept: 40.1%, weight range: [0.000, 1.000])
+    ESFP: 38 → 150 (need 112 LLM samples)
+      Generated 280 candidates → kept 112 (accept: 40.0%, weight range: [0.000, 1.000])
+    ESTJ: 31 → 150 (need 119 LLM samples)
+      Generated 297 candidates → kept 119 (accept: 40.1%, weight range: [0.000, 1.000])
+    ESTP: 71 → 150 (need 79 LLM samples)
+      Generated 197 candidates → kept 79 (accept: 40.1%, weight range: [0.000, 1.000])
+    ISFJ: 133 → 150 (need 17 LLM samples)
+      Generated 42 candidates → kept 17 (accept: 40.5%, weight range: [0.000, 1.000])
+
+  [ridge/baseline] F1=0.1895 (small=0.0114, large=0.2705)
+
+  [ridge/smote_only] F1=0.2366 (small=0.0774, large=0.3089)
+
+  [ridge/llm_binary_smote] F1=0.2402 (small=0.0752, large=0.3152)
+
+  [ridge/llm_soft_smote] F1=0.2399 (small=0.0776, large=0.3136)
+
+  [svc_linear/baseline] F1=0.2265 (small=0.0611, large=0.3018)
+
+  [svc_linear/smote_only] F1=0.2673 (small=0.1282, large=0.3305)
+
+  [svc_linear/llm_binary_smote] F1=0.2628 (small=0.1192, large=0.3280)
+
+  [svc_linear/llm_soft_smote] F1=0.2663 (small=0.1305, large=0.3280)
+
+  [logistic_regression/baseline] F1=0.2019 (small=0.0308, large=0.2797)
+
+  [logistic_regression/smote_only] F1=0.2592 (small=0.1113, large=0.3265)
+
+  [logistic_regression/llm_binary_smote] F1=0.2591 (small=0.1207, large=0.3220)
+
+  [logistic_regression/llm_soft_smote] F1=0.2599 (small=0.1202, large=0.3235)
+
+==========================================================================================
+FINAL REPORT
+==========================================================================================
+
+--- TABLE 1: Overall Method Comparison (vs SMOTE) ---
+Method                  Mean F1    Δ SMOTE               95% CI    p(Bonf)      d   Win%
+-------------------------------------------------------------------------------------
+  baseline               20.45%     -4.49pp [  -5.18,   -3.80]    0.0000* -5.03   0.0%
+  llm_binary_smote       25.27%     +0.33pp [  -0.12,   +0.78]    0.3987  0.56  66.7%
+  llm_soft_smote         25.36%     +0.42pp [  -0.00,   +0.84]    0.1540  0.76  88.9%
+  smote_only (ref)       24.94%    (reference)
+
+--- TABLE 2: LLM Soft+SMOTE vs SMOTE by Classifier ---
+Classifier                Δ SMOTE               95% CI          p   Win%
+------------------------------------------------------------------------
+  ridge                    +0.67pp [  -1.44,   +2.77]    0.3056 100.0%
+  svc_linear               +0.25pp [  -0.87,   +1.36]    0.4415  66.7%
+  logistic_regression      +0.34pp [  -0.58,   +1.26]    0.2524 100.0%
+
+--- TABLE 3: Impact on Small vs Large Classes ---
+Method                   Small F1   Large F1    Small Δ    Large Δ
+-----------------------------------------------------------------
+  baseline                  3.46%     28.17%     -5.97pp     -3.82pp
+  smote_only                9.44%     31.99%     +0.00pp     +0.00pp
+  llm_binary_smote          9.95%     32.24%     +0.51pp     +0.25pp
+  llm_soft_smote           10.28%     32.22%     +0.84pp     +0.23pp
+
+--- TABLE 4: Per-Class F1 Breakdown (avg across seeds & classifiers) ---
+Type       Baseline      SMOTE  LLM+SMOTE Soft+SMOTE     Δ Soft
+--------------------------------------------------------------
+  ENFJ        0.57%     15.95%     16.03%     16.32%     +0.37pp
+  ENFP       42.96%     43.34%     44.25%     44.27%     +0.93pp
+  ENTJ        6.61%     20.33%     20.36%     20.21%     -0.12pp
+  ENTP       44.05%     40.90%     41.44%     41.41%     +0.52pp
+  ESFJ        0.00%     13.69%     13.54%     13.69%     -0.00pp *
+  ESFP        0.00%      1.01%      2.28%      2.37%     +1.37pp *
+  ESTJ        0.00%      3.66%      1.44%      2.95%     -0.71pp *
+  ESTP        5.41%     12.29%     15.86%     15.62%     +3.33pp *
+  INFJ       42.28%     39.91%     40.00%     40.01%     +0.10pp
+  INFP       53.32%     47.73%     48.21%     48.38%     +0.65pp
+  INTJ       37.35%     34.46%     34.85%     35.06%     +0.60pp
+  INTP       44.01%     39.16%     39.89%     39.86%     +0.70pp
+  ISFJ       11.91%     16.54%     16.61%     16.75%     +0.21pp *
+  ISFP        9.53%     20.57%     21.45%     20.94%     +0.37pp
+  ISTJ        4.14%     17.26%     17.10%     16.92%     -0.34pp
+  ISTP       25.07%     32.25%     31.02%     30.99%     -1.26pp
+
+  * = LLM-augmented class
+
+Total time: 65.1 min
+Done!

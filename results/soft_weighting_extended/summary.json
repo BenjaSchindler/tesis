@@ -1,0 +1,25 @@
+{
+  "overall": {
+    "no_augmentation": {
+      "mean_vs_smote": -1.6348548466486017,
+      "win_rate": 40.95238095238095,
+      "n": 105
+    },
+    "smote": {
+      "mean_vs_smote": -1.7585936610902595,
+      "win_rate": 15.238095238095237,
+      "n": 105
+    },
+    "binary_filter": {
+      "mean_vs_smote": 0.47190471383064503,
+      "win_rate": 60.95238095238095,
+      "n": 105
+    },
+    "soft_weighted": {
+      "mean_vs_smote": 0.6038462235812483,
+      "win_rate": 64.76190476190476,
+      "n": 105
+    }
+  },
+  "timestamp": "2026-02-06T17:21:56.343451"
+}

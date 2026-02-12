@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\caption{Ganancias del filtrado geométrico por n-shot y modelo de embeddings}
+\label{tab:embedding_nshot}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Modelo} & \textbf{10-shot $\Delta$ (pp)} & \textbf{25-shot $\Delta$ (pp)} & \textbf{50-shot $\Delta$ (pp)} \\
+\midrule
+mpnet-base     & \textbf{+5.37***} & \textbf{+2.11***} & +0.75**  \\
+bge-large      & +5.05***          & +0.75**           & +0.32    \\
+e5-large       & +1.42             & +1.09***          & +0.42*   \\
+bge-small      & +4.07***          & +1.38**           & +0.54    \\
+\midrule
+\multicolumn{4}{l}{\small Significancia: * $p<0.05$, ** $p<0.01$, *** $p<0.001$ (prueba t pareada).} \\
+\multicolumn{4}{l}{\small Todos los modelos muestran retornos decrecientes con mayor disponibilidad de datos.} \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,15 @@
+\begin{table}[htbp]
+\centering
+\caption{Weight by Tier Validation (PyTorch MLP)}
+\label{tab:pytorch_weight_tier}
+\begin{tabular}{lccccc}
+\toprule
+Config & $\Delta$ (pp) & LOW $\Delta$ & MID $\Delta$ & HIGH $\Delta$ \\
+\midrule
+uniform & -0.07 & +0.04 & -0.33 & +0.48 \\
+tier_boost_low & +0.75 & +0.55 & +1.13 & +0.16 \\
+tier_boost_extreme & +0.07 & -0.07 & +0.32 & -0.27 \\
+only_low & +0.16 & +0.43 & -0.30 & +0.61 \\
+\bottomrule
+\end{tabular}
+\end{table}

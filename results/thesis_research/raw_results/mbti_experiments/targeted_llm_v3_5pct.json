@@ -1,0 +1,575 @@
+{
+  "experiment": "targeted_llm_v3_5pct",
+  "timestamp": "2026-01-26T14:23:21.080845",
+  "hypothesis": "5% best LLM samples fill gaps, 95% SMOTE for bulk",
+  "smote_baseline": {
+    "delta_mean_pp": 0.127,
+    "delta_pct": 62.0,
+    "baseline_f1": 0.205,
+    "augmented_f1": 0.332,
+    "description": "SMOTE on embedding space with k=5 neighbors"
+  },
+  "config": {
+    "llm_n_per_class": 5,
+    "smote_n_per_class": 100,
+    "lof_threshold": -0.3
+  },
+  "result": {
+    "config_name": "targeted_llm_v3_5pct",
+    "config_params": {
+      "fixed_n_per_class": 100,
+      "oversample_factor": 1.5,
+      "fixed_n_selection_strategy": "similarity",
+      "max_clusters": 12,
+      "anchor_strategy": "medoid",
+      "auto_anchor_margin": 0.05,
+      "anchor_selection_ratio": 0.8,
+      "anchor_outlier_threshold": 1.5,
+      "k_neighbors": 50,
+      "filter_cascade_level": 4,
+      "similarity_threshold": 0.65,
+      "min_classifier_confidence": 0.05,
+      "contamination_threshold": 0.95,
+      "filter_mode": "hybrid",
+      "synthetic_weight": 1.0,
+      "budget_pct": 0.2,
+      "n_shot": 0,
+      "temperature": 0.7,
+      "prompts_per_cluster": 9,
+      "samples_per_prompt": 5,
+      "use_f1_budget_scaling": true,
+      "f1_budget_thresholds": [
+        0.35,
+        0.2
+      ],
+      "f1_budget_multipliers": [
+        0.0,
+        0.5,
+        2.5
+      ],
+      "use_val_gating": true,
+      "val_size": 0.15,
+      "val_tolerance": 0.02,
+      "cap_class_ratio": 0.15,
+      "llm_provider": "google",
+      "llm_model": "gemini-3-flash-preview",
+      "method": "targeted_llm_v3_5pct",
+      "llm_n_per_class": 5,
+      "smote_n_per_class": 100,
+      "lof_threshold": -0.3,
+      "n_gap_classes": 14
+    },
+    "n_folds": 15,
+    "baseline_mean": 0.20481519791318537,
+    "baseline_std": 0.014365262301148384,
+    "augmented_mean": 0.32872712578008084,
+    "augmented_std": 0.02226919645235865,
+    "delta_mean": 0.12391192786689545,
+    "delta_std": 0.01801734987600119,
+    "delta_pct": 60.49938145674999,
+    "ci_95_lower": 0.11393425207765401,
+    "ci_95_upper": 0.1338896036561369,
+    "t_statistic": 26.635927943219407,
+    "p_value": 2.1467316949895206e-13,
+    "significant": true,
+    "win_rate": 1.0,
+    "n_synthetic": 1600,
+    "method": "targeted_llm_v3",
+    "per_class_delta": {
+      "ENFJ": 0.1314569282451703,
+      "ENFP": 0.01942216950701664,
+      "ENTJ": 0.13452771288696996,
+      "ENTP": 0.015019585335241503,
+      "ESFJ": 0.3866026239555651,
+      "ESFP": 0.12040404040404043,
+      "ESTJ": 0.3466174566174567,
+      "ESTP": 0.3010077610767266,
+      "INFJ": 0.014138511361287742,
+      "INFP": 0.007678549361515352,
+      "INTJ": 0.011467556715487326,
+      "INTP": 0.015870258294045148,
+      "ISFJ": 0.16456840481948976,
+      "ISFP": 0.10475868215963527,
+      "ISTJ": 0.1311804439770646,
+      "ISTP": 0.07787016115361486
+    },
+    "problem_class_delta": {
+      "ENFJ": 0.1314569282451703,
+      "ESFJ": 0.3866026239555651,
+      "ESFP": 0.12040404040404043,
+      "ESTJ": 0.3466174566174567,
+      "ISTJ": 0.1311804439770646
+    },
+    "timestamp": "2026-01-26T14:23:21.071499"
+  },
+  "detailed_stats": {
+    "selection_stats": {
+      "ISTJ": {
+        "generated": 45,
+        "selected": 5,
+        "avg_dist_to_real": 0.6759392619132996,
+        "avg_lof_score": -0.09072251617908478,
+        "lof_scores": [
+          -0.04838979244232178,
+          -0.0519481897354126,
+          -0.13905858993530273,
+          -0.11118519306182861,
+          -0.10303080081939697
+        ]
+      },
+      "ISFJ": {
+        "generated": 24,
+        "selected": 5,
+        "avg_dist_to_real": 0.6607080698013306,
+        "avg_lof_score": -0.09090366214513779,
+        "lof_scores": [
+          -0.1575777530670166,
+          -0.10016345977783203,
+          -0.04920077323913574,
+          -0.0727996826171875,
+          -0.07477664947509766
+        ]
+      },
+      "INFJ": {
+        "generated": 23,
+        "selected": 5,
+        "avg_dist_to_real": 0.5388436317443848,
+        "avg_lof_score": -0.014196157455444336,
+        "lof_scores": [
+          -0.034705162048339844,
+          -0.04783666133880615,
+          0.010233402252197266,
+          0.021779298782348633,
+          -0.020451664924621582
+        ]
+      },
+      "INTJ": {
+        "generated": 34,
+        "selected": 5,
+        "avg_dist_to_real": 0.578011155128479,
+        "avg_lof_score": -0.014027595520019531,
+        "lof_scores": [
+          -0.062036991119384766,
+          0.0017287731170654297,
+          0.021413207054138184,
+          0.01848006248474121,
+          -0.049723029136657715
+        ]
+      },
+      "ISTP": {
+        "generated": 45,
+        "selected": 5,
+        "avg_dist_to_real": 0.6470829248428345,
+        "avg_lof_score": -0.0995236188173294,
+        "lof_scores": [
+          -0.10104012489318848,
+          -0.09557163715362549,
+          -0.09479904174804688,
+          -0.09554362297058105,
+          -0.11066365242004395
+        ]
+      },
+      "ISFP": {
+        "generated": 40,
+        "selected": 5,
+        "avg_dist_to_real": 0.5883293747901917,
+        "avg_lof_score": -0.05310792848467827,
+        "lof_scores": [
+          -0.006201028823852539,
+          -0.0652397871017456,
+          -0.07538914680480957,
+          -0.07403123378753662,
+          -0.044678449630737305
+        ]
+      },
+      "INFP": {
+        "generated": 31,
+        "selected": 5,
+        "avg_dist_to_real": 0.6007186770439148,
+        "avg_lof_score": -0.08681559562683105,
+        "lof_scores": [
+          -0.06773114204406738,
+          -0.04933011531829834,
+          -0.09929466247558594,
+          -0.11925756931304932,
+          -0.0984644889831543
+        ]
+      },
+      "INTP": {
+        "generated": 42,
+        "selected": 5,
+        "avg_dist_to_real": 0.567969560623169,
+        "avg_lof_score": -0.022281289100646973,
+        "lof_scores": [
+          -0.03924262523651123,
+          -0.0314326286315918,
+          0.013604879379272461,
+          -0.005727887153625488,
+          -0.04860818386077881
+        ]
+      },
+      "ESTP": {
+        "generated": 45,
+        "selected": 5,
+        "avg_dist_to_real": 0.6899774670600891,
+        "avg_lof_score": -0.091561459004879,
+        "lof_scores": [
+          -0.06626534461975098,
+          -0.12750589847564697,
+          -0.09955859184265137,
+          -0.10157382488250732,
+          -0.06290364265441895
+        ]
+      },
+      "ENFP": {
+        "generated": 5,
+        "selected": 5,
+        "avg_dist_to_real": 0.5858632326126099,
+        "avg_lof_score": -0.08749840408563614,
+        "lof_scores": [
+          -0.16176116466522217,
+          -0.07852888107299805,
+          -0.09275424480438232,
+          -0.0821000337600708,
+          -0.022347688674926758
+        ]
+      },
+      "ENTP": {
+        "generated": 35,
+        "selected": 5,
+        "avg_dist_to_real": 0.565733015537262,
+        "avg_lof_score": -0.04563131183385849,
+        "lof_scores": [
+          -0.0717240571975708,
+          -0.01572895050048828,
+          -0.016538262367248535,
+          -0.05344581604003906,
+          -0.07071948051452637
+        ]
+      },
+      "ESTJ": {
+        "generated": 45,
+        "selected": 5,
+        "avg_dist_to_real": 0.6863000988960266,
+        "avg_lof_score": -0.031817056238651276,
+        "lof_scores": [
+          -0.026020407676696777,
+          -0.06886804103851318,
+          0.015958547592163086,
+          -0.03263866901397705,
+          -0.047516703605651855
+        ]
+      },
+      "ENFJ": {
+        "generated": 45,
+        "selected": 5,
+        "avg_dist_to_real": 0.6413818597793579,
+        "avg_lof_score": -0.06420476734638214,
+        "lof_scores": [
+          -0.07240104675292969,
+          -0.10972344875335693,
+          -0.03053736686706543,
+          -0.05539298057556152,
+          -0.05296897888183594
+        ]
+      },
+      "ENTJ": {
+        "generated": 35,
+        "selected": 5,
+        "avg_dist_to_real": 0.6048004627227783,
+        "avg_lof_score": -0.048728108406066895,
+        "lof_scores": [
+          -0.03043651580810547,
+          -0.0753096342086792,
+          -0.08218264579772949,
+          -0.003731369972229004,
+          -0.05198037624359131
+        ]
+      }
+    },
+    "per_class_stats": {
+      "ENFJ": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 45,
+          "selected": 5,
+          "avg_dist_to_real": 0.6413818597793579,
+          "avg_lof_score": -0.06420476734638214,
+          "lof_scores": [
+            -0.07240104675292969,
+            -0.10972344875335693,
+            -0.03053736686706543,
+            -0.05539298057556152,
+            -0.05296897888183594
+          ]
+        }
+      },
+      "ENFP": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 5,
+          "selected": 5,
+          "avg_dist_to_real": 0.5858632326126099,
+          "avg_lof_score": -0.08749840408563614,
+          "lof_scores": [
+            -0.16176116466522217,
+            -0.07852888107299805,
+            -0.09275424480438232,
+            -0.0821000337600708,
+            -0.022347688674926758
+          ]
+        }
+      },
+      "ENTJ": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 35,
+          "selected": 5,
+          "avg_dist_to_real": 0.6048004627227783,
+          "avg_lof_score": -0.048728108406066895,
+          "lof_scores": [
+            -0.03043651580810547,
+            -0.0753096342086792,
+            -0.08218264579772949,
+            -0.003731369972229004,
+            -0.05198037624359131
+          ]
+        }
+      },
+      "ENTP": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 35,
+          "selected": 5,
+          "avg_dist_to_real": 0.565733015537262,
+          "avg_lof_score": -0.04563131183385849,
+          "lof_scores": [
+            -0.0717240571975708,
+            -0.01572895050048828,
+            -0.016538262367248535,
+            -0.05344581604003906,
+            -0.07071948051452637
+          ]
+        }
+      },
+      "ESFJ": {
+        "type": "non_gap_class",
+        "llm_samples": 0,
+        "smote_samples": 100,
+        "total": 100
+      },
+      "ESFP": {
+        "type": "non_gap_class",
+        "llm_samples": 0,
+        "smote_samples": 100,
+        "total": 100
+      },
+      "ESTJ": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 45,
+          "selected": 5,
+          "avg_dist_to_real": 0.6863000988960266,
+          "avg_lof_score": -0.031817056238651276,
+          "lof_scores": [
+            -0.026020407676696777,
+            -0.06886804103851318,
+            0.015958547592163086,
+            -0.03263866901397705,
+            -0.047516703605651855
+          ]
+        }
+      },
+      "ESTP": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 45,
+          "selected": 5,
+          "avg_dist_to_real": 0.6899774670600891,
+          "avg_lof_score": -0.091561459004879,
+          "lof_scores": [
+            -0.06626534461975098,
+            -0.12750589847564697,
+            -0.09955859184265137,
+            -0.10157382488250732,
+            -0.06290364265441895
+          ]
+        }
+      },
+      "INFJ": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 23,
+          "selected": 5,
+          "avg_dist_to_real": 0.5388436317443848,
+          "avg_lof_score": -0.014196157455444336,
+          "lof_scores": [
+            -0.034705162048339844,
+            -0.04783666133880615,
+            0.010233402252197266,
+            0.021779298782348633,
+            -0.020451664924621582
+          ]
+        }
+      },
+      "INFP": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 31,
+          "selected": 5,
+          "avg_dist_to_real": 0.6007186770439148,
+          "avg_lof_score": -0.08681559562683105,
+          "lof_scores": [
+            -0.06773114204406738,
+            -0.04933011531829834,
+            -0.09929466247558594,
+            -0.11925756931304932,
+            -0.0984644889831543
+          ]
+        }
+      },
+      "INTJ": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 34,
+          "selected": 5,
+          "avg_dist_to_real": 0.578011155128479,
+          "avg_lof_score": -0.014027595520019531,
+          "lof_scores": [
+            -0.062036991119384766,
+            0.0017287731170654297,
+            0.021413207054138184,
+            0.01848006248474121,
+            -0.049723029136657715
+          ]
+        }
+      },
+      "INTP": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 42,
+          "selected": 5,
+          "avg_dist_to_real": 0.567969560623169,
+          "avg_lof_score": -0.022281289100646973,
+          "lof_scores": [
+            -0.03924262523651123,
+            -0.0314326286315918,
+            0.013604879379272461,
+            -0.005727887153625488,
+            -0.04860818386077881
+          ]
+        }
+      },
+      "ISFJ": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 24,
+          "selected": 5,
+          "avg_dist_to_real": 0.6607080698013306,
+          "avg_lof_score": -0.09090366214513779,
+          "lof_scores": [
+            -0.1575777530670166,
+            -0.10016345977783203,
+            -0.04920077323913574,
+            -0.0727996826171875,
+            -0.07477664947509766
+          ]
+        }
+      },
+      "ISFP": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 40,
+          "selected": 5,
+          "avg_dist_to_real": 0.5883293747901917,
+          "avg_lof_score": -0.05310792848467827,
+          "lof_scores": [
+            -0.006201028823852539,
+            -0.0652397871017456,
+            -0.07538914680480957,
+            -0.07403123378753662,
+            -0.044678449630737305
+          ]
+        }
+      },
+      "ISTJ": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 45,
+          "selected": 5,
+          "avg_dist_to_real": 0.6759392619132996,
+          "avg_lof_score": -0.09072251617908478,
+          "lof_scores": [
+            -0.04838979244232178,
+            -0.0519481897354126,
+            -0.13905858993530273,
+            -0.11118519306182861,
+            -0.10303080081939697
+          ]
+        }
+      },
+      "ISTP": {
+        "type": "gap_class",
+        "llm_samples": 5,
+        "smote_samples": 95,
+        "total": 100,
+        "selection_stats": {
+          "generated": 45,
+          "selected": 5,
+          "avg_dist_to_real": 0.6470829248428345,
+          "avg_lof_score": -0.0995236188173294,
+          "lof_scores": [
+            -0.10104012489318848,
+            -0.09557163715362549,
+            -0.09479904174804688,
+            -0.09554362297058105,
+            -0.11066365242004395
+          ]
+        }
+      }
+    },
+    "totals": {
+      "llm": 70,
+      "smote": 1530
+    }
+  }
+}

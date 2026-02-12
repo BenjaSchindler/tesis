@@ -1,0 +1,23 @@
+\begin{table}[htbp]
+\centering
+\caption{Efecto del número de clases sobre la efectividad de la aumentación (pond. suave vs SMOTE)}
+\label{tab:nclasses_pattern}
+\begin{tabular}{rlrrrll}
+\toprule
+\textbf{$N$ clases} & \textbf{Conjunto(s)} & \textbf{$\Delta$ (pp)} & \textbf{Std} & \textbf{Vic.\%} & \textbf{$N$ pares} \\
+\midrule
+2   & sms\_spam                      & +3.18 & 3.24 & 93.3\%  & 15 \\
+3   & hate\_speech\_davidson          & +1.86 & 2.97 & 66.7\%  & 15 \\
+4   & 20newsgroups, ag\_news          & +1.70 & 3.02 & 73.3\%  & 30 \\
+\rowcolor{green!20}
+6   & emotion, trec6                 & \textbf{+5.42} & 3.63 & \textbf{100.0\%} & 24 \\
+14  & dbpedia14                      & +0.40 & 0.61 & 80.0\%  & 15 \\
+20  & 20newsgroups\_20class           & +2.36 & 1.55 & 100.0\% & 15 \\
+77  & banking77                      & $-$0.99 & 0.52 & 0.0\% & 9 \\
+150 & clinc150                       & +0.01 & 0.53 & 44.4\%  & 9 \\
+\midrule
+\multicolumn{6}{l}{\small Correlación de Spearman: $r=-0.260$, $p=0.003$. Más clases $\Rightarrow$ menores ganancias.} \\
+\multicolumn{6}{l}{\small Rango óptimo: 2--20 clases. Las ganancias disminuyen a partir de 77 clases.} \\
+\bottomrule
+\end{tabular}
+\end{table}

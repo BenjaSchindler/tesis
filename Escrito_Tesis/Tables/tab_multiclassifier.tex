@@ -1,0 +1,27 @@
+% Tabla: Comparación multi-clasificador
+% Validación K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Evaluación multi-clasificador sobre datos sintéticos de sobremuestreo masivo}
+\label{tab:multiclassifier}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Clasificador} & \textbf{Línea base} & \textbf{Aumentado} & \textbf{$\Delta$ F1 (pp)} & \textbf{p-valor} \\
+\midrule
+\rowcolor{green!20}
+\textbf{MLP Profundo (512-256-128)} & \textbf{0.2075} & \textbf{0.2492} & \textbf{+4.17} & \textbf{0.0010} \\
+Regresión Logística & 0.2272 & 0.2308 & +0.36 & 0.3001 \\
+MLP Medio (256-128) & 0.2273 & 0.2306 & +0.33 & 0.6224 \\
+LightGBM & 0.1677 & 0.1667 & $-$0.10 & 0.6672 \\
+XGBoost & 0.1788 & 0.1745 & $-$0.43 & 0.1792 \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Embeddings MPNet 768D. Solo MLP Profundo alcanza significancia estadística (p=0.001).
+
+\textbullet\ \textbf{Hallazgo clave}: las redes neuronales profundas explotan mejor los datos sintéticos.
+
+\textbullet\ Los modelos basados en árboles (XGBoost, LightGBM) tienen línea base inferior y empeoran con augmentación.
+
+\end{table}

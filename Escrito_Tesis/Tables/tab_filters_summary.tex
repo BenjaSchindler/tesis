@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering
+\caption{Filtros geométricos implementados y sus parámetros}
+\label{tab:filters_summary}
+\small
+\begin{tabular}{llll}
+\toprule
+\textbf{Filtro} & \textbf{Criterio} & \textbf{Parámetros} & \textbf{Selección} \\
+\midrule
+LOF relajado     & Densidad local (LOF)          & $n=20$, $\theta=0.0$  & Umbral \\
+LOF estricto     & Densidad local (LOF)          & $n=20$, $\theta>0.0$  & Umbral \\
+Cascada nivel 1  & Distancia euclidiana al ancla  & $k=10$               & Top-N por ranking \\
+Cascada nivel 2  & Similitud coseno al ancla      & $k=10$               & Top-N por ranking \\
+Cascada completa & Media geométrica (4 niveles)   & $k=10$               & Top-N por ranking \\
+Combinado        & LOF $\cap$ similitud coseno    & $\theta_{lof}=0.0$, $\theta_{sim}=0.5$ & Ambos criterios \\
+Guiado           & Cobertura + calidad            & $\alpha=0.6$, $\beta=0.4$ & Selección voraz \\
+Sin filtro       & ---                            & ---                  & Aleatorio \\
+\bottomrule
+\end{tabular}
+\end{table}

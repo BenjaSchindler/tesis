@@ -1,0 +1,82 @@
+{
+  "description": "Todas las configuraciones de filtros probadas en el experimento exhaustivo",
+  "total_filter_configs": 20,
+  "filters": {
+    "none": {
+      "description": "Sin filtro - selección aleatoria de candidatos LLM",
+      "configs": [
+        {"filter_type": "none", "params": {}}
+      ]
+    },
+    "lof": {
+      "description": "Local Outlier Factor - detecta y elimina outliers basado en densidad local",
+      "class": "LOFFilter",
+      "file": "src/core/geometric_filter.py",
+      "configs": [
+        {"filter_type": "lof", "params": {"n_neighbors": 5, "threshold": -0.5}},
+        {"filter_type": "lof", "params": {"n_neighbors": 5, "threshold": 0.0}},
+        {"filter_type": "lof", "params": {"n_neighbors": 10, "threshold": -0.5}},
+        {"filter_type": "lof", "params": {"n_neighbors": 10, "threshold": 0.0}},
+        {"filter_type": "lof", "params": {"n_neighbors": 20, "threshold": -0.3}},
+        {"filter_type": "lof", "params": {"n_neighbors": 20, "threshold": 0.0}}
+      ],
+      "parameters": {
+        "n_neighbors": "Número de vecinos para calcular LOF (5, 10, 20)",
+        "threshold": "Umbral LOF. >0 = inlier seguro, >-0.5 = probable inlier"
+      }
+    },
+    "combined": {
+      "description": "LOF + Similitud coseno al centroide (AND logic)",
+      "class": "CombinedGeometricFilter",
+      "file": "src/core/geometric_filter.py",
+      "configs": [
+        {"filter_type": "combined", "params": {"lof_threshold": 0.0, "sim_threshold": 0.3}},
+        {"filter_type": "combined", "params": {"lof_threshold": 0.0, "sim_threshold": 0.5}},
+        {"filter_type": "combined", "params": {"lof_threshold": 0.0, "sim_threshold": 0.7}},
+        {"filter_type": "combined", "params": {"lof_threshold": -0.3, "sim_threshold": 0.5}}
+      ],
+      "parameters": {
+        "lof_threshold": "Umbral LOF (igual que LOFFilter)",
+        "sim_threshold": "Umbral de similitud coseno al centroide (0.3-0.7)"
+      }
+    },
+    "cascade": {
+      "description": "Filtro en cascada multi-nivel basado en ranking de calidad",
+      "class": "FilterCascade",
+      "file": "src/core/filter_cascade.py",
+      "configs": [
+        {"filter_type": "cascade", "params": {"filter_level": 0, "k_neighbors": 10}},
+        {"filter_type": "cascade", "params": {"filter_level": 1, "k_neighbors": 10}},
+        {"filter_type": "cascade", "params": {"filter_level": 2, "k_neighbors": 10}},
+        {"filter_type": "cascade", "params": {"filter_level": 3, "k_neighbors": 10}},
+        {"filter_type": "cascade", "params": {"filter_level": 4, "k_neighbors": 10}}
+      ],
+      "parameters": {
+        "filter_level": {
+          "0": "Sin filtro (baseline)",
+          "1": "Solo distancia al anchor",
+          "2": "Distancia + similitud coseno",
+          "3": "Distancia + similitud + KNN purity",
+          "4": "Full cascade (distancia + similitud + KNN + confidence)"
+        },
+        "k_neighbors": "K para cálculo de KNN purity"
+      }
+    },
+    "embedding_guided": {
+      "description": "Selección basada en cobertura + calidad para llenar gaps",
+      "class": "EmbeddingGuidedSampler",
+      "file": "src/core/embedding_guided_sampler.py",
+      "configs": [
+        {"filter_type": "embedding_guided", "params": {"coverage_weight": 0.4, "quality_weight": 0.6, "min_distance_threshold": 0.1}},
+        {"filter_type": "embedding_guided", "params": {"coverage_weight": 0.6, "quality_weight": 0.4, "min_distance_threshold": 0.1}},
+        {"filter_type": "embedding_guided", "params": {"coverage_weight": 0.8, "quality_weight": 0.2, "min_distance_threshold": 0.1}},
+        {"filter_type": "embedding_guided", "params": {"coverage_weight": 0.6, "quality_weight": 0.4, "min_distance_threshold": 0.05}}
+      ],
+      "parameters": {
+        "coverage_weight": "Peso para score de cobertura (llenar gaps)",
+        "quality_weight": "Peso para score de calidad (proximidad al centroide)",
+        "min_distance_threshold": "Distancia mínima a samples existentes"
+      }
+    }
+  }
+}

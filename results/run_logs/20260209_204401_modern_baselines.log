@@ -1,0 +1,62 @@
+2026-02-09 20:44:25.407745: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+==========================================================================================
+MODERN BASELINES EXPERIMENT
+==========================================================================================
+
+Datasets: 21
+Classifiers: ['logistic_regression', 'svc_linear', 'ridge']
+Methods: ['no_augmentation', 'smote', 'random_oversample', 'eda', 'back_translation', 'binary_filter', 'soft_weighted', 'embedding_mixup', 't5_paraphrase', 'contextual_bert']
+Seeds: [42, 123, 456]
+Total experiments: 1890
+
+RESUME MODE: Found 1200 existing results, skipping those.
+Remaining experiments: 690
+
+Loading embedding model...
+/home/benja/miniconda3/lib/python3.13/site-packages/huggingface_hub/file_download.py:1150: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Initializing providers and augmenters...
+
+  Skipping sms_spam_10shot (all seeds complete)
+
+  Skipping sms_spam_25shot (all seeds complete)
+
+  Skipping sms_spam_50shot (all seeds complete)
+
+  Skipping hate_speech_davidson_10shot (all seeds complete)
+
+  Skipping hate_speech_davidson_25shot (all seeds complete)
+
+  Skipping hate_speech_davidson_50shot (all seeds complete)
+
+  Skipping 20newsgroups_10shot (all seeds complete)
+
+  Skipping 20newsgroups_25shot (all seeds complete)
+
+  Skipping 20newsgroups_50shot (all seeds complete)
+
+  Skipping ag_news_10shot (all seeds complete)
+
+  Skipping ag_news_25shot (all seeds complete)
+
+  Skipping ag_news_50shot (all seeds complete)
+
+  Skipping emotion_10shot (all seeds complete)
+
+##########################################################################################
+# emotion_25shot (6 classes, 25-shot)
+##########################################################################################
+  Train: 150, Test: 1025
+  Embedding...
+  Pre-computing back-translation...
+
+  --- Seed 42 --- (skipped, already complete)
+
+  --- Seed 123 ---
+    Loading BERT MLM model: bert-base-uncased
+/home/benja/miniconda3/lib/python3.13/site-packages/huggingface_hub/file_download.py:1150: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Some weights of the model checkpoint at bert-base-uncased were not used when initializing BertForMaskedLM: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight', 'cls.seq_relationship.bias', 'cls.seq_relationship.weight']
+- This IS expected if you are initializing BertForMaskedLM from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForMaskedLM from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).

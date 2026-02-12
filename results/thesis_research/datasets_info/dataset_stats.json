@@ -1,0 +1,170 @@
+{
+  "description": "Datasets de benchmark usados en los experimentos",
+  "location": "data/benchmarks/",
+  "datasets": {
+    "20newsgroups_10shot": {
+      "n_train": 40,
+      "n_test": 500,
+      "n_classes": 4,
+      "class_distribution": {
+        "sci.med": 10,
+        "soc.religion.christian": 10,
+        "alt.atheism": 10,
+        "comp.graphics": 10
+      },
+      "samples_per_class": 10,
+      "used_in_main_experiment": true
+    },
+    "20newsgroups_25shot": {
+      "n_train": 100,
+      "n_test": 500,
+      "n_classes": 4,
+      "class_distribution": {
+        "sci.med": 25,
+        "soc.religion.christian": 25,
+        "alt.atheism": 25,
+        "comp.graphics": 25
+      },
+      "samples_per_class": 25,
+      "used_in_main_experiment": true
+    },
+    "20newsgroups_50shot": {
+      "n_train": 200,
+      "n_test": 500,
+      "n_classes": 4,
+      "class_distribution": {
+        "sci.med": 50,
+        "soc.religion.christian": 50,
+        "alt.atheism": 50,
+        "comp.graphics": 50
+      },
+      "samples_per_class": 50
+    },
+    "ag_news_synthetic_10shot": {
+      "n_train": 40,
+      "n_test": 50,
+      "n_classes": 4,
+      "class_distribution": {
+        "Business": 10,
+        "Sci/Tech": 10,
+        "World": 10,
+        "Sports": 10
+      },
+      "samples_per_class": 10
+    },
+    "ag_news_synthetic_25shot": {
+      "n_train": 100,
+      "n_test": 50,
+      "n_classes": 4,
+      "class_distribution": {
+        "Business": 25,
+        "Sci/Tech": 25,
+        "World": 25,
+        "Sports": 25
+      },
+      "samples_per_class": 25
+    },
+    "ag_news_synthetic_50shot": {
+      "n_train": 200,
+      "n_test": 50,
+      "n_classes": 4,
+      "class_distribution": {
+        "Business": 50,
+        "Sci/Tech": 50,
+        "World": 50,
+        "Sports": 50
+      },
+      "samples_per_class": 50
+    },
+    "ag_news_synthetic_full": {
+      "n_train": 200,
+      "n_test": 50,
+      "n_classes": 4,
+      "class_distribution": {
+        "Sports": 50,
+        "World": 50,
+        "Sci/Tech": 50,
+        "Business": 50
+      },
+      "samples_per_class": "varies"
+    },
+    "hate_speech_davidson_10shot": {
+      "n_train": 30,
+      "n_test": 500,
+      "n_classes": 3,
+      "class_distribution": {
+        "neither": 10,
+        "hate_speech": 10,
+        "offensive": 10
+      },
+      "samples_per_class": 10,
+      "used_in_main_experiment": true
+    },
+    "hate_speech_davidson_25shot": {
+      "n_train": 75,
+      "n_test": 500,
+      "n_classes": 3,
+      "class_distribution": {
+        "neither": 25,
+        "hate_speech": 25,
+        "offensive": 25
+      },
+      "samples_per_class": 25,
+      "used_in_main_experiment": true
+    },
+    "hate_speech_davidson_50shot": {
+      "n_train": 150,
+      "n_test": 500,
+      "n_classes": 3,
+      "class_distribution": {
+        "neither": 50,
+        "hate_speech": 50,
+        "offensive": 50
+      },
+      "samples_per_class": 50
+    },
+    "hate_speech_davidson_full": {
+      "n_train": 20000,
+      "n_test": 4783,
+      "n_classes": 3,
+      "class_distribution": {
+        "neither": 3408,
+        "offensive": 15389,
+        "hate_speech": 1203
+      },
+      "samples_per_class": "varies"
+    },
+    "sms_spam_10shot": {
+      "n_train": 20,
+      "n_test": 500,
+      "n_classes": 2,
+      "class_distribution": {
+        "spam": 10,
+        "ham": 10
+      },
+      "samples_per_class": 10,
+      "used_in_main_experiment": true
+    },
+    "sms_spam_25shot": {
+      "n_train": 50,
+      "n_test": 500,
+      "n_classes": 2,
+      "class_distribution": {
+        "spam": 25,
+        "ham": 25
+      },
+      "samples_per_class": 25,
+      "used_in_main_experiment": true
+    },
+    "sms_spam_50shot": {
+      "n_train": 100,
+      "n_test": 500,
+      "n_classes": 2,
+      "class_distribution": {
+        "spam": 50,
+        "ham": 50
+      },
+      "samples_per_class": 50
+    }
+  }
+}

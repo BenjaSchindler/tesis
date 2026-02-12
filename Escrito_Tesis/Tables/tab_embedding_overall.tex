@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering
+\caption{Rendimiento global del filtrado geométrico con distintos modelos de embeddings}
+\label{tab:embedding_overall}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Modelo} & \textbf{Dim} & \textbf{F1 SMOTE} & \textbf{F1 Pond.} & \textbf{$\Delta$ (pp)} & \textbf{$d$ de Cohen} & \textbf{Vic.\%} \\
+\midrule
+mpnet-base     & 768  & 0.7243 & 0.7517 & \textbf{+2.74***} & 0.154 & \textbf{92.1\%} \\
+bge-large      & 1024 & 0.7468 & 0.7672 & +2.04***          & 0.140 & 69.8\%          \\
+e5-large       & 1024 & 0.7572 & 0.7669 & +0.97*            & 0.059 & 68.3\%          \\
+bge-small      & 384  & 0.7134 & 0.7334 & +2.00***          & 0.123 & 76.2\%          \\
+\midrule
+\multicolumn{7}{l}{\small $n=63$ comp. pareadas por modelo (7 conjuntos $\times$ 3 n-shot $\times$ 3 semillas).} \\
+\multicolumn{7}{l}{\small Significancia: * $p<0.05$, ** $p<0.01$, *** $p<0.001$ (prueba t pareada).} \\
+\multicolumn{7}{l}{\small \textbf{Mejor resultado en negrita.} Todos los modelos producen ganancias significativas.} \\
+\bottomrule
+\end{tabular}
+\end{table}

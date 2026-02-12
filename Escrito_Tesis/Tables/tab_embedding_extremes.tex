@@ -1,0 +1,31 @@
+\begin{table}[htbp]
+\centering
+\caption{5 mejores y 5 peores combinaciones conjunto-modelo-nshot}
+\label{tab:embedding_extremes}
+\begin{tabular}{llrr}
+\toprule
+\multicolumn{4}{c}{\textbf{5 mejores combinaciones}} \\
+\midrule
+\textbf{Conjunto} & \textbf{Modelo} & \textbf{N-shot} & \textbf{$\Delta$ (pp)} \\
+\midrule
+emotion          & mpnet-base     & 10 & \textbf{+10.52} \\
+emotion          & bge-small      & 10 & +9.56 \\
+hate\_speech     & bge-large      & 10 & +8.08 \\
+20newsgroups     & mpnet-base     & 10 & +7.00 \\
+emotion          & e5-large       & 10 & +6.71 \\
+\midrule
+\multicolumn{4}{c}{\textbf{5 peores combinaciones}} \\
+\midrule
+\textbf{Conjunto} & \textbf{Modelo} & \textbf{N-shot} & \textbf{$\Delta$ (pp)} \\
+\midrule
+hate\_speech     & e5-large       & 10 & \textbf{$-$9.39} \\
+sms\_spam        & bge-small      & 25 & $-$2.09 \\
+20news\_20class  & bge-large      & 50 & $-$1.18 \\
+ag\_news         & bge-small      & 50 & $-$0.99 \\
+sms\_spam        & bge-large      & 50 & $-$0.96 \\
+\midrule
+\multicolumn{4}{l}{\small Las 5 mejores son 10-shot; 4/5 peores son 50-shot.} \\
+\multicolumn{4}{l}{\small El fallo de e5-large en hate\_speech\_10shot es un caso atípico notable.} \\
+\bottomrule
+\end{tabular}
+\end{table}

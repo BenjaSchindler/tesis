@@ -1,0 +1,932 @@
+{
+  "timestamp": "2026-02-06T13:27:02.832805",
+  "n_experiments_used": 1200,
+  "n_datasets": 5,
+  "datasets": [
+    "20newsgroups_10shot",
+    "20newsgroups_25shot",
+    "sms_spam_10shot",
+    "sms_spam_25shot",
+    "hate_speech_davidson_10shot"
+  ],
+  "strategies": {
+    "regression": {
+      "results": [
+        {
+          "held_out_dataset": "20newsgroups_10shot",
+          "strategy": "regression_gbr_shallow",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 5,
+            "n_shot": 25
+          },
+          "predicted_delta_vs_smote": 1.8404751969483824,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 7.252009382951075,
+          "actual_delta_of_prediction": 4.749941669738833,
+          "regret": 2.5020677132122415,
+          "regret_pct": 34.50171643592207,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.35479583337304366
+        },
+        {
+          "held_out_dataset": "20newsgroups_25shot",
+          "strategy": "regression_gbr_shallow",
+          "predicted_best_config": {
+            "filter_type": "combined",
+            "filter_params": {
+              "lof_threshold": 0.0,
+              "sim_threshold": 0.7
+            },
+            "llm_pct": 50,
+            "n_shot": 25
+          },
+          "predicted_delta_vs_smote": 2.291084256262519,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 20,
+              "threshold": -0.3
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 2.6093295738264133,
+          "actual_delta_of_prediction": 0.9003061538845558,
+          "regret": 1.7090234199418575,
+          "regret_pct": 65.49664852936476,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.15647078725493724
+        },
+        {
+          "held_out_dataset": "sms_spam_10shot",
+          "strategy": "regression_gbr_shallow",
+          "predicted_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": -0.5
+            },
+            "llm_pct": 5,
+            "n_shot": 50
+          },
+          "predicted_delta_vs_smote": 2.9635633965255765,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": 0.0
+            },
+            "llm_pct": 25,
+            "n_shot": 50
+          },
+          "actual_best_delta": 6.980721814205326,
+          "actual_delta_of_prediction": 4.729885466323925,
+          "regret": 2.2508363478814015,
+          "regret_pct": 32.24360471292657,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": true,
+            "10": true,
+            "20": true
+          },
+          "rank_correlation": 0.5362599490758201
+        },
+        {
+          "held_out_dataset": "sms_spam_25shot",
+          "strategy": "regression_gbr_shallow",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 5,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 3.2244247650858706,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 0,
+              "k_neighbors": 10
+            },
+            "llm_pct": 5,
+            "n_shot": 25
+          },
+          "actual_best_delta": 2.8428285187655944,
+          "actual_delta_of_prediction": 1.0562461899360276,
+          "regret": 1.7865823288295668,
+          "regret_pct": 62.84523730630548,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.6342507150060214
+        },
+        {
+          "held_out_dataset": "hate_speech_davidson_10shot",
+          "strategy": "regression_rf_shallow",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 5,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 1.562093569772609,
+          "actual_best_config": {
+            "filter_type": "combined",
+            "filter_params": {
+              "lof_threshold": 0.0,
+              "sim_threshold": 0.3
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "actual_best_delta": 6.146878380259757,
+          "actual_delta_of_prediction": 3.928876648198254,
+          "regret": 2.218001732061503,
+          "regret_pct": 36.08338403415384,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.5299940501007486
+        }
+      ],
+      "avg_regret": 2.093302308385314,
+      "avg_delta_achieved": 3.073051225616319,
+      "avg_rank_correlation": 0.4423542669621142
+    },
+    "portfolio": {
+      "results": [
+        {
+          "held_out_dataset": "20newsgroups_10shot",
+          "strategy": "portfolio_avg_rank",
+          "predicted_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": 0.0
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 5.008539106870169,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 7.252009382951075,
+          "actual_delta_of_prediction": 5.008539106870169,
+          "regret": 2.243470276080906,
+          "regret_pct": 30.93584353813903,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.26569002220036697
+        },
+        {
+          "held_out_dataset": "20newsgroups_25shot",
+          "strategy": "portfolio_avg_rank",
+          "predicted_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": -0.5
+            },
+            "llm_pct": 25,
+            "n_shot": 25
+          },
+          "predicted_delta_vs_smote": 1.0982643676920811,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 20,
+              "threshold": -0.3
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 2.6093295738264133,
+          "actual_delta_of_prediction": 1.0982643676920811,
+          "regret": 1.5110652061343322,
+          "regret_pct": 57.91009389122328,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.19685287332803128
+        },
+        {
+          "held_out_dataset": "sms_spam_10shot",
+          "strategy": "portfolio_avg_rank",
+          "predicted_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 10,
+              "threshold": -0.5
+            },
+            "llm_pct": 25,
+            "n_shot": 25
+          },
+          "predicted_delta_vs_smote": 5.070564496273633,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": 0.0
+            },
+            "llm_pct": 25,
+            "n_shot": 50
+          },
+          "actual_best_delta": 6.980721814205326,
+          "actual_delta_of_prediction": 5.070564496273633,
+          "regret": 1.9101573179316933,
+          "regret_pct": 27.363320997044234,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.5605695947150547
+        },
+        {
+          "held_out_dataset": "sms_spam_25shot",
+          "strategy": "portfolio_avg_rank",
+          "predicted_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": 0.0
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 1.0562461899360276,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 0,
+              "k_neighbors": 10
+            },
+            "llm_pct": 5,
+            "n_shot": 25
+          },
+          "actual_best_delta": 2.8428285187655944,
+          "actual_delta_of_prediction": 1.0562461899360276,
+          "regret": 1.7865823288295668,
+          "regret_pct": 62.84523730630548,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.5164815517841502
+        },
+        {
+          "held_out_dataset": "hate_speech_davidson_10shot",
+          "strategy": "portfolio_avg_rank",
+          "predicted_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": -0.5
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 2.7859291516858953,
+          "actual_best_config": {
+            "filter_type": "combined",
+            "filter_params": {
+              "lof_threshold": 0.0,
+              "sim_threshold": 0.3
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "actual_best_delta": 6.146878380259757,
+          "actual_delta_of_prediction": 2.7859291516858953,
+          "regret": 3.360949228573862,
+          "regret_pct": 54.67733409802445,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.3174759968990642
+        }
+      ],
+      "avg_regret": 2.162444871510072,
+      "avg_delta_achieved": 3.003908662491561,
+      "avg_rank_correlation": 0.3714140077853335
+    },
+    "rule_based": {
+      "results": [
+        {
+          "held_out_dataset": "20newsgroups_10shot",
+          "strategy": "rule_based_cascade",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 25,
+            "n_shot": 25
+          },
+          "predicted_delta_vs_smote": 5.055990870656757,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 7.252009382951075,
+          "actual_delta_of_prediction": 5.055990870656757,
+          "regret": 2.1960185122943177,
+          "regret_pct": 30.281517801907302,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": -0.06442952929798951
+        },
+        {
+          "held_out_dataset": "20newsgroups_25shot",
+          "strategy": "rule_based_cascade",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 25,
+            "n_shot": 25
+          },
+          "predicted_delta_vs_smote": 0.8879575993263056,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 20,
+              "threshold": -0.3
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 2.6093295738264133,
+          "actual_delta_of_prediction": 0.8879575993263056,
+          "regret": 1.7213719745001077,
+          "regret_pct": 65.96989478702864,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": -0.22807244802962434
+        },
+        {
+          "held_out_dataset": "sms_spam_10shot",
+          "strategy": "rule_based_cascade",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 25,
+            "n_shot": 25
+          },
+          "predicted_delta_vs_smote": 6.0355599065503585,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": 0.0
+            },
+            "llm_pct": 25,
+            "n_shot": 50
+          },
+          "actual_best_delta": 6.980721814205326,
+          "actual_delta_of_prediction": 6.0355599065503585,
+          "regret": 0.9451619076549678,
+          "regret_pct": 13.539601388091748,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.4657880899683102
+        },
+        {
+          "held_out_dataset": "sms_spam_25shot",
+          "strategy": "rule_based_combined",
+          "predicted_best_config": {
+            "filter_type": "combined",
+            "filter_params": {
+              "lof_threshold": 0.0,
+              "sim_threshold": 0.3
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": -1.6893588622715727,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 0,
+              "k_neighbors": 10
+            },
+            "llm_pct": 5,
+            "n_shot": 25
+          },
+          "actual_best_delta": 2.8428285187655944,
+          "actual_delta_of_prediction": -1.6893588622715727,
+          "regret": 4.532187381037167,
+          "regret_pct": 159.4252819373404,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.5430969182290802
+        },
+        {
+          "held_out_dataset": "hate_speech_davidson_10shot",
+          "strategy": "rule_based_cascade",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 25,
+            "n_shot": 25
+          },
+          "predicted_delta_vs_smote": 2.754679437171792,
+          "actual_best_config": {
+            "filter_type": "combined",
+            "filter_params": {
+              "lof_threshold": 0.0,
+              "sim_threshold": 0.3
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "actual_best_delta": 6.146878380259757,
+          "actual_delta_of_prediction": 2.754679437171792,
+          "regret": 3.392198943087965,
+          "regret_pct": 55.18571758279389,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.32363691008248757
+        }
+      ],
+      "avg_regret": 2.557387743714905,
+      "avg_delta_achieved": 2.608965790286728,
+      "avg_rank_correlation": 0.20800398819045282
+    },
+    "baseline_cascade_l1": {
+      "results": [
+        {
+          "held_out_dataset": "20newsgroups_10shot",
+          "strategy": "baseline_always_cascade_l1",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 7.252009382951075,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 7.252009382951075,
+          "actual_delta_of_prediction": 7.252009382951075,
+          "regret": 0.0,
+          "regret_pct": 0.0,
+          "top_k_accuracy": {
+            "1": true,
+            "3": true,
+            "5": true,
+            "10": true,
+            "20": true
+          },
+          "rank_correlation": 0.0
+        },
+        {
+          "held_out_dataset": "20newsgroups_25shot",
+          "strategy": "baseline_always_cascade_l1",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 2.1163088549104536,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 20,
+              "threshold": -0.3
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 2.6093295738264133,
+          "actual_delta_of_prediction": 2.1163088549104536,
+          "regret": 0.49302071891595967,
+          "regret_pct": 18.894536123812703,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        },
+        {
+          "held_out_dataset": "sms_spam_10shot",
+          "strategy": "baseline_always_cascade_l1",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 4.3926774315286465,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": 0.0
+            },
+            "llm_pct": 25,
+            "n_shot": 50
+          },
+          "actual_best_delta": 6.980721814205326,
+          "actual_delta_of_prediction": 4.3926774315286465,
+          "regret": 2.5880443826766797,
+          "regret_pct": 37.074165846434006,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        },
+        {
+          "held_out_dataset": "sms_spam_25shot",
+          "strategy": "baseline_always_cascade_l1",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 0.3483826075616703,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 0,
+              "k_neighbors": 10
+            },
+            "llm_pct": 5,
+            "n_shot": 25
+          },
+          "actual_best_delta": 2.8428285187655944,
+          "actual_delta_of_prediction": 0.3483826075616703,
+          "regret": 2.494445911203924,
+          "regret_pct": 87.74521202168944,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        },
+        {
+          "held_out_dataset": "hate_speech_davidson_10shot",
+          "strategy": "baseline_always_cascade_l1",
+          "predicted_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "predicted_delta_vs_smote": 1.149902269544345,
+          "actual_best_config": {
+            "filter_type": "combined",
+            "filter_params": {
+              "lof_threshold": 0.0,
+              "sim_threshold": 0.3
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "actual_best_delta": 6.146878380259757,
+          "actual_delta_of_prediction": 1.149902269544345,
+          "regret": 4.996976110715412,
+          "regret_pct": 81.29290676651144,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        }
+      ],
+      "avg_regret": 2.114497424702395,
+      "avg_delta_achieved": 3.051856109299238,
+      "avg_rank_correlation": 0.0
+    },
+    "baseline_random": {
+      "results": [
+        {
+          "held_out_dataset": "20newsgroups_10shot",
+          "strategy": "baseline_random",
+          "predicted_best_config": {
+            "random": true
+          },
+          "predicted_delta_vs_smote": 3.6141129897716495,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 1,
+              "k_neighbors": 10
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 7.252009382951075,
+          "actual_delta_of_prediction": 3.6141129897716495,
+          "regret": 3.637896393179425,
+          "regret_pct": 50.16397802424035,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        },
+        {
+          "held_out_dataset": "20newsgroups_25shot",
+          "strategy": "baseline_random",
+          "predicted_best_config": {
+            "random": true
+          },
+          "predicted_delta_vs_smote": 0.7830465498168183,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 20,
+              "threshold": -0.3
+            },
+            "llm_pct": 100,
+            "n_shot": 10
+          },
+          "actual_best_delta": 2.6093295738264133,
+          "actual_delta_of_prediction": 0.7830465498168183,
+          "regret": 1.8262830240095949,
+          "regret_pct": 69.99050799594735,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        },
+        {
+          "held_out_dataset": "sms_spam_10shot",
+          "strategy": "baseline_random",
+          "predicted_best_config": {
+            "random": true
+          },
+          "predicted_delta_vs_smote": -1.165520319689381,
+          "actual_best_config": {
+            "filter_type": "lof",
+            "filter_params": {
+              "n_neighbors": 5,
+              "threshold": 0.0
+            },
+            "llm_pct": 25,
+            "n_shot": 50
+          },
+          "actual_best_delta": 6.980721814205326,
+          "actual_delta_of_prediction": -1.165520319689381,
+          "regret": 8.146242133894708,
+          "regret_pct": 116.69627225823011,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        },
+        {
+          "held_out_dataset": "sms_spam_25shot",
+          "strategy": "baseline_random",
+          "predicted_best_config": {
+            "random": true
+          },
+          "predicted_delta_vs_smote": -1.403428605216472,
+          "actual_best_config": {
+            "filter_type": "cascade",
+            "filter_params": {
+              "filter_level": 0,
+              "k_neighbors": 10
+            },
+            "llm_pct": 5,
+            "n_shot": 25
+          },
+          "actual_best_delta": 2.8428285187655944,
+          "actual_delta_of_prediction": -1.403428605216472,
+          "regret": 4.246257123982066,
+          "regret_pct": 149.36733242798147,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        },
+        {
+          "held_out_dataset": "hate_speech_davidson_10shot",
+          "strategy": "baseline_random",
+          "predicted_best_config": {
+            "random": true
+          },
+          "predicted_delta_vs_smote": -3.057698950865463,
+          "actual_best_config": {
+            "filter_type": "combined",
+            "filter_params": {
+              "lof_threshold": 0.0,
+              "sim_threshold": 0.3
+            },
+            "llm_pct": 25,
+            "n_shot": 10
+          },
+          "actual_best_delta": 6.146878380259757,
+          "actual_delta_of_prediction": -3.057698950865463,
+          "regret": 9.20457733112522,
+          "regret_pct": 149.74393117464365,
+          "top_k_accuracy": {
+            "1": false,
+            "3": false,
+            "5": false,
+            "10": false,
+            "20": false
+          },
+          "rank_correlation": 0.0
+        }
+      ],
+      "avg_regret": 5.412251201238203,
+      "avg_delta_achieved": -0.24589766723656972,
+      "avg_rank_correlation": 0.0
+    }
+  },
+  "feature_importances": {
+    "combined_sim_threshold": 0.23017944472150487,
+    "llm_pct": 0.21368207019077073,
+    "vocab_size": 0.1009254575868721,
+    "max_class_overlap": 0.08469775396277948,
+    "n_train": 0.05919784706179076,
+    "n_classes": 0.04521062219198947,
+    "avg_text_length_chars": 0.04510127158318265,
+    "type_token_ratio": 0.03229650302094296,
+    "embedding_spread": 0.028357688271801455,
+    "n_shot_config": 0.02538287083338381,
+    "class_separation_ratio": 0.02384753625617179,
+    "cascade_filter_level": 0.015029737978690252,
+    "avg_centroid_distance": 0.014706730882470232,
+    "text_length_std": 0.014614359067239568,
+    "avg_text_length": 0.012043567992314949,
+    "is_embedding_guided": 0.010842487251286198,
+    "lof_n_neighbors": 0.009370517207890694,
+    "avg_intra_class_distance": 0.008576413803846343,
+    "eg_coverage_weight": 0.00827383426447051,
+    "avg_knn_distance_k5": 0.004624244180447966,
+    "is_lof": 0.0041966407006818265,
+    "is_combined": 0.0033759391672631258,
+    "n_shot": 0.002172270162668099,
+    "samples_per_class": 0.0020903422444840613,
+    "is_cascade": 0.0008478444144736938,
+    "is_none": 0.00018121362984083118,
+    "lof_threshold": 8.924389542901044e-05,
+    "density_variance": 8.55474753125875e-05,
+    "imbalance_ratio": 0.0
+  },
+  "tree_rules": [
+    "--- LODO fold: held_out=20newsgroups_10shot ---\n|--- avg_knn_distance_k5 <= 0.91\n|   |--- avg_text_length <= 16.98\n|   |   |--- class: 1\n|   |--- avg_text_length >  16.98\n|   |   |--- class: 0\n|--- avg_knn_distance_k5 >  0.91\n|   |--- class: 2\n\nPredicted filter: cascade\nActual best filter: cascade\n",
+    "--- LODO fold: held_out=20newsgroups_25shot ---\n|--- avg_text_length <= 19.43\n|   |--- avg_text_length <= 16.41\n|   |   |--- class: 1\n|   |--- avg_text_length >  16.41\n|   |   |--- class: 2\n|--- avg_text_length >  19.43\n|   |--- class: 0\n\nPredicted filter: cascade\nActual best filter: lof\n",
+    "--- LODO fold: held_out=sms_spam_10shot ---\n|--- max_class_overlap <= 0.45\n|   |--- avg_text_length <= 102.53\n|   |   |--- class: 1\n|   |--- avg_text_length >  102.53\n|   |   |--- class: 2\n|--- max_class_overlap >  0.45\n|   |--- class: 0\n\nPredicted filter: cascade\nActual best filter: lof\n",
+    "--- LODO fold: held_out=sms_spam_25shot ---\n|--- avg_knn_distance_k5 <= 0.91\n|   |--- avg_text_length <= 81.69\n|   |   |--- class: 1\n|   |--- avg_text_length >  81.69\n|   |   |--- class: 0\n|--- avg_knn_distance_k5 >  0.91\n|   |--- class: 2\n\nPredicted filter: combined\nActual best filter: cascade\n",
+    "--- LODO fold: held_out=hate_speech_davidson_10shot ---\n|--- avg_knn_distance_k5 <= 0.91\n|   |--- class: 0\n|--- avg_knn_distance_k5 >  0.91\n|   |--- class: 1\n\nPredicted filter: cascade\nActual best filter: combined\n"
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "filter_ranking": [
+    {
+      "filter": "cascade_l1",
+      "mean": 3.66323284108612,
+      "std": 3.360894971817078,
+      "win_rate": 84.52380952380952,
+      "n": 168
+    },
+    {
+      "filter": "cascade_l2",
+      "mean": 3.604846507411135,
+      "std": 3.346181662831591,
+      "win_rate": 83.92857142857143,
+      "n": 168
+    },
+    {
+      "filter": "cascade_full",
+      "mean": 3.604322700011513,
+      "std": 3.4121498273104685,
+      "win_rate": 83.33333333333333,
+      "n": 168
+    },
+    {
+      "filter": "lof_k10",
+      "mean": -0.37908904660533577,
+      "std": 6.74952966738463,
+      "win_rate": 58.333333333333336,
+      "n": 12
+    },
+    {
+      "filter": "lof_k20",
+      "mean": -0.8796274816949979,
+      "std": 6.647313016226296,
+      "win_rate": 50.0,
+      "n": 12
+    },
+    {
+      "filter": "none",
+      "mean": -1.161298830961208,
+      "std": 6.392682779529554,
+      "win_rate": 50.0,
+      "n": 12
+    }
+  ],
+  "strategy_comparison": {
+    "keep_all": {
+      "mean": -0.6509658423966537,
+      "win_rate": 50.0
+    },
+    "top_n": {
+      "mean": 3.6130121630250276,
+      "win_rate": 84.12698412698413
+    }
+  },
+  "best_per_dataset": {
+    "20newsgroups_10shot": {
+      "dataset": "20newsgroups_10shot",
+      "filter_name": "cascade_l1",
+      "filter_type": "cascade",
+      "filter_params": {
+        "filter_level": 1,
+        "k_neighbors": 10
+      },
+      "strategy": "top_n",
+      "normalization": "rank",
+      "temperature": 0.5,
+      "min_weight": 0.3,
+      "baseline_f1": 0.748074073930749,
+      "smote_f1": 0.749275511139526,
+      "soft_weighted_f1": 0.8218898361060085,
+      "delta_vs_baseline_pp": 7.381576217525954,
+      "delta_vs_smote_pp": 7.261432496648257,
+      "n_real_samples": 40,
+      "n_synthetic_samples": 200,
+      "weight_mean": 0.8286050939563515,
+      "weight_std": 0.10106354636468746,
+      "weight_min": 0.5911520688926677,
+      "weight_max": 0.9999999999993519,
+      "weight_median": 0.8286045771820226,
+      "timestamp": "2026-02-06T14:26:18.973208",
+      "phase": 2
+    },
+    "20newsgroups_25shot": {
+      "dataset": "20newsgroups_25shot",
+      "filter_name": "cascade_l2",
+      "filter_type": "cascade",
+      "filter_params": {
+        "filter_level": 2,
+        "k_neighbors": 10
+      },
+      "strategy": "top_n",
+      "normalization": "minmax",
+      "temperature": 0.5,
+      "min_weight": 0.1,
+      "baseline_f1": 0.838670442877931,
+      "smote_f1": 0.8322117776216754,
+      "soft_weighted_f1": 0.8503984219737644,
+      "delta_vs_baseline_pp": 1.172797909583334,
+      "delta_vs_smote_pp": 1.8186644352088943,
+      "n_real_samples": 100,
+      "n_synthetic_samples": 200,
+      "weight_mean": 0.6533566478457016,
+      "weight_std": 0.12278194978167707,
+      "weight_min": 0.48243658450921245,
+      "weight_max": 0.9999999995771015,
+      "weight_median": 0.6343346977658075,
+      "timestamp": "2026-02-06T14:26:46.397588",
+      "phase": 2
+    },
+    "hate_speech_davidson_10shot": {
+      "dataset": "hate_speech_davidson_10shot",
+      "filter_name": "cascade_full",
+      "filter_type": "cascade",
+      "filter_params": {
+        "filter_level": 4,
+        "k_neighbors": 10
+      },
+      "strategy": "top_n",
+      "normalization": "minmax",
+      "temperature": 0.5,
+      "min_weight": 0.0,
+      "baseline_f1": 0.5429930127374679,
+      "smote_f1": 0.5249257084873523,
+      "soft_weighted_f1": 0.5813270511637412,
+      "delta_vs_baseline_pp": 3.8334038426273254,
+      "delta_vs_smote_pp": 5.640134267638885,
+      "n_real_samples": 30,
+      "n_synthetic_samples": 150,
+      "weight_mean": 0.6198586072840196,
+      "weight_std": 0.1968470724376239,
+      "weight_min": 0.29549994239649885,
+      "weight_max": 0.9999999995974242,
+      "weight_median": 0.60582409046652,
+      "timestamp": "2026-02-06T14:27:39.413507",
+      "phase": 2
+    },
+    "hate_speech_davidson_25shot": {
+      "dataset": "hate_speech_davidson_25shot",
+      "filter_name": "lof_k10",
+      "filter_type": "lof",
+      "filter_params": {
+        "n_neighbors": 10,
+        "threshold": 0.0
+      },
+      "strategy": "top_n",
+      "normalization": "minmax",
+      "temperature": 1.0,
+      "min_weight": 0.1,
+      "baseline_f1": 0.598660978788956,
+      "smote_f1": 0.5854672522550174,
+      "soft_weighted_f1": 0.6802455250767266,
+      "delta_vs_baseline_pp": 8.158454628777069,
+      "delta_vs_smote_pp": 9.477827282170924,
+      "n_real_samples": 75,
+      "n_synthetic_samples": 150,
+      "weight_mean": 0.9478529691696167,
+      "weight_std": 0.03264578431844711,
+      "weight_min": 0.879966676235199,
+      "weight_max": 1.0,
+      "weight_median": 0.9539192318916321,
+      "timestamp": "2026-02-06T14:26:11.480334",
+      "phase": 1
+    },
+    "sms_spam_10shot": {
+      "dataset": "sms_spam_10shot",
+      "filter_name": "cascade_l1",
+      "filter_type": "cascade",
+      "filter_params": {
+        "filter_level": 1,
+        "k_neighbors": 10
+      },
+      "strategy": "top_n",
+      "normalization": "minmax",
+      "temperature": 1.0,
+      "min_weight": 0.1,
+      "baseline_f1": 0.8772066684002195,
+      "smote_f1": 0.8682702098419954,
+      "soft_weighted_f1": 0.940187094767567,
+      "delta_vs_baseline_pp": 6.298042636734746,
+      "delta_vs_smote_pp": 7.191688492557158,
+      "n_real_samples": 20,
+      "n_synthetic_samples": 100,
+      "weight_mean": 0.740362261263189,
+      "weight_std": 0.12306793026206327,
+      "weight_min": 0.5148129467319936,
+      "weight_max": 0.9999999997642998,
+      "weight_median": 0.7346451254635229,
+      "timestamp": "2026-02-06T14:26:03.809231",
+      "phase": 1
+    },
+    "sms_spam_25shot": {
+      "dataset": "sms_spam_25shot",
+      "filter_name": "cascade_l1",
+      "filter_type": "cascade",
+      "filter_params": {
+        "filter_level": 1,
+        "k_neighbors": 10
+      },
+      "strategy": "top_n",
+      "normalization": "minmax",
+      "temperature": 0.5,
+      "min_weight": 0.0,
+      "baseline_f1": 0.9131098367220497,
+      "smote_f1": 0.926692440061424,
+      "soft_weighted_f1": 0.9336968307085078,
+      "delta_vs_baseline_pp": 2.0586993986458135,
+      "delta_vs_smote_pp": 0.7004390647083802,
+      "n_real_samples": 50,
+      "n_synthetic_samples": 100,
+      "weight_mean": 0.5534442885927617,
+      "weight_std": 0.17944475753723205,
+      "weight_min": 0.2929748880134842,
+      "weight_max": 0.9999999995415763,
+      "weight_median": 0.5626629760048515,
+      "timestamp": "2026-02-06T14:27:14.730495",
+      "phase": 2
+    }
+  },
+  "timestamp": "2026-02-06T14:28:04.913264"
+}

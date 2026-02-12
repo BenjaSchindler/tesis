@@ -1,0 +1,200 @@
+% Chapter 5 - Metodología
+
+\chapter{Metodología}
+\label{ch:metodologia}
+
+Este capítulo describe el diseño experimental completo de la investigación. Se detallan los conjuntos de datos, el modelo de embeddings, el proceso de generación con LLM, los filtros geométricos implementados, el mecanismo de ponderación suave, los métodos de línea base, los clasificadores evaluados, el protocolo estadístico, la adaptación para reconocimiento de entidades nombradas, y la estructura de los experimentos realizados.
+
+\section{Conjuntos de Datos}
+\label{sec:datasets}
+
+La evaluación experimental se realiza sobre 13 conjuntos de datos que abarcan 9 dominios textuales distintos. La Tabla~\ref{tab:datasets_summary} presenta un resumen de todos los conjuntos utilizados.
+
+\input{Tables/tab_datasets_summary}
+
+\subsection{Conjuntos de Clasificación de Texto}
+
+Los 7 conjuntos principales de clasificación cubren un rango de 2 a 20 clases. El conjunto \textbf{20newsgroups} contiene publicaciones de grupos de noticias organizadas en 4 categorías temáticas (ciencia, tecnología, política, religión). \textbf{sms\_spam} es un problema binario de detección de mensajes no deseados en SMS. \textbf{hate\_speech\_davidson} clasifica publicaciones de redes sociales en 3 categorías: discurso de odio, lenguaje ofensivo y lenguaje neutro. \textbf{ag\_news} agrupa noticias en 4 categorías (mundo, deportes, negocios, ciencia/tecnología). \textbf{emotion} clasifica textos según 6 emociones básicas (alegría, tristeza, ira, miedo, amor, sorpresa). \textbf{dbpedia14} contiene descripciones de entidades de Wikipedia organizadas en 14 categorías ontológicas. \textbf{20newsgroups\_20class} utiliza las 20 categorías originales del corpus de grupos de noticias, proporcionando un escenario de alta granularidad.
+
+Para simular escenarios de pocos ejemplos, se extraen 10, 25 o 50 muestras por clase del conjunto de entrenamiento original, manteniendo el conjunto de prueba completo intacto. Este procedimiento genera 21 configuraciones base (7 conjuntos de datos $\times$ 3 valores de n-shot). La evaluación sobre el conjunto de prueba completo proporciona estimaciones estables del rendimiento real del clasificador.
+
+\subsection{Conjuntos Adicionales para Análisis de Escalabilidad}
+
+Tres conjuntos adicionales evalúan el efecto del número de clases sobre la efectividad del filtrado. \textbf{banking77} contiene consultas bancarias organizadas en 77 categorías de intención. \textbf{clinc150} agrupa consultas de asistentes virtuales en 150 categorías. \textbf{trec6} clasifica preguntas en 6 categorías semánticas. Estos conjuntos, con 6, 77 y 150 clases respectivamente, complementan el rango de 2-20 clases de los conjuntos principales.
+
+\subsection{Conjuntos de Reconocimiento de Entidades Nombradas}
+
+La extensión a NER emplea 3 corpus. \textbf{MultiNERD} contiene textos anotados con 5 tipos de entidades (persona, organización, ubicación, fecha, miscelánea). \textbf{WikiANN} proporciona anotaciones en 3 tipos (persona, organización, ubicación) derivadas de artículos de Wikipedia. \textbf{Few-NERD} ofrece una taxonomía de 8 tipos de entidades con granularidad intermedia. Cada corpus se evalúa con 10, 25 y 50 oraciones por tipo de entidad.
+
+\section{Modelo de Embeddings}
+\label{sec:modelo_embeddings}
+
+La representación vectorial emplea el modelo \texttt{all-mpnet-base-v2} de la biblioteca SentenceTransformers. Este modelo produce embeddings de 768 dimensiones con normalización L2 automática. La selección responde al balance entre calidad de representación y eficiencia computacional: el modelo ocupa la primera posición en múltiples evaluaciones de similitud semántica dentro de su categoría de tamaño según el benchmark MTEB, que evalúa 58 conjuntos de datos en 8 tareas de embeddings \cite{muennighoff2023mteb}.
+
+Cada texto se codifica como un vector unitario en $\mathbb{R}^{768}$. La normalización L2 garantiza que la similitud coseno entre vectores equivalga al producto punto, simplificando los cálculos geométricos. Todas las operaciones de filtrado, clasificación y evaluación operan sobre estos embeddings.
+
+Para verificar que los resultados no dependen de la elección específica del modelo de embeddings, se realiza un estudio de ablación con 3 modelos adicionales: \texttt{bge-large-en-v1.5} (1024 dimensiones), \texttt{e5-large-v2} (1024 dimensiones) y \texttt{bge-small-en-v1.5} (384 dimensiones). Los resultados de esta ablación se reportan en la Sección~\ref{sec:robustez_embeddings}.
+
+\section{Generación con Modelo de Lenguaje}
+\label{sec:generacion_llm}
+
+El proceso de generación de muestras sintéticas utiliza Gemini 3 Flash (\texttt{gemini-3-flash-preview}) de Google como modelo generativo. La selección responde a consideraciones prácticas: el modelo ofrece calidad de generación competitiva a un costo significativamente menor que alternativas como GPT-4 o Claude.
+
+Para cada clase en cada configuración experimental, se proporcionan los ejemplos reales disponibles como contexto en el prompt y se solicitan variaciones del mismo estilo y tema. Se genera un excedente de 3x: por cada muestra deseada, se solicitan 3 candidatos. Este excedente permite que los filtros geométricos seleccionen las mejores muestras de un conjunto amplio de candidatos.
+
+La plantilla de prompt sigue una estructura directa. Se indica al modelo la categoría objetivo, se proporcionan los ejemplos reales como referencia, y se solicita la generación de nuevos ejemplos que mantengan las características estilísticas y temáticas de la clase. No se emplea fine-tuning del modelo generativo; toda la especificidad proviene del aprendizaje en contexto (in-context learning).
+
+Las respuestas del LLM se procesan mediante un pipeline de parsing simple. Cada línea de la respuesta se trata como un candidato potencial. Se eliminan prefijos numéricos y marcadores de lista (caracteres como dígitos, puntos, paréntesis, guiones y asteriscos). Solo se retienen líneas con más de 10 caracteres después de la limpieza, descartando líneas vacías o fragmentos demasiado cortos para constituir ejemplos válidos.
+
+Todas las respuestas del LLM se almacenan en caché mediante hash MD5 del prompt completo. Este mecanismo cumple dos funciones: garantiza reproducibilidad exacta entre ejecuciones con la misma configuración, y reduce costos al evitar llamadas redundantes a la API. La caché se almacena en disco como archivos JSON indexados por hash.
+
+\section{Filtros Geométricos}
+\label{sec:filtros_geometricos}
+
+El sistema implementa 5 estrategias de selección de muestras sintéticas, que varían desde la ausencia de filtrado hasta combinaciones restrictivas de múltiples criterios. La Tabla~\ref{tab:filters_summary} resume los filtros con sus parámetros y criterios de selección.
+
+\input{Tables/tab_filters_summary}
+
+\subsection{Filtro LOF (Local Outlier Factor)}
+\label{subsec:filtro_lof}
+
+El filtro basado en LOF evalúa la densidad local de cada muestra sintética respecto a la distribución de muestras reales de su clase. El algoritmo LOF calcula para cada punto una puntuación que compara su densidad local con la de sus vecinos. Una puntuación cercana a 1 indica densidad similar a los vecinos (inlier); valores significativamente mayores que 1 indican baja densidad relativa (outlier).
+
+El procedimiento opera en dos fases. Primero, se entrena el detector LOF exclusivamente sobre los embeddings reales de la clase, con $n\_neighbors=20$. Segundo, se evalúa cada muestra sintética con el modelo entrenado. Las muestras con puntuación LOF por encima del umbral se clasifican como outliers y se rechazan.
+
+Se implementan dos variantes que difieren en la severidad del umbral. La variante \textbf{lof\_relaxed} utiliza un umbral permisivo ($threshold=0.0$), aceptando la mayoría de las muestras que no son outliers extremos. La variante \textbf{lof\_strict} emplea un umbral más restrictivo que exige mayor consistencia con la distribución real.
+
+\subsection{Cascada de Filtros}
+\label{subsec:cascada_filtros}
+
+La cascada implementa un sistema jerárquico de puntuación con hasta 4 niveles de evaluación. A diferencia del filtro LOF que opera con umbral binario, la cascada asigna una puntuación continua a cada candidato y selecciona los mejores por ranking.
+
+El \textbf{nivel 1} evalúa la distancia euclidiana al ancla más cercana de la clase. Las muestras más próximas a los ejemplos reales reciben puntuaciones más altas. El \textbf{nivel 2} añade la similitud coseno al ancla, capturando la orientación además de la magnitud. El \textbf{nivel 3} incorpora la pureza KNN: la distancia promedio a los $k=10$ vecinos más cercanos de la misma clase, penalizando muestras cuyos vecinos son predominantemente de otras clases. El \textbf{nivel 4} agrega la confianza medida como distancia al centroide de la clase.
+
+Las puntuaciones de los niveles activos se combinan mediante media geométrica, y se seleccionan los $N$ mejores candidatos por ranking, donde $N$ es el número de muestras deseadas. El parámetro \texttt{filter\_level} controla cuántos niveles se activan: un valor de 1 utiliza solo la distancia, un valor de 4 activa todos los criterios.
+
+Un hallazgo relevante de esta investigación es que el nivel 1 (solo distancia euclidiana) produce los mejores resultados. La adición de criterios no mejora la selección; al contrario, la combinación de múltiples métricas introduce ruido que degrada la calidad de la selección. Este resultado es consistente con evidencia reciente de que la calidad de la representación, y no la complejidad del algoritmo de selección, es el factor determinante en la poda de datos \cite{du2025disentangling}.
+
+\subsection{Filtro Combinado}
+\label{subsec:filtro_combinado}
+
+El filtro combinado exige que cada muestra supere simultáneamente dos criterios independientes: la evaluación LOF (la muestra debe ser un inlier según la densidad local) y un umbral mínimo de similitud coseno con los ejemplos reales de la clase ($sim\_threshold=0.5$). Una muestra se acepta solo si pasa ambos filtros.
+
+Este diseño representa la estrategia más restrictiva del sistema. La conjunción de criterios reduce drásticamente la tasa de aceptación, llegando a 0\% en varias configuraciones. El filtro combinado se incluye como caso de estudio de sobrefiltrado: demuestra empíricamente que la combinación de múltiples filtros no es necesariamente beneficiosa.
+
+\subsection{Muestreador Guiado por Embeddings}
+\label{subsec:muestreador_guiado}
+
+El muestreador guiado optimiza una función objetivo que balancea cobertura y calidad. La cobertura, ponderada con factor 0.6, mide cuán bien las muestras seleccionadas cubren el espacio de embeddings de la clase. La calidad, ponderada con factor 0.4, evalúa la proximidad de cada muestra al centroide de la clase.
+
+La selección opera mediante un algoritmo voraz con restricciones de diversidad. En cada paso, se selecciona la muestra que maximiza la función objetivo conjunta, evitando seleccionar muestras demasiado similares entre sí. Este enfoque produce un conjunto diverso pero potencialmente incluye muestras periféricas para maximizar la cobertura.
+
+\subsection{Sin Filtro (Control)}
+\label{subsec:sin_filtro}
+
+La condición de control selecciona aleatoriamente entre los candidatos generados por el LLM, sin aplicar ningún criterio geométrico. Esta condición permite aislar la contribución específica del filtrado: la diferencia entre cualquier filtro y la condición sin filtro cuantifica el valor añadido de la selección geométrica.
+
+\section{Ponderación Suave}
+\label{sec:ponderacion_suave}
+
+La ponderación suave constituye la segunda contribución metodológica de esta investigación, complementando el filtrado binario. En lugar de la decisión discreta aceptar/rechazar con peso uniforme, las puntuaciones del filtro geométrico se transforman en pesos de muestra que modulan la contribución de cada ejemplo sintético durante el entrenamiento.
+
+El procedimiento consta de 4 pasos. Primero, se calculan las puntuaciones del filtro de cascada nivel 1 para cada muestra sintética. Segundo, se seleccionan los $N$ mejores candidatos (top-N), donde $N$ es igual al número de muestras reales por clase. Tercero, las puntuaciones se normalizan al rango $[0, 1]$ mediante normalización min-max según la Ecuación~\ref{eq:minmax}:
+
+\begin{equation}
+s_{norm}(x) = \frac{s(x) - s_{min}}{s_{max} - s_{min}}
+\label{eq:minmax}
+\end{equation}
+
+donde $s(x)$ es la puntuación original de la muestra $x$, y $s_{min}$ y $s_{max}$ son las puntuaciones mínima y máxima del conjunto de candidatos seleccionados.
+
+Cuarto, se aplica escalado por temperatura para controlar la distribución de pesos según la Ecuación~\ref{eq:temperatura_pesos}:
+
+\begin{equation}
+w(x) = \max\left(w_{min},\ s_{norm}(x)^{1/T}\right)
+\label{eq:temperatura_pesos}
+\end{equation}
+
+donde $T=0.5$ es la temperatura y $w_{min}=0.0$ es el peso mínimo. Una temperatura menor que 1 amplifica las diferencias entre puntuaciones, asignando pesos proporcionalmente mayores a las muestras de mayor calidad geométrica. El peso mínimo de 0.0 permite que las muestras de menor calidad no contribuyan al entrenamiento.
+
+Los pesos resultantes se pasan al clasificador como argumento \texttt{sample\_weight}. Las muestras reales siempre reciben peso 1.0. De esta manera, el clasificador pondera más fuertemente los ejemplos sintéticos que residen en regiones geométricamente consistentes con la distribución real de la clase.
+
+\section{Métodos de Línea Base}
+\label{sec:lineas_base}
+
+El sistema propuesto se compara contra 9 métodos de aumentación que representan las principales familias de técnicas disponibles en la literatura.
+
+\textbf{SMOTE} genera muestras sintéticas mediante interpolación lineal en el espacio de embeddings. La implementación utiliza un patrón de problema binario ficticio (dummy-binary): para cada clase, se crea un problema binario donde la clase objetivo es la minoritaria y el resto constituye la mayoritaria, se aplica SMOTE estándar, y se retienen solo las muestras sintéticas de la clase objetivo. Este procedimiento se repite independientemente para cada clase. La equivalencia de esta implementación con SMOTE estándar se valida formalmente en la Sección~\ref{sec:validacion_smote}.
+
+\textbf{Sobremuestreo aleatorio} duplica aleatoriamente muestras existentes de cada clase hasta alcanzar el número deseado. Este método no genera información nueva; solo replica ejemplos existentes.
+
+\textbf{EDA} (Easy Data Augmentation) aplica 4 operaciones de perturbación textual: sustitución de sinónimos, inserción aleatoria de palabras, intercambio de posición de palabras y eliminación aleatoria de palabras. Estas operaciones producen variaciones superficiales que preservan el significado aproximado del texto original.
+
+\textbf{Traducción inversa} genera variaciones traduciendo cada texto al español mediante Gemini y traduciendo el resultado de vuelta al inglés. Las diferencias entre el texto original y la traducción de ida y vuelta producen paráfrasis que conservan el contenido semántico con variación léxica y sintáctica. Las respuestas se almacenan en caché con el mismo mecanismo MD5 utilizado para las generaciones directas.
+
+\textbf{Sin aumentación} entrena el clasificador exclusivamente con las muestras reales disponibles, sin datos sintéticos de ningún tipo. Esta condición establece el límite inferior de rendimiento con los datos originales.
+
+\textbf{Mixup en embeddings} genera muestras sintéticas mediante interpolación convexa de pares de embeddings de la misma clase. Para cada par de muestras reales $(x_i, x_j)$ con la misma etiqueta, se genera un embedding sintético $x_{synth} = \lambda x_i + (1-\lambda) x_j$ donde $\lambda \sim \text{Beta}(\alpha, \alpha)$. Esta técnica densifica el espacio de representación manteniendo las muestras dentro del casco convexo de la clase.
+
+\textbf{Paráfrasis con T5} emplea el modelo T5 para generar reformulaciones de los ejemplos existentes. El modelo recibe cada texto con la instrucción de parafrasearlo, produciendo una versión alternativa que preserva el significado con variación de estructura y vocabulario.
+
+\textbf{Aumentación contextual con BERT} sustituye tokens en los textos originales utilizando las predicciones del modelo BERT enmascarado. Para cada texto, se enmascaran aleatoriamente un porcentaje de tokens y se reemplazan con las predicciones más probables del modelo, generando variaciones contextualizadas que mantienen la coherencia gramatical.
+
+\section{Clasificadores}
+\label{sec:clasificadores}
+
+La evaluación emplea 5 clasificadores que cubren las principales familias de modelos supervisados. Todos los clasificadores operan sobre los embeddings de 768 dimensiones producidos por el modelo de representación.
+
+La \textbf{regresión logística} se configura con \texttt{max\_iter=1000} y solver LBFGS. Este clasificador lineal establece la línea base estándar para clasificación de texto en espacios de embeddings. El \textbf{SVC lineal} emplea una máquina de vectores soporte con kernel lineal, que maximiza el margen entre clases en el espacio de representación. El \textbf{clasificador Ridge} aplica regresión regularizada con penalización L2, ofreciendo una alternativa lineal con regularización explícita.
+
+El \textbf{bosque aleatorio} con 100 árboles representa los métodos basados en ensambles de árboles de decisión. A diferencia de los clasificadores lineales, los árboles de decisión realizan particiones sobre ejes individuales del espacio de características. El \textbf{perceptrón multicapa} (MLP) implementa una red neuronal con una capa oculta de 100 unidades y activación ReLU, representando los clasificadores no lineales basados en redes neuronales.
+
+Todos los clasificadores se inicializan con \texttt{random\_state=42} para garantizar reproducibilidad dentro de cada semilla experimental. La selección de estos 5 clasificadores permite evaluar si los beneficios del filtrado geométrico dependen de la arquitectura del modelo supervisado.
+
+\section{Protocolo de Evaluación Estadística}
+\label{sec:protocolo_estadistico}
+
+La métrica primaria es el macro F1, que pondera equitativamente cada clase independientemente de su frecuencia. Esta métrica se calcula sobre el conjunto de prueba completo para cada configuración experimental.
+
+La evaluación emplea un diseño de holdout con 5 semillas aleatorias $[42, 123, 456, 789, 1011]$ que controlan el muestreo de los datos de entrenamiento de pocos ejemplos. El conjunto de prueba se mantiene fijo. Para cada configuración, se calcula el delta respecto a SMOTE: $\Delta = F1_{\mathrm{method}} - F1_{\mathrm{SMOTE}}$, expresado en puntos porcentuales.
+
+La significancia estadística se evalúa mediante prueba t pareada sobre los deltas observados en todas las configuraciones. Para las comparaciones entre métodos, se aplica corrección de Bonferroni que divide el umbral de significancia por el número de comparaciones realizadas, controlando la tasa de error familiar. Un resultado se considera significativo cuando $p_{Bonferroni} < 0.05$.
+
+Los intervalos de confianza al 95\% se calculan mediante bootstrap con 10,000 remuestreos. El tamaño de efecto se cuantifica mediante la d de Cohen:
+
+\begin{equation}
+d = \frac{\bar{\Delta}}{s_{\Delta}}
+\label{eq:cohen_d}
+\end{equation}
+
+donde $\bar{\Delta}$ es la media de los deltas y $s_{\Delta}$ su desviación estándar. Valores de $d = 0.2$ se interpretan como efectos pequeños, $d = 0.5$ como medianos y $d = 0.8$ como grandes. La tasa de victoria cuantifica la fracción de configuraciones donde el método evaluado supera a SMOTE.
+
+\section{Adaptación para Reconocimiento de Entidades Nombradas}
+\label{sec:adaptacion_ner}
+
+La extensión a NER evalúa si los filtros geométricos diseñados para clasificación de texto generalizan a una tarea estructuralmente diferente. La adaptación opera en 3 niveles.
+
+A nivel de representación, cada oración se codifica como un embedding a nivel de oración completa utilizando el mismo modelo \texttt{all-mpnet-base-v2}. A nivel de clase, se define la ``clase'' de cada oración como el tipo de entidad dominante que contiene. Una oración con 2 menciones de persona y 1 de organización se asigna a la clase ``persona''. Esta simplificación permite reutilizar los filtros diseñados para clasificación sin modificación.
+
+A nivel de filtrado, los filtros geométricos se aplican sobre los embeddings de oraciones agrupados por tipo de entidad dominante. La cascada nivel 1 evalúa la distancia euclidiana entre el embedding de una oración sintética y los embeddings de oraciones reales del mismo tipo de entidad. El LOF evalúa la densidad local en el mismo espacio.
+
+La evaluación emplea SpaCy para el reconocimiento de entidades y la biblioteca seqeval para calcular el F1 a nivel de entidad. Esta métrica penaliza tanto las entidades incorrectamente etiquetadas como las fronteras mal detectadas, proporcionando una evaluación estricta de la calidad del reconocimiento.
+
+\section{Diseño Experimental}
+\label{sec:diseno_experimental}
+
+La investigación comprende 6 experimentos complementarios que abordan las hipótesis planteadas en el Capítulo~\ref{ch:hipotesis}.
+
+El \textbf{experimento principal} evalúa 3,675 configuraciones: 7 conjuntos de datos $\times$ 3 valores de n-shot $\times$ 5 clasificadores $\times$ 7 métodos $\times$ 5 semillas. Los 7 métodos son: sin aumentación, SMOTE, sobremuestreo aleatorio, EDA, traducción inversa, filtrado binario (cascada nivel 1 con peso uniforme) y ponderación suave (cascada nivel 1 con pesos por calidad). Este experimento proporciona la evidencia principal para la hipótesis H1 y sus componentes H1a, H1b y H1d.
+
+La \textbf{comparación con líneas base modernas} amplía el alcance a 1,890 configuraciones: 21 configuraciones de datos (7 conjuntos $\times$ 3 n-shot) $\times$ 3 clasificadores (regresión logística, SVC, Ridge) $\times$ 10 métodos $\times$ 3 semillas. Los 3 métodos adicionales son mixup en embeddings, paráfrasis con T5 y aumentación contextual con BERT. Este experimento posiciona el sistema propuesto frente a técnicas recientes de la literatura.
+
+La \textbf{extensión a NER} comprende 63 configuraciones: 3 corpus $\times$ 3 valores de n-shot $\times$ 7 filtros geométricos. Este experimento evalúa la hipótesis H1c sobre generalización entre tareas.
+
+La \textbf{ablación de embeddings} ejecuta 504 evaluaciones: 4 modelos de embeddings $\times$ 7 conjuntos de datos $\times$ 3 valores de n-shot $\times$ 3 clasificadores $\times$ 3 semillas. Este estudio verifica que los resultados no dependen de la elección específica del modelo de representación.
+
+La \textbf{evaluación en conjuntos nuevos} abarca 81 configuraciones: 3 conjuntos (banking77, clinc150, trec6) $\times$ 3 valores de n-shot $\times$ 3 clasificadores $\times$ 3 semillas $\times$ 3 métodos (SMOTE, filtrado binario, ponderación suave). Este experimento evalúa el efecto del número de clases sobre la efectividad del filtrado.
+
+La \textbf{mejora iterativa de prompts} evalúa 120 configuraciones: 6 conjuntos $\times$ 2 filtros $\times$ 5 iteraciones $\times$ 2 comparaciones (vs SMOTE, vs pasada única). Este experimento investiga si la retroalimentación de los filtros al proceso de generación mejora las tasas de aceptación y el rendimiento final.
+
+En total, la evaluación experimental comprende más de 6,300 configuraciones individuales, proporcionando evidencia estadística robusta para las conclusiones de esta investigación.

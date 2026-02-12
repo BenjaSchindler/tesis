@@ -1,0 +1,28 @@
+\begin{table}[htbp]
+\centering
+\caption{Comparación de 10 métodos de aumentación respecto a la línea base SMOTE}
+\label{tab:modern_method_comparison}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Método} & \textbf{F1 medio} & \textbf{$\Delta$ SMOTE (pp)} & \textbf{IC 95\%} & \textbf{$d$ de Cohen} & \textbf{Vic.\%} \\
+\midrule
+\rowcolor{green!20}
+\textbf{Pond. suave}      & 0.7508 & \textbf{+2.61***} & [+1.98, +3.25] & \textbf{0.95} & \textbf{88.9\%} \\
+\rowcolor{green!10}
+\textbf{Filtro binario}   & 0.7487 & +2.39***           & [+1.75, +3.07] & 0.82          & 79.4\%          \\
+Sin aumentación            & 0.7312 & +0.64***           & [+0.42, +0.89] & 0.64          & 73.0\%          \\
+Trad. inversa              & 0.7241 & $-$0.07            & [$-$0.42, +0.26] & $-$0.05     & 57.1\%          \\
+EDA                        & 0.7233 & $-$0.15            & [$-$0.57, +0.27] & $-$0.08     & 52.4\%          \\
+BERT contextual            & 0.7222 & $-$0.26            & [$-$0.58, +0.02] & $-$0.21     & 46.0\%          \\
+Mixup embeddings           & 0.7247 & $-$0.01            & [$-$0.13, +0.11] & $-$0.02     & 44.4\%          \\
+Sobrem. aleatorio          & 0.7232 & $-$0.16            & [$-$0.35, +0.02] & $-$0.21     & 39.7\%          \\
+\textit{SMOTE (base)}      & 0.7248 & ---                & ---              & ---           & ---             \\
+Paráfrasis T5              & 0.7213 & $-$0.35            & [$-$0.62, $-$0.11] & $-$0.34   & 38.1\%          \\
+\midrule
+\multicolumn{6}{l}{\small $N=63$ comparaciones pareadas (21 conjuntos $\times$ 3 semillas). Clasificadores: LR, SVC, Ridge.} \\
+\multicolumn{6}{l}{\small Significancia: *** $p<0.001$ (prueba t pareada con corrección de Bonferroni).} \\
+\multicolumn{6}{l}{\small \textbf{Solo los métodos de filtrado geométrico superan significativamente a SMOTE.}} \\
+\bottomrule
+\end{tabular}
+\end{table}

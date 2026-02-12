@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\centering
+\caption{Validación de la implementación de SMOTE: por clase (dummy-binary) vs estándar multiclase}
+\label{tab:smote_validation}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Conjunto} & \textbf{$N$ comp.} & \textbf{$|\Delta|$ medio (pp)} & \textbf{$|\Delta|$ máx (pp)} \\
+\midrule
+sms\_spam\_10shot              & 9 & 0.0000 & 0.0000 \\
+20newsgroups\_10shot           & 9 & 0.0000 & 0.0000 \\
+hate\_speech\_davidson\_10shot & 9 & 0.0000 & 0.0000 \\
+\midrule
+\textbf{Total}                 & \textbf{27} & \textbf{0.0000} & \textbf{0.0000} \\
+\midrule
+\multicolumn{4}{l}{\small 3 clasificadores (LR, SVC, Ridge) $\times$ 3 semillas $\times$ 3 conjuntos = 27 comp.} \\
+\multicolumn{4}{l}{\small Umbral: $<$0.1pp. \textbf{Resultado: VALIDADO.} Implementaciones equivalentes.} \\
+\bottomrule
+\end{tabular}
+\end{table}

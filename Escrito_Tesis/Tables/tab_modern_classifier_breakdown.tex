@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\centering
+\caption{Rendimiento por clasificador: filtrado geométrico vs SMOTE}
+\label{tab:modern_classifier}
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{\textbf{Pond. suave}} & \multicolumn{3}{c}{\textbf{Filtro binario}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+\textbf{Clasificador} & \textbf{$\Delta$ (pp)} & \textbf{$d$} & \textbf{Vic.\%} & \textbf{$\Delta$ (pp)} & \textbf{$d$} & \textbf{Vic.\%} \\
+\midrule
+Reg. logística & +2.09*** & 0.82 & 76.2\% & +1.61*** & 0.56 & 65.1\% \\
+SVC (lineal)   & +2.98*** & 1.02 & 92.1\% & +2.86*** & 0.93 & 90.5\% \\
+Ridge          & +2.74*** & 1.04 & 92.1\% & +2.69*** & 1.02 & 85.7\% \\
+\midrule
+\multicolumn{7}{l}{\small Significancia: * $p<0.05$, ** $p<0.01$, *** $p<0.001$ (prueba t pareada).} \\
+\multicolumn{7}{l}{\small $n=63$ comparaciones pareadas por clasificador (21 conjuntos $\times$ 3 semillas).} \\
+\bottomrule
+\end{tabular}
+\end{table}

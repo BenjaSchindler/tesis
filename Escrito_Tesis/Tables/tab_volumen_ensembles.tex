@@ -1,0 +1,25 @@
+% Tabla: Impacto del volumen de generación en Macro F1
+% Validación K-Fold CV (5×3 = 15 folds)
+\begin{table}[htbp]
+\centering
+\caption{Impacto del volumen de generación en Macro F1 (Regresión Logística)}
+\label{tab:volumen_ensembles}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Configuración} & \textbf{N sintéticos} & \textbf{$\Delta$ F1 (pp)} & \textbf{p-valor} \\
+\midrule
+Alto volumen de generación & $\sim$4,200 & +1.07 & $<$0.0001 \\
+Ensemble mejores configs. & $\sim$1,500 & +0.90 & 0.0042 \\
+Ensemble Top-3 & $\sim$1,200 & +0.89 & 0.0002 \\
+Volumen ultra & $\sim$2,800 & +0.73 & 0.0018 \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}\footnotesize
+
+\textbullet\ Clasificador: Regresión Logística sobre embeddings MPNet 768D.
+
+\textbullet\ \textbf{Hallazgo crítico}: las clases ESFJ, ESFP y ESTJ muestran 0\% de mejora en todas estas configuraciones, a pesar del alto volumen de sintéticos generados.
+
+\textbullet\ Este resultado motiva la investigación de clasificadores alternativos en la sección siguiente.
+
+\end{table}

@@ -1,0 +1,1646 @@
+{
+  "config": {
+    "target_samples_per_class": 50,
+    "max_llm_calls_per_class": 300,
+    "batch_size": 25,
+    "n_shot": 25,
+    "early_stop_acceptance": 0.02
+  },
+  "results": [
+    {
+      "dataset": "20newsgroups_10shot",
+      "n_classes": 4,
+      "baseline_f1": 0.748074073930749,
+      "timestamp": "2026-01-26T22:58:23.079726",
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "f1_score": 0.8361689620423245,
+          "f1_delta_vs_baseline": 8.80948881115755,
+          "total_llm_calls": 4,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 2202.3722027893873,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 54,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "f1_score": 0.8380984232491997,
+          "f1_delta_vs_baseline": 9.002434931845071,
+          "total_llm_calls": 8,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 1125.304366480634,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "f1_score": 0.8141437511124576,
+          "f1_delta_vs_baseline": 6.606967718170864,
+          "total_llm_calls": 9,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 734.1075242412072,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 57,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.8045182636416032,
+          "f1_delta_vs_baseline": 5.644418971085418,
+          "total_llm_calls": 9,
+          "avg_acceptance_rate": 0.9189189189189189,
+          "efficiency_score": 627.1576634539354,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 74,
+              "acceptance_rate": 0.6756756756756757,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.8262878021154996,
+          "f1_delta_vs_baseline": 7.821372818475059,
+          "total_llm_calls": 8,
+          "avg_acceptance_rate": 0.9732142857142857,
+          "efficiency_score": 977.6716023093824,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.8196477131243629,
+          "f1_delta_vs_baseline": 7.1573639193613925,
+          "total_llm_calls": 8,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 894.6704899201741,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "f1_score": 0.7543579200820941,
+          "f1_delta_vs_baseline": 0.628384615134514,
+          "total_llm_calls": 18,
+          "avg_acceptance_rate": 0.006902431990771893,
+          "efficiency_score": 34.91025639636189,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 0,
+              "llm_calls": 5,
+              "total_generated": 125,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "sci.med": {
+              "n_valid": 1,
+              "llm_calls": 5,
+              "total_generated": 125,
+              "acceptance_rate": 0.008,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "alt.atheism": {
+              "n_valid": 1,
+              "llm_calls": 4,
+              "total_generated": 101,
+              "acceptance_rate": 0.009900990099009901,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "soc.religion.christian": {
+              "n_valid": 1,
+              "llm_calls": 4,
+              "total_generated": 103,
+              "acceptance_rate": 0.009708737864077669,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "all_reached_target": false
+        }
+      ]
+    },
+    {
+      "dataset": "20newsgroups_25shot",
+      "n_classes": 4,
+      "baseline_f1": 0.838670442877931,
+      "timestamp": "2026-01-26T23:26:20.304527",
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "f1_score": 0.8460982941388906,
+          "f1_delta_vs_baseline": 0.7427851260959573,
+          "total_llm_calls": 4,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 185.6962815239893,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 94,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "f1_score": 0.843084983928755,
+          "f1_delta_vs_baseline": 0.441454105082395,
+          "total_llm_calls": 8,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 55.18176313529938,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "f1_score": 0.859322945985505,
+          "f1_delta_vs_baseline": 2.065250310757394,
+          "total_llm_calls": 12,
+          "avg_acceptance_rate": 0.9033333333333333,
+          "efficiency_score": 172.10419256311616,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.8533333333333334,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.9466666666666667,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.9466666666666667,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.8666666666666667,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.8540590002668654,
+          "f1_delta_vs_baseline": 1.538855738893441,
+          "total_llm_calls": 8,
+          "avg_acceptance_rate": 0.9732142857142857,
+          "efficiency_score": 192.35696736168012,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 56,
+              "acceptance_rate": 0.8928571428571429,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.8538144451525314,
+          "f1_delta_vs_baseline": 1.5144002274600332,
+          "total_llm_calls": 8,
+          "avg_acceptance_rate": 0.9950980392156863,
+          "efficiency_score": 189.30002843250415,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.8410348643031584,
+          "f1_delta_vs_baseline": 0.23644214252274143,
+          "total_llm_calls": 9,
+          "avg_acceptance_rate": 0.9458777663112028,
+          "efficiency_score": 26.271349169193492,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 57,
+              "acceptance_rate": 0.8771929824561403,
+              "status": "SUCCESS"
+            },
+            "sci.med": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 54,
+              "acceptance_rate": 0.9259259259259259,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "f1_score": 0.8275789661634799,
+          "f1_delta_vs_baseline": -1.1091476714451098,
+          "total_llm_calls": 45,
+          "avg_acceptance_rate": 0.07066150029637111,
+          "efficiency_score": -24.647726032113553,
+          "per_class_stats": {
+            "comp.graphics": {
+              "n_valid": 1,
+              "llm_calls": 5,
+              "total_generated": 125,
+              "acceptance_rate": 0.008,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "sci.med": {
+              "n_valid": 1,
+              "llm_calls": 4,
+              "total_generated": 101,
+              "acceptance_rate": 0.009900990099009901,
+              "status": "LOW_ACCEPTANCE"
+            },
+            "alt.atheism": {
+              "n_valid": 50,
+              "llm_calls": 11,
+              "total_generated": 275,
+              "acceptance_rate": 0.18181818181818182,
+              "status": "SUCCESS"
+            },
+            "soc.religion.christian": {
+              "n_valid": 50,
+              "llm_calls": 25,
+              "total_generated": 615,
+              "acceptance_rate": 0.08292682926829269,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": false
+        }
+      ]
+    },
+    {
+      "dataset": "sms_spam_10shot",
+      "n_classes": 2,
+      "baseline_f1": 0.8772066684002195,
+      "timestamp": "2026-01-26T23:35:09.090421",
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "f1_score": 0.905554170350054,
+          "f1_delta_vs_baseline": 2.8347501949834486,
+          "total_llm_calls": 2,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 1417.3750974917243,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "f1_score": 0.926692440061424,
+          "f1_delta_vs_baseline": 4.948577166120449,
+          "total_llm_calls": 5,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 989.7154332240898,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 74,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "f1_score": 0.9164540041317293,
+          "f1_delta_vs_baseline": 3.9247335731509736,
+          "total_llm_calls": 5,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 784.9467146301947,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.9032738095238095,
+          "f1_delta_vs_baseline": 2.6067141123589987,
+          "total_llm_calls": 5,
+          "avg_acceptance_rate": 0.9310344827586207,
+          "efficiency_score": 521.3428224717998,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 58,
+              "acceptance_rate": 0.8620689655172413,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.8947559426601343,
+          "f1_delta_vs_baseline": 1.7549274259914704,
+          "total_llm_calls": 5,
+          "avg_acceptance_rate": 0.8378378378378378,
+          "efficiency_score": 350.9854851982941,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 74,
+              "acceptance_rate": 0.6756756756756757,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.9131098367220497,
+          "f1_delta_vs_baseline": 3.590316832183016,
+          "total_llm_calls": 5,
+          "avg_acceptance_rate": 0.8424657534246576,
+          "efficiency_score": 718.0633664366031,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 73,
+              "acceptance_rate": 0.684931506849315,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "f1_score": 0.12280701754385964,
+          "f1_delta_vs_baseline": -75.43996508563599,
+          "total_llm_calls": 10,
+          "avg_acceptance_rate": 0.295,
+          "efficiency_score": -7543.9965085635995,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 100,
+              "acceptance_rate": 0.59,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 0,
+              "llm_calls": 6,
+              "total_generated": 123,
+              "acceptance_rate": 0.0,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "all_reached_target": false
+        }
+      ]
+    },
+    {
+      "dataset": "sms_spam_25shot",
+      "n_classes": 2,
+      "baseline_f1": 0.9131098367220497,
+      "timestamp": "2026-01-26T23:47:39.053316",
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "f1_score": 0.9584717607973422,
+          "f1_delta_vs_baseline": 4.536192407529249,
+          "total_llm_calls": 2,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 2268.0962037646245,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 15,
+              "llm_calls": 1,
+              "total_generated": 15,
+              "acceptance_rate": 1.0,
+              "status": "INSUFFICIENT"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 73,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": false
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "f1_score": 0.9164540041317293,
+          "f1_delta_vs_baseline": 0.3344167409679577,
+          "total_llm_calls": 4,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 83.60418524198943,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "f1_score": 0.926692440061424,
+          "f1_delta_vs_baseline": 1.3582603339374333,
+          "total_llm_calls": 6,
+          "avg_acceptance_rate": 0.9199999999999999,
+          "efficiency_score": 226.37672232290555,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.9066666666666666,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.9333333333333333,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.9065203897725829,
+          "f1_delta_vs_baseline": -0.6589446949466837,
+          "total_llm_calls": 5,
+          "avg_acceptance_rate": 0.9098360655737705,
+          "efficiency_score": -131.78893898933674,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 61,
+              "acceptance_rate": 0.819672131147541,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.9065203897725829,
+          "f1_delta_vs_baseline": -0.6589446949466837,
+          "total_llm_calls": 4,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": -164.73617373667093,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.9131098367220497,
+          "f1_delta_vs_baseline": 0.0,
+          "total_llm_calls": 4,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 0.0,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "f1_score": 0.9032738095238095,
+          "f1_delta_vs_baseline": -0.9836027198240171,
+          "total_llm_calls": 29,
+          "avg_acceptance_rate": 0.3758,
+          "efficiency_score": -33.91733516634542,
+          "per_class_stats": {
+            "spam": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 100,
+              "acceptance_rate": 0.67,
+              "status": "SUCCESS"
+            },
+            "ham": {
+              "n_valid": 50,
+              "llm_calls": 25,
+              "total_generated": 625,
+              "acceptance_rate": 0.0816,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        }
+      ]
+    },
+    {
+      "dataset": "hate_speech_davidson_10shot",
+      "n_classes": 3,
+      "baseline_f1": 0.5429930127374679,
+      "timestamp": "2026-01-27T00:15:13.579148",
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "f1_score": 0.484395244348989,
+          "f1_delta_vs_baseline": -5.859776838847891,
+          "total_llm_calls": 3,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": -1953.2589462826302,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 11,
+              "llm_calls": 1,
+              "total_generated": 11,
+              "acceptance_rate": 1.0,
+              "status": "INSUFFICIENT"
+            }
+          },
+          "all_reached_target": false
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "f1_score": 0.5582310890580052,
+          "f1_delta_vs_baseline": 1.5238076320537308,
+          "total_llm_calls": 6,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 253.96793867562178,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "f1_score": 0.5738137082122148,
+          "f1_delta_vs_baseline": 3.082069547474686,
+          "total_llm_calls": 7,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 440.2956496392409,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 51,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.5428519973333775,
+          "f1_delta_vs_baseline": -0.014101540409039437,
+          "total_llm_calls": 7,
+          "avg_acceptance_rate": 0.9934640522875817,
+          "efficiency_score": -2.0145057727199194,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.6021061870036566,
+          "f1_delta_vs_baseline": 5.911317426618867,
+          "total_llm_calls": 7,
+          "avg_acceptance_rate": 0.9934640522875817,
+          "efficiency_score": 844.4739180884095,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.5762624845934804,
+          "f1_delta_vs_baseline": 3.326947185601248,
+          "total_llm_calls": 7,
+          "avg_acceptance_rate": 0.9934640522875817,
+          "efficiency_score": 475.27816937160685,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 51,
+              "acceptance_rate": 0.9803921568627451,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "f1_score": 0.5230753618528841,
+          "f1_delta_vs_baseline": -1.991765088458386,
+          "total_llm_calls": 77,
+          "avg_acceptance_rate": 0.19271071803772186,
+          "efficiency_score": -25.86707907088813,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 10,
+              "total_generated": 213,
+              "acceptance_rate": 0.2347417840375587,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 7,
+              "total_generated": 175,
+              "acceptance_rate": 0.30857142857142855,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 60,
+              "total_generated": 1436,
+              "acceptance_rate": 0.034818941504178275,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        }
+      ]
+    },
+    {
+      "dataset": "hate_speech_davidson_25shot",
+      "n_classes": 3,
+      "baseline_f1": 0.598660978788956,
+      "timestamp": "2026-01-27T00:27:51.742337",
+      "filter_results": [
+        {
+          "filter_name": "none",
+          "filter_type": "none",
+          "filter_params": {},
+          "f1_score": 0.6235779080839974,
+          "f1_delta_vs_baseline": 2.4916929295041412,
+          "total_llm_calls": 3,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 830.5643098347138,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 12,
+              "llm_calls": 1,
+              "total_generated": 12,
+              "acceptance_rate": 1.0,
+              "status": "INSUFFICIENT"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 75,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 1,
+              "total_generated": 100,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": false
+        },
+        {
+          "filter_name": "lof_relaxed",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": -0.5
+          },
+          "f1_score": 0.5916845741369269,
+          "f1_delta_vs_baseline": -0.6976404652029089,
+          "total_llm_calls": 6,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": -116.27341086715148,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "lof_strict",
+          "filter_type": "lof",
+          "filter_params": {
+            "n_neighbors": 10,
+            "threshold": 0.0
+          },
+          "f1_score": 0.5860790218938968,
+          "f1_delta_vs_baseline": -1.2581956895059143,
+          "total_llm_calls": 9,
+          "avg_acceptance_rate": 0.831111111111111,
+          "efficiency_score": -139.7995210562127,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.9333333333333333,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.8933333333333333,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.6666666666666666,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l1",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 1,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.6139259250199125,
+          "f1_delta_vs_baseline": 1.5264946230956533,
+          "total_llm_calls": 8,
+          "avg_acceptance_rate": 0.9047619047619048,
+          "efficiency_score": 190.81182788695668,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 4,
+              "total_generated": 70,
+              "acceptance_rate": 0.7142857142857143,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_l2",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 2,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.5972278036428981,
+          "f1_delta_vs_baseline": -0.14331751460578968,
+          "total_llm_calls": 6,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": -23.886252434298278,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "cascade_full",
+          "filter_type": "cascade",
+          "filter_params": {
+            "filter_level": 4,
+            "k_neighbors": 10
+          },
+          "f1_score": 0.6012989161909489,
+          "f1_delta_vs_baseline": 0.2637937401992918,
+          "total_llm_calls": 6,
+          "avg_acceptance_rate": 1.0,
+          "efficiency_score": 43.965623366548634,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 50,
+              "llm_calls": 2,
+              "total_generated": 50,
+              "acceptance_rate": 1.0,
+              "status": "SUCCESS"
+            }
+          },
+          "all_reached_target": true
+        },
+        {
+          "filter_name": "combined",
+          "filter_type": "combined",
+          "filter_params": {
+            "lof_threshold": 0.0,
+            "sim_threshold": 0.5
+          },
+          "f1_score": 0.6041578504311423,
+          "f1_delta_vs_baseline": 0.5496871642186374,
+          "total_llm_calls": 13,
+          "avg_acceptance_rate": 0.4369673202614379,
+          "efficiency_score": 42.283628016818255,
+          "per_class_stats": {
+            "hate_speech": {
+              "n_valid": 50,
+              "llm_calls": 5,
+              "total_generated": 102,
+              "acceptance_rate": 0.5882352941176471,
+              "status": "SUCCESS"
+            },
+            "offensive": {
+              "n_valid": 50,
+              "llm_calls": 3,
+              "total_generated": 75,
+              "acceptance_rate": 0.7066666666666667,
+              "status": "SUCCESS"
+            },
+            "neither": {
+              "n_valid": 2,
+              "llm_calls": 5,
+              "total_generated": 125,
+              "acceptance_rate": 0.016,
+              "status": "LOW_ACCEPTANCE"
+            }
+          },
+          "all_reached_target": false
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "none": {
+      "mean_f1_delta": 2.259188771737076,
+      "mean_llm_calls": 3.0,
+      "mean_acceptance_rate": 1.0,
+      "mean_efficiency": 825.1408581869682,
+      "success_rate": 0.5
+    },
+    "lof_relaxed": {
+      "mean_f1_delta": 2.5921750184777825,
+      "mean_llm_calls": 6.166666666666667,
+      "mean_acceptance_rate": 1.0,
+      "mean_efficiency": 398.58337931508044,
+      "success_rate": 1.0
+    },
+    "lof_strict": {
+      "mean_f1_delta": 2.629847632330906,
+      "mean_llm_calls": 8.0,
+      "mean_acceptance_rate": 0.9424074074074075,
+      "mean_efficiency": 369.67188039007533,
+      "success_rate": 1.0
+    },
+    "cascade_l1": {
+      "mean_f1_delta": 1.7739062016796312,
+      "mean_llm_calls": 7.0,
+      "mean_acceptance_rate": 0.9385382850025138,
+      "mean_efficiency": 232.97763940205255,
+      "success_rate": 1.0
+    },
+    "cascade_l2": {
+      "mean_f1_delta": 2.699959281498826,
+      "mean_llm_calls": 6.333333333333333,
+      "mean_acceptance_rate": 0.9666023691758986,
+      "mean_efficiency": 362.30143464293684,
+      "success_rate": 1.0
+    },
+    "cascade_full": {
+      "mean_f1_delta": 2.429143969977948,
+      "mean_llm_calls": 6.5,
+      "mean_acceptance_rate": 0.9636345953372404,
+      "mean_efficiency": 359.7081663773544,
+      "success_rate": 1.0
+    },
+    "combined": {
+      "mean_f1_delta": -13.05773479766839,
+      "mean_llm_calls": 32.0,
+      "mean_acceptance_rate": 0.22967366176438384,
+      "mean_efficiency": -1258.5391274032945,
+      "success_rate": 0.3333333333333333
+    }
+  }
+}

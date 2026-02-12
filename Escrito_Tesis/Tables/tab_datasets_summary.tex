@@ -1,0 +1,32 @@
+\begin{table}[htbp]
+\centering
+\caption{Conjuntos de datos utilizados en la evaluación experimental}
+\label{tab:datasets_summary}
+\begin{tabular}{llrrr}
+\toprule
+\textbf{Conjunto de datos} & \textbf{Dominio} & \textbf{Clases} & \textbf{N-shots} & \textbf{Test} \\
+\midrule
+\multicolumn{5}{c}{\textit{Clasificación de texto (experimento principal)}} \\
+\midrule
+sms\_spam             & Detección de spam       & 2  & 10, 25, 50 & 1,394 \\
+hate\_speech\_davidson & Discurso de odio        & 3  & 10, 25, 50 & 4,948 \\
+20newsgroups          & Noticias (4 categorías) & 4  & 10, 25, 50 & 7,532 \\
+ag\_news              & Noticias (4 categorías) & 4  & 10, 25, 50 & 7,600 \\
+emotion               & Emociones en texto      & 6  & 10, 25, 50 & 2,000 \\
+dbpedia14             & Clasificación de temas  & 14 & 10, 25, 50 & 5,000 \\
+20newsgroups\_20class & Noticias (20 categorías)& 20 & 10, 25, 50 & 7,532 \\
+\midrule
+\multicolumn{5}{c}{\textit{Conjuntos adicionales (análisis de escalabilidad)}} \\
+\midrule
+trec6                 & Preguntas              & 6   & 10, 25, 50 & 500 \\
+banking77             & Intenciones bancarias  & 77  & 10, 25, 50 & 3,080 \\
+clinc150              & Intenciones de diálogo & 150 & 10, 25, 50 & 4,500 \\
+\midrule
+\multicolumn{5}{c}{\textit{Reconocimiento de entidades nombradas (NER)}} \\
+\midrule
+MultiNERD             & Entidades generales    & 5 tipos  & 10, 25, 50 & 10,000 \\
+WikiANN               & Entidades Wikipedia    & 3 tipos  & 10, 25, 50 & 10,000 \\
+Few-NERD              & Entidades detalladas   & 8 tipos  & 10, 25, 50 & 10,000 \\
+\bottomrule
+\end{tabular}
+\end{table}

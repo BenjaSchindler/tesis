@@ -1,0 +1,228 @@
+================================================================================
+META-LEARNING SELECTOR EXPERIMENT — ANALYSIS REPORT
+================================================================================
+Date: 2026-02-06T13:27:02.832305
+Datasets: 5 (20newsgroups_10shot, 20newsgroups_25shot, sms_spam_10shot, sms_spam_25shot, hate_speech_davidson_10shot)
+Strategies: ['regression', 'portfolio', 'rule_based', 'baseline_cascade_l1', 'baseline_random']
+
+------------------------------------------------------------------------------------------
+Strategy                         Avg Regret    Avg Delta    Top-1    Top-5    Avg rho
+------------------------------------------------------------------------------------------
+regression                           +2.093pp       +3.073pp       0%      20%      0.442
+portfolio                            +2.162pp       +3.004pp       0%       0%      0.371
+rule_based                           +2.557pp       +2.609pp       0%       0%      0.208
+baseline_cascade_l1                  +2.114pp       +3.052pp      20%      20%      0.000
+baseline_random                      +5.412pp       -0.246pp       0%       0%      0.000
+
+================================================================================
+PER-DATASET BREAKDOWN
+================================================================================
+
+────────────────────────────────────────────────────────────
+Dataset: 20newsgroups_10shot
+────────────────────────────────────────────────────────────
+  regression                delta=+4.750pp  regret=2.502pp  top1=N  rho=0.355
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 5, 'n_shot': 25}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10} (delta=+7.252pp)
+  portfolio                 delta=+5.009pp  regret=2.243pp  top1=N  rho=0.266
+    Predicted: {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': 0.0}, 'llm_pct': 25, 'n_shot': 10}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10} (delta=+7.252pp)
+  rule_based                delta=+5.056pp  regret=2.196pp  top1=N  rho=-0.064
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 25, 'n_shot': 25}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10} (delta=+7.252pp)
+  baseline_cascade_l1       delta=+7.252pp  regret=0.000pp  top1=Y  rho=0.000
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10} (delta=+7.252pp)
+  baseline_random           delta=+3.614pp  regret=3.638pp  top1=N  rho=0.000
+    Predicted: {'random': True}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10} (delta=+7.252pp)
+
+────────────────────────────────────────────────────────────
+Dataset: 20newsgroups_25shot
+────────────────────────────────────────────────────────────
+  regression                delta=+0.900pp  regret=1.709pp  top1=N  rho=0.156
+    Predicted: {'filter_type': 'combined', 'filter_params': {'lof_threshold': 0.0, 'sim_threshold': 0.7}, 'llm_pct': 50, 'n_shot': 25}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 20, 'threshold': -0.3}, 'llm_pct': 100, 'n_shot': 10} (delta=+2.609pp)
+  portfolio                 delta=+1.098pp  regret=1.511pp  top1=N  rho=0.197
+    Predicted: {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': -0.5}, 'llm_pct': 25, 'n_shot': 25}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 20, 'threshold': -0.3}, 'llm_pct': 100, 'n_shot': 10} (delta=+2.609pp)
+  rule_based                delta=+0.888pp  regret=1.721pp  top1=N  rho=-0.228
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 25, 'n_shot': 25}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 20, 'threshold': -0.3}, 'llm_pct': 100, 'n_shot': 10} (delta=+2.609pp)
+  baseline_cascade_l1       delta=+2.116pp  regret=0.493pp  top1=N  rho=0.000
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 20, 'threshold': -0.3}, 'llm_pct': 100, 'n_shot': 10} (delta=+2.609pp)
+  baseline_random           delta=+0.783pp  regret=1.826pp  top1=N  rho=0.000
+    Predicted: {'random': True}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 20, 'threshold': -0.3}, 'llm_pct': 100, 'n_shot': 10} (delta=+2.609pp)
+
+────────────────────────────────────────────────────────────
+Dataset: sms_spam_10shot
+────────────────────────────────────────────────────────────
+  regression                delta=+4.730pp  regret=2.251pp  top1=N  rho=0.536
+    Predicted: {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': -0.5}, 'llm_pct': 5, 'n_shot': 50}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': 0.0}, 'llm_pct': 25, 'n_shot': 50} (delta=+6.981pp)
+  portfolio                 delta=+5.071pp  regret=1.910pp  top1=N  rho=0.561
+    Predicted: {'filter_type': 'lof', 'filter_params': {'n_neighbors': 10, 'threshold': -0.5}, 'llm_pct': 25, 'n_shot': 25}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': 0.0}, 'llm_pct': 25, 'n_shot': 50} (delta=+6.981pp)
+  rule_based                delta=+6.036pp  regret=0.945pp  top1=N  rho=0.466
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 25, 'n_shot': 25}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': 0.0}, 'llm_pct': 25, 'n_shot': 50} (delta=+6.981pp)
+  baseline_cascade_l1       delta=+4.393pp  regret=2.588pp  top1=N  rho=0.000
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': 0.0}, 'llm_pct': 25, 'n_shot': 50} (delta=+6.981pp)
+  baseline_random           delta=-1.166pp  regret=8.146pp  top1=N  rho=0.000
+    Predicted: {'random': True}
+    Oracle:    {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': 0.0}, 'llm_pct': 25, 'n_shot': 50} (delta=+6.981pp)
+
+────────────────────────────────────────────────────────────
+Dataset: sms_spam_25shot
+────────────────────────────────────────────────────────────
+  regression                delta=+1.056pp  regret=1.787pp  top1=N  rho=0.634
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 5, 'n_shot': 10}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 0, 'k_neighbors': 10}, 'llm_pct': 5, 'n_shot': 25} (delta=+2.843pp)
+  portfolio                 delta=+1.056pp  regret=1.787pp  top1=N  rho=0.516
+    Predicted: {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': 0.0}, 'llm_pct': 25, 'n_shot': 10}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 0, 'k_neighbors': 10}, 'llm_pct': 5, 'n_shot': 25} (delta=+2.843pp)
+  rule_based                delta=-1.689pp  regret=4.532pp  top1=N  rho=0.543
+    Predicted: {'filter_type': 'combined', 'filter_params': {'lof_threshold': 0.0, 'sim_threshold': 0.3}, 'llm_pct': 25, 'n_shot': 10}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 0, 'k_neighbors': 10}, 'llm_pct': 5, 'n_shot': 25} (delta=+2.843pp)
+  baseline_cascade_l1       delta=+0.348pp  regret=2.494pp  top1=N  rho=0.000
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 0, 'k_neighbors': 10}, 'llm_pct': 5, 'n_shot': 25} (delta=+2.843pp)
+  baseline_random           delta=-1.403pp  regret=4.246pp  top1=N  rho=0.000
+    Predicted: {'random': True}
+    Oracle:    {'filter_type': 'cascade', 'filter_params': {'filter_level': 0, 'k_neighbors': 10}, 'llm_pct': 5, 'n_shot': 25} (delta=+2.843pp)
+
+────────────────────────────────────────────────────────────
+Dataset: hate_speech_davidson_10shot
+────────────────────────────────────────────────────────────
+  regression                delta=+3.929pp  regret=2.218pp  top1=N  rho=0.530
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 5, 'n_shot': 10}
+    Oracle:    {'filter_type': 'combined', 'filter_params': {'lof_threshold': 0.0, 'sim_threshold': 0.3}, 'llm_pct': 25, 'n_shot': 10} (delta=+6.147pp)
+  portfolio                 delta=+2.786pp  regret=3.361pp  top1=N  rho=0.317
+    Predicted: {'filter_type': 'lof', 'filter_params': {'n_neighbors': 5, 'threshold': -0.5}, 'llm_pct': 25, 'n_shot': 10}
+    Oracle:    {'filter_type': 'combined', 'filter_params': {'lof_threshold': 0.0, 'sim_threshold': 0.3}, 'llm_pct': 25, 'n_shot': 10} (delta=+6.147pp)
+  rule_based                delta=+2.755pp  regret=3.392pp  top1=N  rho=0.324
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 25, 'n_shot': 25}
+    Oracle:    {'filter_type': 'combined', 'filter_params': {'lof_threshold': 0.0, 'sim_threshold': 0.3}, 'llm_pct': 25, 'n_shot': 10} (delta=+6.147pp)
+  baseline_cascade_l1       delta=+1.150pp  regret=4.997pp  top1=N  rho=0.000
+    Predicted: {'filter_type': 'cascade', 'filter_params': {'filter_level': 1, 'k_neighbors': 10}, 'llm_pct': 100, 'n_shot': 10}
+    Oracle:    {'filter_type': 'combined', 'filter_params': {'lof_threshold': 0.0, 'sim_threshold': 0.3}, 'llm_pct': 25, 'n_shot': 10} (delta=+6.147pp)
+  baseline_random           delta=-3.058pp  regret=9.205pp  top1=N  rho=0.000
+    Predicted: {'random': True}
+    Oracle:    {'filter_type': 'combined', 'filter_params': {'lof_threshold': 0.0, 'sim_threshold': 0.3}, 'llm_pct': 25, 'n_shot': 10} (delta=+6.147pp)
+
+================================================================================
+FEATURE IMPORTANCE (GBR on all 1200 experiments)
+================================================================================
+  combined_sim_threshold         0.2302  ##############################################
+  llm_pct                        0.2137  ##########################################
+  vocab_size                     0.1009  ####################
+  max_class_overlap              0.0847  ################
+  n_train                        0.0592  ###########
+  n_classes                      0.0452  #########
+  avg_text_length_chars          0.0451  #########
+  type_token_ratio               0.0323  ######
+  embedding_spread               0.0284  #####
+  n_shot_config                  0.0254  #####
+  class_separation_ratio         0.0238  ####
+  cascade_filter_level           0.0150  ###
+  avg_centroid_distance          0.0147  ##
+  text_length_std                0.0146  ##
+  avg_text_length                0.0120  ##
+
+================================================================================
+DECISION TREE RULES (Strategy C)
+================================================================================
+--- LODO fold: held_out=20newsgroups_10shot ---
+|--- avg_knn_distance_k5 <= 0.91
+|   |--- avg_text_length <= 16.98
+|   |   |--- class: 1
+|   |--- avg_text_length >  16.98
+|   |   |--- class: 0
+|--- avg_knn_distance_k5 >  0.91
+|   |--- class: 2
+
+Predicted filter: cascade
+Actual best filter: cascade
+
+--- LODO fold: held_out=20newsgroups_25shot ---
+|--- avg_text_length <= 19.43
+|   |--- avg_text_length <= 16.41
+|   |   |--- class: 1
+|   |--- avg_text_length >  16.41
+|   |   |--- class: 2
+|--- avg_text_length >  19.43
+|   |--- class: 0
+
+Predicted filter: cascade
+Actual best filter: lof
+
+--- LODO fold: held_out=sms_spam_10shot ---
+|--- max_class_overlap <= 0.45
+|   |--- avg_text_length <= 102.53
+|   |   |--- class: 1
+|   |--- avg_text_length >  102.53
+|   |   |--- class: 2
+|--- max_class_overlap >  0.45
+|   |--- class: 0
+
+Predicted filter: cascade
+Actual best filter: lof
+
+--- LODO fold: held_out=sms_spam_25shot ---
+|--- avg_knn_distance_k5 <= 0.91
+|   |--- avg_text_length <= 81.69
+|   |   |--- class: 1
+|   |--- avg_text_length >  81.69
+|   |   |--- class: 0
+|--- avg_knn_distance_k5 >  0.91
+|   |--- class: 2
+
+Predicted filter: combined
+Actual best filter: cascade
+
+--- LODO fold: held_out=hate_speech_davidson_10shot ---
+|--- avg_knn_distance_k5 <= 0.91
+|   |--- class: 0
+|--- avg_knn_distance_k5 >  0.91
+|   |--- class: 1
+
+Predicted filter: cascade
+Actual best filter: combined
+
+
+================================================================================
+DATASET META-FEATURES
+================================================================================
+
+20newsgroups_10shot:
+  n_train=40, n_classes=4, spc=10
+  text: avg_len=149.4 words, vocab=2030, ttr=0.377
+  embedding: separation=0.681, spread=0.0336, overlap=0.4716
+  density: knn5=0.8997, var=0.046501
+
+20newsgroups_25shot:
+  n_train=100, n_classes=4, spc=25
+  text: avg_len=191.1 words, vocab=5112, ttr=0.273
+  embedding: separation=0.582, spread=0.0340, overlap=0.3601
+  density: knn5=0.9251, var=0.004754
+
+sms_spam_10shot:
+  n_train=20, n_classes=2, spc=10
+  text: avg_len=18.9 words, vocab=280, ttr=0.743
+  embedding: separation=0.698, spread=0.0310, overlap=0.5820
+  density: knn5=0.9220, var=0.011133
+
+sms_spam_25shot:
+  n_train=50, n_classes=2, spc=25
+  text: avg_len=20.0 words, vocab=600, ttr=0.600
+  embedding: separation=0.569, spread=0.0316, overlap=0.4892
+  density: knn5=0.8561, var=0.015188
+
+hate_speech_davidson_10shot:
+  n_train=30, n_classes=3, spc=10
+  text: avg_len=14.0 words, vocab=304, ttr=0.726
+  embedding: separation=0.569, spread=0.0306, overlap=0.4193
+  density: knn5=0.8970, var=0.004882
