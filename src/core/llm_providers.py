@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """
-LLM Provider Abstraction Layer for Phase I Robust
+LLM Provider Abstraction Layer
 
 Supports multiple LLM providers for text generation:
 - OpenAI (gpt-4o-mini, etc.)
+- OpenAI GPT-5 (gpt-5-mini, etc.) via Responses API
 - Google Gemini 3 Flash (gemini-3-flash-preview)
+- Anthropic Claude (claude-haiku-4-5, etc.)
+- OpenAI-compatible APIs (Moonshot Kimi K2.5, Zhipu GLM-5)
 
 Usage:
     from llm_providers import create_provider
@@ -225,25 +228,16 @@ class GPT5Provider(LLMProvider):
 
         Note: temperature is IGNORED - GPT-5 uses reasoning.effort instead.
         """
-        # Extract content from messages (GPT-5 Responses API uses 'input')
-        # Combine system and user messages
-        prompt_parts = []
+        # GPT-5 Responses API accepts message-format input directly
+        api_input = []
         for msg in messages:
-            if msg["role"] == "system":
-                prompt_parts.append(f"Instructions: {msg['content']}\n")
-            elif msg["role"] == "user":
-                prompt_parts.append(msg["content"])
-            elif msg["role"] == "assistant":
-                prompt_parts.append(f"Previous response: {msg['content']}\n")
-
-        prompt = "\n".join(prompt_parts)
+            api_input.append({"role": msg["role"], "content": msg["content"]})
 
         try:
             response = self.client.responses.create(
                 model=self.model,
-                input=prompt,
+                input=api_input,
                 reasoning={"effort": self.reasoning_effort},
-                text={"verbosity": "medium"},
                 max_output_tokens=max_tokens
             )
 
@@ -271,6 +265,140 @@ class GPT5Provider(LLMProvider):
         return "openai_gpt5"
 
 
+class AnthropicProvider(LLMProvider):
+    """Anthropic Claude provider (claude-haiku-4-5, etc.)."""
+
+    def __init__(self, model: str = "claude-haiku-4-5", api_key: Optional[str] = None):
+        from anthropic import Anthropic
+
+        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
+        if not self.api_key:
+            raise ValueError("ANTHROPIC_API_KEY not set")
+
+        self.client = Anthropic(api_key=self.api_key)
+        self.model = model
+
+    def generate(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: float = 0.7,
+        max_tokens: int = 4000,
+        **kwargs
+    ) -> Tuple[str, Dict[str, Any]]:
+
+        # Separate system message from conversation messages
+        system_text = None
+        conv_messages = []
+        for msg in messages:
+            if msg["role"] == "system":
+                system_text = msg["content"]
+            else:
+                conv_messages.append(msg)
+
+        # Ensure at least one user message
+        if not conv_messages:
+            conv_messages = [{"role": "user", "content": ""}]
+
+        try:
+            create_kwargs = {
+                "model": self.model,
+                "messages": conv_messages,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            }
+            if system_text:
+                create_kwargs["system"] = system_text
+
+            response = self.client.messages.create(**create_kwargs)
+
+            text = response.content[0].text
+            usage = {
+                "input_tokens": response.usage.input_tokens,
+                "output_tokens": response.usage.output_tokens,
+                "total_tokens": response.usage.input_tokens + response.usage.output_tokens,
+                "provider": "anthropic",
+                "model": self.model
+            }
+
+            return text, usage
+
+        except Exception as e:
+            logger.error(f"Anthropic API error: {e}")
+            raise
+
+    def get_model_name(self) -> str:
+        return self.model
+
+    def get_provider_name(self) -> str:
+        return "anthropic"
+
+
+class OpenAICompatibleProvider(LLMProvider):
+    """Provider for OpenAI-compatible APIs (Moonshot Kimi, Zhipu GLM, etc.)."""
+
+    def __init__(
+        self,
+        model: str,
+        base_url: str,
+        api_key: Optional[str] = None,
+        api_key_env: str = "OPENAI_API_KEY",
+        provider_label: str = "openai_compatible",
+        extra_body: Optional[Dict] = None,
+        forced_temperature: Optional[float] = None,
+    ):
+        from openai import OpenAI
+
+        self.api_key = api_key or os.getenv(api_key_env)
+        if not self.api_key:
+            raise ValueError(f"{api_key_env} not set")
+
+        self.client = OpenAI(api_key=self.api_key, base_url=base_url)
+        self.model = model
+        self._provider_label = provider_label
+        self._extra_body = extra_body or {}
+        self._forced_temperature = forced_temperature
+
+    def generate(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: float = 0.7,
+        max_tokens: int = 4000,
+        **kwargs
+    ) -> Tuple[str, Dict[str, Any]]:
+
+        actual_temp = self._forced_temperature if self._forced_temperature is not None else temperature
+
+        try:
+            completion = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=actual_temp,
+                max_tokens=max_tokens,
+                extra_body=self._extra_body if self._extra_body else None,
+            )
+
+            text = completion.choices[0].message.content
+            usage = {
+                "input_tokens": getattr(completion.usage, 'prompt_tokens', 0),
+                "output_tokens": getattr(completion.usage, 'completion_tokens', 0),
+                "total_tokens": getattr(completion.usage, 'total_tokens', 0),
+                "provider": self._provider_label,
+                "model": self.model
+            }
+
+            return text, usage
+
+        except Exception as e:
+            logger.error(f"{self._provider_label} API error: {e}")
+            raise
+
+    def get_model_name(self) -> str:
+        return self.model
+
+    def get_provider_name(self) -> str:
+        return self._provider_label
+
+
 def create_provider(provider_name: str, model: str = None, **kwargs) -> LLMProvider:
     """
     Factory function to create LLM providers.
@@ -293,6 +421,7 @@ def create_provider(provider_name: str, model: str = None, **kwargs) -> LLMProvi
     elif provider_name in ["gpt5", "openai_gpt5"]:
         return GPT5Provider(
             model=model or "gpt-5-mini",
+            reasoning_effort=kwargs.pop("reasoning_effort", "low"),
             **kwargs
         )
     elif provider_name in ["google", "gemini"]:
@@ -300,8 +429,35 @@ def create_provider(provider_name: str, model: str = None, **kwargs) -> LLMProvi
             model=model or "gemini-3-flash-preview",
             **kwargs
         )
+    elif provider_name == "anthropic":
+        return AnthropicProvider(
+            model=model or "claude-haiku-4-5",
+            **kwargs
+        )
+    elif provider_name == "moonshot":
+        return OpenAICompatibleProvider(
+            model=model or "kimi-k2.5",
+            base_url="https://api.moonshot.ai/v1",
+            api_key_env="MOONSHOT_API_KEY",
+            provider_label="moonshot",
+            extra_body={"thinking": {"type": "disabled"}},  # instant mode
+            forced_temperature=0.6,  # K2.5 instant mode requires exactly 0.6
+            **kwargs
+        )
+    elif provider_name == "zhipu":
+        return OpenAICompatibleProvider(
+            model=model or "glm-5",
+            base_url="https://api.z.ai/api/paas/v4/",
+            api_key_env="ZAI_API_KEY",
+            provider_label="zhipu",
+            extra_body={"thinking": {"type": "disabled"}},  # no thinking
+            **kwargs
+        )
     else:
-        raise ValueError(f"Unknown provider: {provider_name}. Supported: openai, gpt5, google")
+        raise ValueError(
+            f"Unknown provider: {provider_name}. "
+            "Supported: openai, gpt5, google, anthropic, moonshot, zhipu"
+        )
 
 
 # Quick test function

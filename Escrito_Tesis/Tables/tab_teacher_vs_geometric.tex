@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Comparación entre filtrado geométrico y filtrado basado en modelo teacher. El teacher es una regresión logística entrenada exclusivamente con datos reales. Los clasificadores de evaluación son SVC lineal y Ridge (distintos del teacher).}
+\label{tab:teacher_vs_geometric}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Método} & \textbf{F1 Macro} & \textbf{$\Delta$ vs SMOTE} & \textbf{IC 95\%} & \textbf{$d$} & \textbf{Victoria} & \textbf{$p$} \\
+\midrule
+SMOTE & 72.23 & --- & --- & --- & --- & --- \\
+Geométrico (binario) & 75.01 & +2.78*** & [2.30, 3.30] & 0.97 & 88.1\% & $<$0.001 \\
+Geométrico (ponderado) & 74.70 & +2.46*** & [2.06, 2.88] & 1.05 & 96.0\% & $<$0.001 \\
+Teacher (binario) & 74.66 & +2.43*** & [1.98, 2.89] & 0.94 & 88.9\% & $<$0.001 \\
+Teacher (ponderado) & 74.38 & +2.15*** & [1.77, 2.54] & 0.98 & 89.7\% & $<$0.001 \\
+\midrule
+\multicolumn{7}{l}{\small Geométrico vs Teacher (ponderado): $\Delta$ = +0.31pp, victoria geométrico = 59.5\%, $p$ = 0.0001} \\
+\bottomrule
+\end{tabular}
+\end{table}

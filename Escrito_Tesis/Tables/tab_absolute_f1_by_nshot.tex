@@ -1,0 +1,15 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Macro F1 absoluto por número de ejemplos por clase. Valores promediados sobre todos los datasets, clasificadores y semillas. La columna $\Delta$ indica la mejora de la ponderación suave respecto a SMOTE.}
+\label{tab:absolute_f1_by_nshot}
+\begin{tabular}{rccccr}
+\toprule
+\textbf{N-shot} & \textbf{Sin aum.} & \textbf{SMOTE} & \textbf{Filt. binario} & \textbf{Pond. suave} & \textbf{$\Delta$ Pond. vs SMOTE} \\
+\midrule
+10 & 66.09 & 65.92 & 70.08 & 70.44 & +4.52*** \\
+25 & 72.63 & 72.72 & 74.45 & 74.60 & +1.88*** \\
+50 & 75.11 & 75.09 & 75.54 & 75.43 & +0.34** \\
+\bottomrule
+\end{tabular}
+\end{table}

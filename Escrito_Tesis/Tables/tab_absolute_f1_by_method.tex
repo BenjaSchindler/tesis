@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Rendimiento absoluto y relativo de cada método de aumentación. F1 absoluto promediado sobre todas las configuraciones (datasets $\times$ clasificadores $\times$ semillas). $\Delta$ F1 calculado respecto a SMOTE.}
+\label{tab:absolute_f1_by_method}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Método} & \textbf{F1 Macro} & \textbf{$\pm$ Std} & \textbf{$\Delta$ vs SMOTE} & \textbf{IC 95\%} & \textbf{$d$} & \textbf{Victoria} \\
+\midrule
+Sin aumentación & 71.28 & 18.46 & +0.03 & [-0.10, 0.17] & 0.02 & 55.2\% \\
+SMOTE & 71.24 & 18.55 & --- & --- & --- & --- \\
+Sobremuestreo aleatorio & 70.92 & 18.40 & -0.32*** & [-0.44, -0.21] & -0.24 & 39.2\% \\
+EDA & 71.02 & 18.03 & -0.22 & [-0.41, -0.04] & -0.10 & 48.0\% \\
+Traducción inversa & 71.05 & 18.71 & -0.19 & [-0.34, -0.03] & -0.10 & 53.7\% \\
+Filtrado binario & 73.36 & 17.68 & +2.11*** & [1.85, 2.38] & 0.67 & 77.5\% \\
+Ponderación suave & 73.49 & 17.65 & +2.25*** & [1.98, 2.52] & 0.72 & 82.3\% \\
+\midrule
+\multicolumn{7}{l}{\small Significancia: * $p<0.05$, ** $p<0.01$, *** $p<0.001$ (t pareada, Bonferroni)} \\
+\multicolumn{7}{l}{\small F1 Macro expresado como porcentaje. $n$ = 525 comparaciones pareadas.} \\
+\bottomrule
+\end{tabular}
+\end{table}

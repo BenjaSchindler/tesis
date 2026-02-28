@@ -1,0 +1,156 @@
+% fig_1_2_thesis_overview.tex
+% Hero figure: Thesis overview pipeline (5-block horizontal diagram)
+% Compile: pdflatex fig_1_2_thesis_overview.tex
+\documentclass[tikz,border=5pt]{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc}
+
+% ── Pastel palette ──────────────────────────────────────────────────
+\definecolor{pastelBlue}{HTML}{E3F2FD}
+\definecolor{pastelGreen}{HTML}{E8F5E9}
+\definecolor{pastelPurple}{HTML}{F3E5F5}
+\definecolor{pastelOrange}{HTML}{FFF3E0}
+\definecolor{pastelPink}{HTML}{FCE4EC}
+\definecolor{accentGreen}{HTML}{4CAF50}
+\definecolor{accentRed}{HTML}{E53935}
+\definecolor{borderOrange}{HTML}{FF9800}
+\definecolor{arrowGray}{HTML}{455A64}
+\definecolor{calloutGreen}{HTML}{C8E6C9}
+
+% Define font commands for use inside minipage
+\newcommand{\maintitle}{\sffamily\bfseries\small}
+\newcommand{\mysub}{\sffamily\scriptsize\color{black!70}}
+
+\begin{document}
+\begin{tikzpicture}[
+    % ── shared styles ───────────────────────────────────────────────
+    block/.style={
+        rectangle,
+        rounded corners=6pt,
+        minimum width=2.6cm,
+        minimum height=2.2cm,
+        align=center,
+        draw=#1!60!black,
+        line width=0.8pt,
+        font=\sffamily,
+    },
+    bigarrow/.style={
+        -{Stealth[length=5pt,width=4pt]},
+        line width=1.6pt,
+        arrowGray,
+    },
+]
+
+% =====================================================================
+%  BLOCK 1 – Datos Escasos
+% =====================================================================
+\node[block=pastelBlue, fill=pastelBlue] (datos) {%
+    \begin{minipage}{2.4cm}\centering
+        {\maintitle Datos Escasos}\\[4pt]
+        {\mysub 10--50 muestras/clase}\\[5pt]
+        % dots icon (few scattered samples)
+        \begin{tikzpicture}[scale=0.55]
+            \fill[black!50] (0.0, 0.0) circle (1.5pt);
+            \fill[black!50] (0.5, 0.3) circle (1.5pt);
+            \fill[black!50] (0.2, 0.5) circle (1.5pt);
+            \fill[black!50] (0.7,-0.1) circle (1.5pt);
+            \fill[black!50] (0.9, 0.4) circle (1.5pt);
+        \end{tikzpicture}
+    \end{minipage}
+};
+
+% =====================================================================
+%  BLOCK 2 – Generación LLM
+% =====================================================================
+\node[block=pastelGreen, fill=pastelGreen, right=1.1cm of datos] (gen) {%
+    \begin{minipage}{2.4cm}\centering
+        {\maintitle Generaci\'{o}n LLM}\\[4pt]
+        {\mysub $3\times$ candidatos}
+    \end{minipage}
+};
+
+% =====================================================================
+%  BLOCK 3 – Espacio de Embeddings
+% =====================================================================
+\node[block=pastelPurple, fill=pastelPurple, right=1.1cm of gen] (emb) {%
+    \begin{minipage}{2.4cm}\centering
+        {\maintitle Espacio de}\\[-1pt]
+        {\maintitle Embeddings}\\[4pt]
+        {\mysub $\mathbb{R}^{768}$}
+    \end{minipage}
+};
+
+% =====================================================================
+%  BLOCK 4 – Filtrado Geométrico  (KEY block – bold border)
+% =====================================================================
+\node[block=borderOrange, fill=pastelOrange,
+      line width=2pt,
+      right=1.1cm of emb] (filt) {%
+    \begin{minipage}{2.4cm}\centering
+        {\maintitle Filtrado}\\[-1pt]
+        {\maintitle Geom\'{e}trico}\\[5pt]
+        % funnel icon
+        \begin{tikzpicture}[scale=0.50]
+            \fill[borderOrange!50] (-0.6,0.5) -- (0.6,0.5) -- (0.15,-0.4) -- (-0.15,-0.4) -- cycle;
+            \draw[borderOrange!80!black, line width=0.7pt]
+                (-0.6,0.5) -- (0.6,0.5) -- (0.15,-0.4) -- (-0.15,-0.4) -- cycle;
+            % drip
+            \draw[borderOrange!80!black, line width=0.7pt] (0,-0.4) -- (0,-0.65);
+        \end{tikzpicture}
+    \end{minipage}
+};
+
+% =====================================================================
+%  BLOCK 5 – Clasificador
+% =====================================================================
+\node[block=pastelPink, fill=pastelPink, right=1.6cm of filt] (clf) {%
+    \begin{minipage}{2.4cm}\centering
+        {\maintitle Clasificador}\\[4pt]
+        {\mysub macro $F_1$}
+    \end{minipage}
+};
+
+% =====================================================================
+%  ARROWS between blocks
+% =====================================================================
+\draw[bigarrow] (datos.east)  -- (gen.west);
+\draw[bigarrow] (gen.east)    -- (emb.west);
+\draw[bigarrow] (emb.east)    -- (filt.west);
+
+% Arrow from filter to classifier (green, accepted samples)
+\draw[bigarrow, accentGreen] (filt.east) -- node[above, font=\sffamily\scriptsize\bfseries,
+    text=accentGreen, yshift=1pt] {$\checkmark$} (clf.west);
+
+% Rejected arrow (red, dashed, downward)
+\draw[-{Stealth[length=4pt,width=3.5pt]},
+      line width=1.2pt,
+      accentRed,
+      densely dashed]
+    (filt.south) -- ++(0,-0.8)
+    node[below, font=\sffamily\scriptsize\bfseries, text=accentRed] {$\times$};
+
+% =====================================================================
+%  RESULT CALLOUT
+% =====================================================================
+\node[rectangle,
+      rounded corners=8pt,
+      fill=calloutGreen,
+      draw=accentGreen!70!black,
+      line width=0.9pt,
+      inner sep=8pt,
+      font=\sffamily\small,
+      below=1.6cm of $(emb.south)!0.5!(filt.south)$]
+    (result) {%
+        $+2.25$ pp sobre SMOTE \;\;($p < 0.0001$,\; $d = 0.74$)%
+    };
+
+% thin guide line from callout to pipeline
+\draw[arrowGray!40, line width=0.6pt, densely dotted]
+    (result.north) -- ++(0,0.55);
+
+\end{tikzpicture}
+\end{document}

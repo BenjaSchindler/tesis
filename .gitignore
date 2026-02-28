@@ -17,6 +17,7 @@ cache/
 # Large data files
 data/benchmarks/
 mbti_1.csv
+MBTI_500.csv
 
 # IDE and tools
 .claude/
@@ -47,8 +48,11 @@ experiments/quick_*.py
 # Backup files
 *_backup_*
 
+# Experiment results (regenerable)
+results/
+
 # Thesis LaTeX build artifacts
-Escrito_Tesis/*.aux
+Escrito_Tesis/**/*.aux
 Escrito_Tesis/*.log
 Escrito_Tesis/*.out
 Escrito_Tesis/*.toc
@@ -61,3 +65,12 @@ Escrito_Tesis/*.fdb_latexmk
 Escrito_Tesis/*.synctex.gz
 Escrito_Tesis/*.pdf
 Escrito_Tesis/metodologia_overleaf.zip
+
+# Thesis figures (PNGs and PDFs, heavy)
+Escrito_Tesis/Figures/**/*.png
+Escrito_Tesis/Figures/**/*.pdf
+Escrito_Tesis/Figures/*.png
+Escrito_Tesis/Figures/*.pdf
+
+# Misc logs
+texput.log

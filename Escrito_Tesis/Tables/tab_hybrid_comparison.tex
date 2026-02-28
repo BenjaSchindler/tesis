@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Comparación de estrategias de aumentación híbrida adaptativa por clase. Los métodos híbridos aplican filtrado geométrico a clases difíciles y SMOTE a clases fáciles. CV: dificultad estimada por validación cruzada estratificada de 5 particiones. Geométrico: dificultad estimada por ratio dispersión/separación. Oráculo: dificultad conocida (cota superior, no práctico). $\theta$: umbral de F1 bajo el cual una clase se considera difícil.}
+\label{tab:hybrid_comparison}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Método} & \textbf{F1 Macro} & \textbf{$\Delta$ vs SMOTE} & \textbf{IC 95\%} & \textbf{$d$} & \textbf{Victoria} & \textbf{$p$} \\
+\midrule
+SMOTE & 72.48 & --- & --- & --- & --- & --- \\
+\rowcolor{green!10}Geométrico puro & 74.81 & +2.33*** & [+1.98, +2.70] & 0.93 & 91.0\% & $<$0.001 \\
+Híbrido CV ($\theta=0.70$) & 73.25 & +0.77*** & [+0.36, +1.19] & 0.26 & 36.0\% & $<$0.001 \\
+Híbrido oráculo ($\theta=0.50$) & 72.92 & +0.44* & [+0.09, +0.81] & 0.18 & 29.1\% & 0.016 \\
+Híbrido CV ($\theta=0.30$) & 72.50 & +0.02 & [-0.07, +0.11] & 0.03 & 6.9\% & 0.704 \\
+Híbrido CV ($\theta=0.50$) & 72.36 & -0.11 & [-0.38, +0.13] & -0.06 & 17.5\% & 0.386 \\
+Híbrido geométrico (mediana) & 71.37 & -1.11* & [-2.10, -0.27] & -0.18 & 52.4\% & 0.017 \\
+\bottomrule
+\end{tabular}
+\end{table}

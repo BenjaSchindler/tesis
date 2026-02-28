@@ -1,0 +1,26 @@
+% Appendix A - Validaciones Metodológicas
+
+\chapter{Validaciones Metodológicas}
+\label{ch:appendix_validaciones}
+
+\section{Validación de la Implementación de SMOTE}
+\label{sec:validacion_smote}
+
+La Tabla~\ref{tab:smote_validation} presenta la comparación entre la implementación dummy-binary utilizada en esta investigación y la implementación estándar de SMOTE.
+
+\input{Tables/tab_smote_validation}
+
+La diferencia máxima entre ambas implementaciones es de 0.0000 puntos porcentuales en las 27 comparaciones realizadas (9 configuraciones $\times$ 3 clasificadores). Este resultado confirma que la implementación dummy-binary produce resultados idénticos a SMOTE estándar. Las ganancias reportadas en esta investigación no se deben a una línea base artificialmente débil.
+
+\section{Análisis de Asimetría de Semillas}
+\label{sec:asimetria_semillas}
+
+La Tabla~\ref{tab:seed_asymmetry} presenta el análisis de varianza entre semillas.
+
+\input{Tables/tab_seed_asymmetry}
+
+Las generaciones del LLM se almacenan en caché mediante hash MD5 del prompt. Cuando el mismo prompt se ejecuta con diferentes semillas de muestreo de datos pero el mismo contenido de clase, la caché devuelve respuestas idénticas. Esto produce varianza cero entre semillas para clasificadores determinísticos (regresión logística, SVC, Ridge). El 80\% de las combinaciones LLM + clasificador determinístico presentan esta característica.
+
+Restringiendo el análisis exclusivamente a clasificadores estocásticos (MLP y bosque aleatorio), la ponderación suave mantiene una mejora de +1.79 puntos porcentuales ($p = 0.0015$, $d = 0.52$). El resultado sigue siendo estadísticamente significativo con un tamaño de efecto mediano.
+
+Las pruebas t pareadas siguen siendo válidas porque comparan pares de configuraciones (método vs SMOTE) bajo las mismas condiciones. Los intervalos de confianza podrían subestimar la varianza real al no capturar la variabilidad que introduciría la regeneración de muestras sintéticas con diferentes prompts. Esta limitación se reconoce explícitamente y se discute en el Capítulo~\ref{ch:conclusiones}.

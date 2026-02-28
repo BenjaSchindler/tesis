@@ -1,0 +1,39 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Macro F1 absoluto por conjunto de datos y número de ejemplos. Se muestran los valores para SMOTE y ponderación suave, promediados sobre clasificadores y semillas. $\Delta$ indica la mejora de la ponderación suave.}
+\label{tab:absolute_f1_by_dataset}
+\begin{tabular}{llcccr}
+\toprule
+\textbf{Dataset} & \textbf{N-shot} & \textbf{Sin aum.} & \textbf{SMOTE} & \textbf{Pond. suave} & \textbf{$\Delta$} \\
+\midrule
+SMS Spam & 10 & 84.17 & 84.58 & 91.92 & +7.34 \\
+ & 25 & 89.73 & 90.44 & 92.04 & +1.60 \\
+ & 50 & 92.95 & 93.83 & 94.41 & +0.59 \\
+\midrule
+Hate Speech & 10 & 52.07 & 50.99 & 53.48 & +2.49 \\
+ & 25 & 58.62 & 58.13 & 62.39 & +4.26 \\
+ & 50 & 59.59 & 58.20 & 57.02 & -1.17 \\
+\midrule
+20 Newsgroups (4) & 10 & 73.06 & 72.52 & 80.13 & +7.62 \\
+ & 25 & 82.60 & 82.36 & 83.53 & +1.17 \\
+ & 50 & 82.62 & 82.57 & 83.14 & +0.57 \\
+\midrule
+AG News & 10 & 73.71 & 73.37 & 72.85 & -0.51 \\
+ & 25 & 82.32 & 82.06 & 83.98 & +1.92 \\
+ & 50 & 85.32 & 85.08 & 84.52 & -0.56 \\
+\midrule
+Emotion & 10 & 33.48 & 33.24 & 42.67 & +9.43 \\
+ & 25 & 40.81 & 40.82 & 43.03 & +2.21 \\
+ & 50 & 44.93 & 45.28 & 47.28 & +2.00 \\
+\midrule
+DBpedia (14) & 10 & 88.67 & 89.17 & 90.18 & +1.01 \\
+ & 25 & 92.70 & 93.14 & 93.37 & +0.22 \\
+ & 50 & 94.64 & 94.88 & 94.84 & -0.04 \\
+\midrule
+20 Newsgroups (20) & 10 & 57.45 & 57.58 & 61.86 & +4.27 \\
+ & 25 & 61.64 & 62.06 & 63.83 & +1.78 \\
+ & 50 & 65.69 & 65.79 & 66.82 & +1.03 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,27 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Rendimiento del aprendizaje curricular por proporción de candidatos. Las muestras sintéticas se agregan ordenadas por score geométrico (mejores primero). F1 y $\Delta$ vs SMOTE promediados sobre todas las configuraciones.}
+\label{tab:curriculum_results}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Proporción} & \textbf{N muestras} & \textbf{F1 Macro} & \textbf{$\Delta$ vs SMOTE} & \textbf{Victoria} \\
+\midrule
+10\% & 137 & 74.41 & +1.93 & 82.5\% \\
+20\% & 278 & 74.84 & +2.36 & 85.7\% \\
+30\% & 419 & 75.11 & +2.63 & 85.7\% \\
+40\% & 560 & 75.15 & +2.68 & 85.7\% \\
+50\% & 701 & 75.22 & +2.74 & 86.2\% \\
+60\% & 841 & 75.04 & +2.56 & 82.5\% \\
+70\% & 981 & 74.95 & +2.47 & 80.4\% \\
+80\% & 1122 & 74.90 & +2.43 & 79.9\% \\
+90\% & 1263 & 74.75 & +2.27 & 76.7\% \\
+100\% & 1407 & 74.70 & +2.22 & 75.7\% \\
+\midrule
+SMOTE & --- & 72.48 & --- & --- \\
+Estándar (top-N) & 1407 & 75.09 & +2.61 & --- \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\small Paso óptimo medio: 55\% (mediana: 50\%). Mejora curriculum vs estándar: +0.66pp.}
+\end{table}

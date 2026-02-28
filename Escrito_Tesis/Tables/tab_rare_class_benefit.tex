@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Impacto del filtrado geométrico según la dificultad de la clase. Las clases se agrupan por su F1 base (con SMOTE). Correlación de Spearman entre F1 base y $\Delta$: $\rho = -0.269$ ($p = 0.3737$).}
+\label{tab:rare_class_benefit}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Dificultad de clase} & \textbf{N clases} & \textbf{$\Delta$ medio (pp)} & \textbf{$\Delta$ mediana (pp)} \\
+\midrule
+Difícil (F1$<$0.30) & 4 & +10.44 & +10.08 \\
+Media (0.30--0.60) & 4 & +8.45 & +8.91 \\
+Fácil (0.60--0.80) & 4 & +5.40 & +6.14 \\
+Muy fácil (F1$>$0.80) & 1 & +0.55 & +0.55 \\
+\bottomrule
+\end{tabular}
+\end{table}

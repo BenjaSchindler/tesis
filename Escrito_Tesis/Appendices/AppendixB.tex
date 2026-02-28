@@ -1,0 +1,55 @@
+% Appendix B - Experimentos Complementarios
+
+\chapter{Experimentos Complementarios}
+\label{ch:appendix_complementarios}
+
+\section{Mejora Iterativa de Prompts}
+\label{sec:mejora_iterativa}
+
+Las Tablas~\ref{tab:closed_loop_summary} y \ref{tab:closed_loop_convergence} presentan los resultados del experimento de mejora iterativa.
+
+\input{Tables/tab_closed_loop_summary}
+
+El enfoque iterativo produce +1.12 puntos porcentuales respecto a SMOTE ($p = 0.0001$, $d = 0.36$, tasa de victoria del 52\%). Comparado con el filtrado de pasada única, la mejora iterativa obtiene +2.08 puntos porcentuales ($p = 0.002$, $d = 0.29$, tasa de victoria del 41\%).
+
+\input{Tables/tab_closed_loop_convergence}
+
+Las tasas de aceptación no mejoran con las iteraciones. La tasa de aceptación promedio disminuye 12.3 puntos porcentuales entre la iteración 0 y la iteración 4. Los modos de fallo dominantes son DISTANCE\_OUTLIER (77\% de los rechazos) y CROSS\_CLASS (23\%). Estos patrones sugieren que las limitaciones provienen de la naturaleza inherente del LLM para ciertas distribuciones, no de la calidad del prompt.
+
+La conclusión es que el filtrado de pasada única es competitivo con la mejora iterativa del prompt. El esfuerzo computacional adicional de múltiples iteraciones no produce ganancias proporcionales. Este hallazgo refuerza la idea de que el cuello de botella no está en la calidad del prompt sino en las propiedades fundamentales de la generación del LLM. La generación progresiva con retroalimentación ha demostrado ser efectiva en otros contextos \cite{ye2022progen}, lo que sugiere que la señal de retroalimentación geométrica podría no ser suficientemente informativa para guiar la mejora del prompt.
+
+\section{Filtrado Geométrico vs. Filtrado Basado en Modelo}
+\label{sec:teacher_comparison}
+
+Este experimento compara el filtrado geométrico (basado en distancia euclidiana al centroide de clase) con un filtrado basado en la confianza de un modelo teacher. El modelo teacher es una regresión logística entrenada exclusivamente con datos reales. Para cada muestra sintética, el teacher asigna una probabilidad de pertenencia a la clase correcta. Se comparan 5 métodos: filtrado geométrico binario, filtrado geométrico con ponderación suave, filtrado por confianza del teacher (binario), filtrado por confianza del teacher con ponderación suave, y SMOTE. El diseño comprende 630 evaluaciones: 21 configuraciones de dataset $\times$ 2 clasificadores de evaluación (SVC lineal y Ridge) $\times$ 5 métodos $\times$ 3 semillas. Los clasificadores de evaluación son diferentes del teacher (regresión logística) para evitar circularidad.
+
+La Tabla~\ref{tab:teacher_vs_geometric} presenta la comparación.
+
+\input{Tables/tab_teacher_vs_geometric}
+
+Los 4 métodos de filtrado superan significativamente a SMOTE ($p < 0.001$, tamaños de efecto grandes $d > 0.94$). El filtrado geométrico binario obtiene el mayor $\Delta$F1 (+2.78 puntos porcentuales), seguido del geométrico ponderado (+2.46), el teacher binario (+2.43) y el teacher ponderado (+2.15).
+
+La comparación directa entre los métodos geométrico y teacher ponderados produce una diferencia de +0.31 puntos porcentuales a favor del geométrico (victoria del 59.5\%, $p = 0.0001$). Aunque la ventaja es modesta, el resultado es estadísticamente significativo y presenta una ventaja práctica adicional: el filtrado geométrico no requiere entrenar un modelo teacher, operando exclusivamente sobre la geometría del espacio de embeddings.
+
+Este resultado tiene una interpretación conceptual relevante. La distancia euclidiana al centroide de clase captura una propiedad fundamental del espacio de representación: la proximidad a la región de alta densidad de la clase. La confianza del teacher, en cambio, refleja la separabilidad lineal aprendida por un clasificador específico. El filtrado geométrico es más general porque no depende de las fronteras de decisión de un modelo particular, sino de la estructura intrínseca de las representaciones.
+
+\section{Aumentación Híbrida Adaptativa por Clase}
+\label{sec:hybrid_adaptive}
+
+El análisis por clase individual (Sección~\ref{sec:analisis_per_class}) revela que las clases difíciles se benefician desproporcionadamente del filtrado geométrico (+10.44 puntos porcentuales cuando F1 base $<$ 30\%), mientras que las clases fáciles obtienen ganancias marginales (+0.55 puntos porcentuales cuando F1 $>$ 80\%). Este hallazgo motiva un enfoque híbrido: aplicar filtrado geométrico con LLM a las clases donde más aporta y SMOTE a las demás, potencialmente reduciendo el costo computacional sin sacrificar rendimiento.
+
+Se evalúan 3 métodos de estimación de dificultad que no utilizan datos de test: (1) validación cruzada estratificada de 5 particiones sobre los datos de entrenamiento, que produce una estimación de F1 por clase; (2) ratio geométrico entre la dispersión intra-clase y la distancia al centroide más cercano de otra clase; y (3) un oráculo que utiliza el F1 real sobre datos de test como cota superior teórica. El diseño comprende 1,323 evaluaciones: 21 configuraciones de dataset $\times$ 3 clasificadores $\times$ 3 semillas $\times$ 7 métodos.
+
+La Tabla~\ref{tab:hybrid_comparison} presenta la comparación de las estrategias híbridas con el filtrado geométrico puro y SMOTE.
+
+\input{Tables/tab_hybrid_comparison}
+
+El resultado principal es que ninguna estrategia híbrida supera al filtrado geométrico puro. El filtrado geométrico aplicado uniformemente a todas las clases alcanza +2.33 puntos porcentuales respecto a SMOTE ($d = 0.93$, tasa de victoria del 91.0\%), mientras que el mejor método híbrido (CV con $\theta = 0.70$) obtiene solo +0.77 puntos porcentuales ($d = 0.26$, tasa de victoria del 36.0\%).
+
+La Tabla~\ref{tab:hybrid_threshold} analiza la sensibilidad al umbral de dificultad para la estrategia basada en validación cruzada.
+
+\input{Tables/tab_hybrid_threshold}
+
+El patrón es claro: a medida que el umbral aumenta y más clases reciben filtrado geométrico en lugar de SMOTE, el rendimiento mejora monótonamente. Con $\theta = 0.30$ (solo 0.2 clases promedio reciben LLM), la ganancia es nula (+0.02 puntos porcentuales). Con $\theta = 0.70$ (2.9 clases promedio reciben LLM), la ganancia alcanza +0.77 puntos porcentuales. El máximo se obtiene cuando todas las clases reciben filtrado geométrico (filtrado puro: +2.33 puntos porcentuales).
+
+Este resultado tiene una interpretación relevante. Aunque las clases difíciles se benefician más en términos absolutos, el filtrado geométrico también aporta ganancias positivas a las clases fáciles. Reemplazar el filtrado geométrico por SMOTE en cualquier subconjunto de clases reduce el rendimiento global. El hallazgo contraintuitivo es que la especialización por dificultad no mejora sobre la aplicación uniforme del mejor método.

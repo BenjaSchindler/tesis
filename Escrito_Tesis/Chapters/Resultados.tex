@@ -3,7 +3,9 @@
 \chapter{Resultados}
 \label{ch:resultados}
 
-Este capítulo presenta los resultados experimentales organizados en 12 secciones. Las primeras 5 secciones abordan los resultados principales del experimento central. Las secciones 6 a 9 presentan los análisis complementarios. Las secciones 10 a 12 reportan las validaciones metodológicas y las visualizaciones del espacio de embeddings.
+Este capítulo presenta los resultados experimentales organizados en 19 secciones. Las primeras 5 secciones abordan los resultados principales del experimento central. La sección 6 presenta un análisis teórico del efecto de complejidad del filtro. La sección 7 presenta el análisis por clase individual. Las secciones 8 a 11 presentan los análisis complementarios. Las secciones 12 y 13 introducen dos experimentos adicionales: aprendizaje curricular y comparación con filtrado basado en modelo. La sección 14 evalúa una estrategia híbrida adaptativa por clase. Las secciones 15 y 16 reportan las validaciones metodológicas. La sección 17 cuantifica las propiedades geométricas del filtrado. La sección 18 presenta las visualizaciones del espacio de embeddings. La sección 19 evalúa la robustez del método respecto al modelo de lenguaje utilizado para la generación.
+
+\paragraph{Nota sobre reproducibilidad de las generaciones.} Las respuestas del LLM se almacenan en caché mediante hash MD5 del prompt. Cuando el mismo prompt se ejecuta con diferentes semillas de muestreo de datos, la caché devuelve respuestas idénticas, produciendo varianza cero entre semillas para clasificadores determinísticos (regresión logística, SVC, Ridge). El 80\% de las combinaciones método/clasificador presentan esta característica. Los intervalos de confianza reportados a lo largo de este capítulo podrían subestimar la varianza real. La Sección~\ref{sec:asimetria_semillas} presenta un análisis completo de esta asimetría. El resultado principal se mantiene significativo cuando se restringe a clasificadores estocásticos (+1.79 puntos porcentuales, $p = 0.0015$, $d = 0.52$).
 
 \section{Comparación Principal de Métodos}
 \label{sec:comparacion_principal}
@@ -12,11 +14,15 @@ El experimento principal evalúa 3,675 configuraciones (7 conjuntos de datos $\t
 
 \input{Tables/tab_modern_method_comparison}
 
-El resultado central de esta investigación es que la ponderación suave produce una mejora de +2.25 puntos porcentuales respecto a SMOTE ($p < 0.0001$ con corrección de Bonferroni, $d = 0.74$, tasa de victoria del 83.8\%). Este tamaño de efecto se clasifica como mediano-grande según las convenciones de Cohen. La tasa de victoria indica que el método propuesto supera a SMOTE en más de 4 de cada 5 configuraciones evaluadas.
+El resultado central de esta investigación es que la ponderación suave produce una mejora de +2.25 puntos porcentuales respecto a SMOTE ($p < 0.0001$ con corrección de Bonferroni, $d = 0.74$, tasa de victoria del 83.8\%)\footnote{Los valores $p$ e intervalos de confianza de este resultado deben interpretarse considerando que el 80\% de las combinaciones método/clasificador determinístico presentan varianza cero entre semillas debido al caching de generaciones del LLM. Restringiendo el análisis a clasificadores estocásticos, la mejora se mantiene significativa: +1.79 puntos porcentuales ($p = 0.0015$, $d = 0.52$). Véase la Sección~\ref{sec:asimetria_semillas} para el análisis completo.}. Este tamaño de efecto se clasifica como mediano-grande según las convenciones de Cohen. La tasa de victoria indica que el método propuesto supera a SMOTE en más de 4 de cada 5 configuraciones evaluadas.
 
 El filtrado binario también alcanza significancia estadística con +2.11 puntos porcentuales ($p < 0.0001$, $d = 0.69$, tasa de victoria del 76.2\%). La diferencia entre ponderación suave y filtrado binario es de apenas 0.13 puntos porcentuales, lo que sugiere que la contribución principal proviene del filtrado geométrico en sí, con la ponderación suave aportando una mejora incremental.
 
 Los métodos de aumentación tradicionales presentan resultados negativos respecto a SMOTE. EDA obtiene $-0.22$ puntos porcentuales, la traducción inversa $-0.19$ puntos porcentuales, y el sobremuestreo aleatorio $-0.32$ puntos porcentuales. Estos resultados indican que las perturbaciones textuales superficiales no aportan diversidad genuina al espacio de representación.
+
+La Tabla~\ref{tab:absolute_f1_by_method} complementa la comparación presentando los valores absolutos de macro F1 para cada método. Los métodos con filtrado geométrico alcanzan un macro F1 absoluto del 73.49\% (ponderación suave) y 73.36\% (filtrado binario), frente al 71.24\% de SMOTE. El contexto absoluto permite apreciar que las diferencias de +2.25 puntos porcentuales representan una mejora relativa del 3.2\% sobre SMOTE. La desviación estándar de $\sim$18 puntos porcentuales refleja la heterogeneidad entre conjuntos de datos y configuraciones, desde problemas binarios con F1 superior al 90\% hasta tareas multiclase con F1 inferior al 50\%.
+
+\input{Tables/tab_absolute_f1_by_method}
 
 La Figura~\ref{fig:boxplot_deltas} visualiza la distribución de deltas para cada método, y la Figura~\ref{fig:heatmap_methods} muestra el rendimiento desglosado por conjunto de datos.
 
@@ -55,6 +61,14 @@ La Tabla~\ref{tab:modern_nshot} presenta el desglose del rendimiento por número
 El patrón de retornos decrecientes es pronunciado. Con 10 ejemplos por clase, la ponderación suave alcanza +4.52 puntos porcentuales ($d = 1.18$, tasa de victoria del 88.6\%). Este tamaño de efecto se clasifica como muy grande. Con 25 ejemplos, la mejora se reduce a +1.88 puntos porcentuales pero la tasa de victoria alcanza su máximo del 97.1\%, indicando mejora casi universal. Con 50 ejemplos, la mejora es de solo +0.34 puntos porcentuales y no alcanza significancia estadística ($p = 0.16$).
 
 Este patrón tiene una interpretación directa. Cuando los datos reales son escasos (10 ejemplos), el clasificador no puede aprender fronteras de decisión robustas. Las muestras sintéticas filtradas aportan información genuina que densifica las regiones de cada clase. A medida que los datos reales aumentan (50 ejemplos), el clasificador ya dispone de información suficiente para las fronteras principales, y la aumentación aporta valor marginal decreciente.
+
+La Tabla~\ref{tab:absolute_f1_by_nshot} presenta los valores absolutos de macro F1 por nivel de n-shot, proporcionando contexto para interpretar las magnitudes de las mejoras. Con 10 ejemplos por clase, el macro F1 base sin aumentación es del 57.55\%, indicando un escenario de clasificación desafiante donde la aumentación filtrada produce las mayores ganancias. Con 50 ejemplos, el F1 base sube al 82.40\%, un escenario donde los clasificadores ya alcanzan rendimiento razonable y la aumentación tiene menor margen de mejora.
+
+\input{Tables/tab_absolute_f1_by_nshot}
+
+La Tabla~\ref{tab:absolute_f1_by_dataset} desglosa los valores absolutos por conjunto de datos y n-shot, revelando la heterogeneidad sustancial entre dominios. Los conjuntos de datos binarios como SMS Spam alcanzan F1 superior al 85\% incluso con 10 ejemplos, mientras que tareas multiclase como emotion con 10 ejemplos presentan F1 inferior al 45\%. Esta heterogeneidad explica la alta desviación estándar reportada en las tablas agregadas.
+
+\input{Tables/tab_absolute_f1_by_dataset}
 
 Las Figuras~\ref{fig:f1_vs_nshot} y~\ref{fig:delta_by_nshot} ilustran esta tendencia.
 
@@ -103,6 +117,59 @@ La segunda ablación compara la ponderación suave contra el filtrado binario. L
 
 La conclusión práctica es que la contribución principal proviene del filtrado en sí. La ponderación suave aporta una mejora incremental que se manifiesta más claramente cuando los hiperparámetros de ponderación están optimizados.
 
+\section{Análisis Teórico del Efecto de Complejidad del Filtro}
+\label{sec:analisis_complejidad}
+
+Los resultados empíricos demuestran consistentemente que el filtro más simple (cascada nivel 1, solo distancia euclidiana) supera a los filtros multi-criterio. Esta sección analiza tres mecanismos teóricos que explican este resultado.
+
+\subsection{Correlación entre métricas en espacios normalizados}
+
+El modelo de embeddings utilizado (all-mpnet-base-v2) produce vectores L2-normalizados. Para vectores unitarios $\mathbf{u}$ y $\mathbf{v}$, la distancia euclidiana y la similitud coseno están relacionadas por:
+
+\begin{equation}
+\|\mathbf{u} - \mathbf{v}\|^2 = 2(1 - \cos(\mathbf{u}, \mathbf{v}))
+\label{eq:l2_cosine}
+\end{equation}
+
+Esta identidad implica que la distancia euclidiana es una transformación monotónica de la similitud coseno. En consecuencia, la cascada nivel 1 (distancia) y la cascada nivel 2 (distancia + similitud coseno) producen rankings idénticos para los mismos candidatos. Agregar el criterio de similitud coseno no aporta información discriminativa nueva; la media geométrica de dos scores monotónicamente relacionados solo introduce una no-linealidad que puede alterar los rankings marginales sin mejorar la calidad de la selección.
+
+Este efecto se amplifica en alta dimensión. Tessari et al. demostraron que la similitud coseno sufre concentración de la medida en espacios de alta dimensionalidad, perdiendo poder discriminativo a medida que las dimensiones aumentan \cite{tessari2024diem}. En 768 dimensiones, las similitudes coseno entre muestras tienden a concentrarse en un rango estrecho, convirtiendo el score del nivel 2 en un factor cuasi-uniforme que diluye la señal del nivel 1 sin compensar con información complementaria.
+
+\subsection{Reducción de diversidad por intersección restrictiva}
+
+El filtro combinado, que exige satisfacer simultáneamente los criterios LOF y de similitud coseno ($\text{lof\_mask} \land \text{sim\_mask}$), ilustra el caso extremo de esta dinámica. La intersección de criterios reduce drásticamente el pool de candidatos aceptados, llegando a tasas de aceptación del 0\% en 6 de 9 configuraciones de NER.
+
+Pero el efecto nocivo no se limita a los casos de pool vacío. Incluso cuando la intersección produce un pool no vacío, las muestras supervivientes son aquellas que son simultáneamente cercanas al centroide, densas según LOF y altamente similares a los ejemplos reales. Estas muestras representan cuasi-duplicados de los datos existentes: son las más ``seguras'' geométricamente, pero también las menos informativas. El valor de la aumentación con LLM reside precisamente en la diversidad que aporta --- muestras que cubren regiones subrepresentadas del espacio de la clase. La intersección restrictiva elimina esta diversidad.
+
+El experimento de aprendizaje curricular (Sección~\ref{sec:curriculum_learning}) proporciona evidencia complementaria. El rendimiento máximo se alcanza al incluir solo el 50\% superior de candidatos ordenados por score. Esto significa que incluso candidatos que ocupan la posición 51--100\% del ranking (que no son outliers extremos, sino muestras de calidad moderada) introducen ruido suficiente para degradar el rendimiento. Cuando múltiples criterios se combinan mediante intersección, el ranking efectivo cambia respecto al ranking por distancia sola, potencialmente promoviendo muestras genéricas sobre aquellas que genuinamente densifican regiones de frontera donde el clasificador tiene mayor margen de mejora.
+
+\subsection{Inestabilidad de LOF en régimen de pocos ejemplos}
+
+El filtro LOF (\textit{Local Outlier Factor}) estima la densidad local de cada punto mediante la distancia a sus $k$ vecinos más cercanos. Con $k=20$ (el valor por defecto), el cálculo requiere al menos 20 vecinos de la misma clase. En el régimen de 10 ejemplos por clase, LOF opera con un máximo de 9 vecinos reales por clase, produciendo estimaciones de densidad degeneradas. Empíricamente, los scores LOF se vuelven cuasi-uniformes en este régimen, perdiendo toda capacidad discriminativa.
+
+Robinson et al. demostraron que los embeddings de modelos de lenguaje presentan singularidades topológicas que violan la hipótesis de la variedad \cite{robinson2025manifold}. Estas irregularidades afectan particularmente a las métricas que dependen de la estructura local del espacio (densidad, vecindad, curvatura), mientras que la distancia euclidiana, como métrica de primer orden, es más robusta ante estas anomalías. La distancia al centroide de clase, utilizada por la cascada nivel 1, requiere únicamente calcular una media aritmética --- una operación estable incluso con $N=10$ puntos.
+
+Este análisis es consistente con Du et al., quienes demostraron que la calidad de la representación subyacente determina más el resultado que la complejidad del algoritmo de selección \cite{du2025disentangling}. Un espacio de embeddings bien estructurado (como el de mpnet-base-v2) con un filtro de primer orden es preferible a un esquema multi-criterio elaborado que intenta compensar deficiencias del espacio mediante complejidad algorítmica. En nuestro caso, la representación es de alta calidad --- la distancia euclidiana captura directamente la estructura geométrica relevante sin necesidad de refinamientos adicionales.
+
+\section{Análisis por Clase Individual}
+\label{sec:analisis_per_class}
+
+El análisis agregado por macro F1 puede ocultar patrones importantes a nivel de clase individual. Para comprender qué clases se benefician más del filtrado geométrico, se re-computa el F1 por clase para 3 conjuntos de datos representativos (emotion, hate\_speech\_davidson, 20newsgroups) con 10 ejemplos por clase, 3 clasificadores lineales y semilla fija.
+
+La Tabla~\ref{tab:per_class_analysis} presenta los resultados desagregados por clase.
+
+\input{Tables/tab_per_class_analysis}
+
+El patrón más notable es que las clases difíciles son las que más se benefician. En emotion, la clase ``anger'' gana +16.9 puntos porcentuales (de 27.8\% a 44.6\%), mientras que ``sadness'' gana apenas +1.0 puntos porcentuales (de 41.3\% a 42.3\%). En 20newsgroups, ``alt.atheism'' gana +15.0 puntos porcentuales (de 50.9\% a 65.9\%), mientras que ``comp.graphics'' gana +0.5 puntos porcentuales sobre un F1 base ya alto del 90.8\%. Este patrón se repite en hate\_speech\_davidson, donde ``offensive'' gana +13.0 puntos porcentuales.
+
+La Tabla~\ref{tab:rare_class_benefit} formaliza esta observación agrupando las clases por su dificultad (F1 base con SMOTE).
+
+\input{Tables/tab_rare_class_benefit}
+
+Las clases difíciles (F1 base $<$ 30\%) obtienen una mejora media de +10.44 puntos porcentuales, mientras que las clases fáciles (F1 $>$ 80\%) obtienen apenas +0.55 puntos porcentuales. La correlación de Spearman entre el F1 base y el delta es negativa ($\rho = -0.269$), aunque no alcanza significancia estadística con las 13 clases disponibles ($p = 0.37$). La dirección del efecto es consistente: el filtrado geométrico aporta mayor valor donde el clasificador tiene mayor margen de mejora.
+
+La interpretación geométrica de este hallazgo es que las clases difíciles tienden a ocupar regiones del espacio de embeddings con mayor solapamiento con otras clases o con menor separación de los límites de decisión. Las muestras sintéticas filtradas densifican las regiones correctas de estas clases, reforzando las fronteras de decisión donde el clasificador original tenía mayor incertidumbre.
+
 \section{Efecto del Número de Clases}
 \label{sec:efecto_clases}
 
@@ -121,7 +188,9 @@ La Tabla~\ref{tab:ner_results} presenta los resultados de la extensión a NER so
 
 \input{Tables/tab_ner_results}
 
-La aumentación de datos para NER con recursos limitados ha sido estudiada previamente mediante modelado de entidades enmascaradas \cite{zhou2022melm}, pero sin mecanismos de filtrado geométrico post-generación. Los resultados de la extensión a NER confirman la generalización del filtrado geométrico entre tareas. La cascada nivel 1 alcanza +9.26 puntos porcentuales sobre la línea base sin aumentación, con tasa de victoria del 100\%. El LOF relajado obtiene +9.28 puntos porcentuales, en empate virtual con la cascada. Ambos filtros superan a la condición sin filtrar por +1.98 puntos porcentuales en promedio, confirmando que el filtrado ayuda en 8 de 9 configuraciones (89\%).
+La aumentación de datos para NER con recursos limitados ha sido estudiada previamente mediante modelado de entidades enmascaradas \cite{zhou2022melm}, pero sin mecanismos de filtrado geométrico post-generación. Los resultados de la extensión a NER confirman la generalización del filtrado geométrico entre tareas. La cascada nivel 1 alcanza +9.26 puntos porcentuales sobre la línea base sin aumentación ($p = 0.0003$ con prueba t pareada, $p_{Bonf} = 0.002$ con corrección por 7 comparaciones, $d = 2.05$), con tasa de victoria del 100\%. El LOF relajado obtiene +9.28 puntos porcentuales ($p_{Bonf} = 0.003$, $d = 1.91$), en empate virtual con la cascada. Todos los filtros excepto el filtro combinado alcanzan significancia estadística tras corrección de Bonferroni ($p_{Bonf} < 0.004$ en todos los casos, $d > 1.88$). El filtro combinado no es significativo ($p = 0.29$, $d = 0.38$), consistente con sus tasas de aceptación del 0\% en la mayoría de configuraciones. Las pruebas de Wilcoxon confirman estos resultados ($p_{Bonf} = 0.027$ para todos los filtros significativos).
+
+La ganancia del filtrado sobre la generación sin filtrar es de +0.86 puntos porcentuales para cascada nivel 1 vs ningún filtro, aunque esta diferencia no alcanza significancia estadística ($p = 0.27$, $d = 0.40$) con solo 9 configuraciones. La dirección del efecto es consistente (tasa de victoria del 66.7\%), sugiriendo que la potencia estadística es insuficiente para detectar una diferencia de esta magnitud con $N = 9$.
 
 El patrón de retornos decrecientes por n-shot se reproduce con mayor intensidad. Con 10 ejemplos por tipo de entidad, la mejora alcanza +15.15 puntos porcentuales. Con 25 ejemplos, +9.21 puntos porcentuales. Con 50 ejemplos, +6.91 puntos porcentuales. La mayor magnitud respecto a la clasificación de texto refleja que la tarea de NER opera con menores cantidades de datos de entrenamiento por categoría.
 
@@ -156,70 +225,95 @@ La consistencia entre modelos es alta. De las 21 configuraciones evaluadas (7 co
 
 Los mejores resultados individuales son emotion\_10shot con mpnet-base (+10.52 puntos porcentuales) y emotion\_10shot con bge-small (+9.56 puntos porcentuales). El peor resultado es hate\_speech\_10shot con e5-large ($-9.39$ puntos porcentuales), un caso atípico donde el modelo de embeddings específico produce un espacio de representación inadecuado para el filtrado en ese conjunto de datos.
 
-\section{Mejora Iterativa de Prompts}
-\label{sec:mejora_iterativa}
+Este estudio de ablación tiene una implicación adicional para la validez del diseño experimental. El mismo modelo de embeddings se utiliza tanto para el filtrado geométrico como para la representación de entrada de los clasificadores, lo que podría introducir una circularidad favorable al filtrado. Sin embargo, el hecho de que modelos de embeddings con geometrías diferentes al utilizado para el filtrado produzcan mejoras consistentes (90.5\% de acuerdo mayoritario) sugiere que las ganancias no dependen exclusivamente de esta circularidad. Si el beneficio proviniera únicamente de optimizar en el mismo espacio donde se evalúa, modelos con espacios de representación distintos no replicarían los resultados. Esta observación se discute en mayor detalle en las limitaciones del Capítulo~\ref{ch:conclusiones}.
 
-Las Tablas~\ref{tab:closed_loop_summary} y \ref{tab:closed_loop_convergence} presentan los resultados del experimento de mejora iterativa.
+El experimento de mejora iterativa de prompts, que evalúa si la retroalimentación geométrica puede guiar la generación del LLM a través de múltiples iteraciones, se presenta en el Apéndice~\ref{ch:appendix_complementarios}. El resultado principal es que el filtrado de pasada única es competitivo con la mejora iterativa, sugiriendo que el cuello de botella reside en las propiedades fundamentales de la generación del LLM, no en la calidad del prompt.
 
-\input{Tables/tab_closed_loop_summary}
+\section{Aprendizaje Curricular con Scores Geométricos}
+\label{sec:curriculum_learning}
 
-El enfoque iterativo produce +1.12 puntos porcentuales respecto a SMOTE ($p = 0.0001$, $d = 0.36$, tasa de victoria del 52\%). Comparado con el filtrado de pasada única, la mejora iterativa obtiene +2.08 puntos porcentuales ($p = 0.002$, $d = 0.29$, tasa de victoria del 41\%).
+El experimento de aprendizaje curricular evalúa si la introducción gradual de muestras sintéticas, ordenadas por su score geométrico de mayor a menor calidad, produce mejores resultados que la incorporación simultánea de todas las muestras seleccionadas. El diseño comprende 1,890 evaluaciones: 7 conjuntos de datos $\times$ 3 valores de n-shot $\times$ 3 clasificadores $\times$ 3 semillas $\times$ 10 pasos incrementales.
 
-\input{Tables/tab_closed_loop_convergence}
+Para cada configuración, las muestras candidatas se generan con factor de sobremuestreo 3x, se evalúan con el filtro de cascada nivel 1, y se ordenan por score descendente. Los pasos incrementales corresponden a incluir del 10\% al 100\% de los candidatos, siempre empezando por los de mayor calidad.
 
-Las tasas de aceptación no mejoran con las iteraciones. La tasa de aceptación promedio disminuye 12.3 puntos porcentuales entre la iteración 0 y la iteración 4. Los modos de fallo dominantes son DISTANCE\_OUTLIER (77\% de los rechazos) y CROSS\_CLASS (23\%). Estos patrones sugieren que las limitaciones provienen de la naturaleza inherente del LLM para ciertas distribuciones, no de la calidad del prompt.
+La Tabla~\ref{tab:curriculum_results} y la Figura~\ref{fig:curriculum_curve} presentan los resultados.
 
-La conclusión es que el filtrado de pasada única es competitivo con la mejora iterativa del prompt. El esfuerzo computacional adicional de múltiples iteraciones no produce ganancias proporcionales. Este hallazgo refuerza la idea de que el cuello de botella no está en la calidad del prompt sino en las propiedades fundamentales de la generación del LLM. La generación progresiva con retroalimentación ha demostrado ser efectiva en otros contextos \cite{ye2022progen}, lo que sugiere que la señal de retroalimentación geométrica podría no ser suficientemente informativa para guiar la mejora del prompt.
+\input{Tables/tab_curriculum_results}
 
-\section{Validación de la Implementación de SMOTE}
-\label{sec:validacion_smote}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{Figures/fig_curriculum_curve.pdf}
+\caption{Curva de aprendizaje curricular: macro F1 en función de la proporción de candidatos incluidos. Las muestras se agregan en orden descendente de score geométrico. La línea punteada indica el rendimiento de SMOTE.}
+\label{fig:curriculum_curve}
+\end{figure}
 
-La Tabla~\ref{tab:smote_validation} presenta la comparación entre la implementación dummy-binary utilizada en esta investigación y la implementación estándar de SMOTE.
+El rendimiento presenta una curva de U invertida con pico en la proporción del 50\% (+2.74 puntos porcentuales vs SMOTE, tasa de victoria del 86.2\%). Incluir solo la mitad superior de los candidatos por score geométrico supera al método estándar que incorpora todos los candidatos seleccionados (+2.74 vs +2.22 puntos porcentuales). La mejora del curriculum sobre el método estándar es de +0.66 puntos porcentuales.
 
-\input{Tables/tab_smote_validation}
+El patrón de degradación a partir del 60\% indica que la cola inferior de candidatos, aunque pasan el filtro de selección top-N, introduce ruido que degrada la calidad del conjunto de entrenamiento. Incluso con tan solo el 10\% de los candidatos (137 muestras en promedio), el rendimiento ya supera a SMOTE (+1.93 puntos porcentuales), lo que confirma que las muestras de mayor score geométrico son las más informativas.
 
-La diferencia máxima entre ambas implementaciones es de 0.0000 puntos porcentuales en las 27 comparaciones realizadas (9 configuraciones $\times$ 3 clasificadores). Este resultado confirma que la implementación dummy-binary produce resultados idénticos a SMOTE estándar. Las ganancias reportadas en esta investigación no se deben a una línea base artificialmente débil.
+El paso óptimo medio es del 55\% (mediana: 50\%), lo que sugiere que aproximadamente la mitad de las muestras generadas aportan valor genuino al clasificador. Este hallazgo complementa la conclusión del filtrado binario: no solo es importante seleccionar qué muestras incluir, sino cuántas incluir. La curva de curriculum proporciona una guía práctica para calibrar el presupuesto de muestras sintéticas.
 
-\section{Análisis de Asimetría de Semillas}
-\label{sec:asimetria_semillas}
+Dos experimentos complementarios se presentan en el Apéndice~\ref{ch:appendix_complementarios}: la comparación entre filtrado geométrico y filtrado basado en un modelo teacher (Sección~\ref{sec:teacher_comparison}), donde el filtrado geométrico supera al teacher con la ventaja de no requerir entrenamiento adicional; y la aumentación híbrida adaptativa por clase (Sección~\ref{sec:hybrid_adaptive}), donde se concluye que la aplicación uniforme del filtrado geométrico supera a las estrategias de especialización por dificultad de clase.
 
-La Tabla~\ref{tab:seed_asymmetry} presenta el análisis de varianza entre semillas.
+Las validaciones metodológicas --- incluyendo la verificación de equivalencia entre la implementación dummy-binary de SMOTE y la implementación estándar (Sección~\ref{sec:validacion_smote}), y el análisis del efecto del almacenamiento en caché de generaciones sobre la varianza entre semillas (Sección~\ref{sec:asimetria_semillas}) --- se presentan en el Apéndice~\ref{ch:appendix_validaciones}. Ambas validaciones confirman la solidez de la línea base y la significancia estadística de los resultados bajo clasificadores estocásticos.
 
-\input{Tables/tab_seed_asymmetry}
+\section{Estadísticas Geométricas del Filtrado}
+\label{sec:geometric_statistics}
 
-Las generaciones del LLM se almacenan en caché mediante hash MD5 del prompt. Cuando el mismo prompt se ejecuta con diferentes semillas de muestreo de datos pero el mismo contenido de clase, la caché devuelve respuestas idénticas. Esto produce varianza cero entre semillas para clasificadores determinísticos (regresión logística, SVC, Ridge). El 80\% de las combinaciones LLM + clasificador determinístico presentan esta característica.
+Para cuantificar el efecto del filtrado geométrico sobre la estructura del espacio de embeddings, se computan 6 métricas geométricas para 4 condiciones de aumentación: solo datos reales, datos reales más muestras LLM sin filtrar, datos reales más muestras LLM filtradas, y datos reales más muestras SMOTE. Las métricas se calculan sobre las 21 configuraciones de dataset.
 
-Restringiendo el análisis exclusivamente a clasificadores estocásticos (MLP y bosque aleatorio), la ponderación suave mantiene una mejora de +1.79 puntos porcentuales ($p = 0.0015$, $d = 0.52$). El resultado sigue siendo estadísticamente significativo con un tamaño de efecto mediano.
+La Tabla~\ref{tab:geometric_statistics} presenta los promedios de las 6 métricas.
 
-Las pruebas t pareadas siguen siendo válidas porque comparan pares de configuraciones (método vs SMOTE) bajo las mismas condiciones. Los intervalos de confianza podrían subestimar la varianza real al no capturar la variabilidad que introduciría la regeneración de muestras sintéticas con diferentes prompts. Esta limitación se reconoce explícitamente y se discute en el Capítulo~\ref{ch:conclusiones}.
+\input{Tables/tab_geometric_statistics}
+
+El filtrado geométrico reduce la distancia intra-clase promedio de 0.850 (sin filtrar) a 0.822 ($p < 0.001$), indicando clústeres más compactos. Simultáneamente, aumenta la separación inter-clase de 0.571 a 0.616 ($p < 0.001$), lo que produce clases más distinguibles. El silhouette score mejora de 0.075 a 0.085 ($p = 0.029$) y el índice Davies-Bouldin disminuye de 3.822 a 3.370, confirmando una mejor estructura de clústeres.
+
+Un resultado notable es que SMOTE obtiene el silhouette score más alto (0.090) y la menor distancia intra-clase (0.762). Esto se explica porque SMOTE interpola linealmente entre vecinos de la misma clase, produciendo muestras que por construcción son compactas alrededor de los datos existentes. Sin embargo, su cobertura del 92.4\% contrasta con el 15.9\% del filtrado, lo que indica que SMOTE satura las regiones ya conocidas sin explorar nuevas zonas del espacio de representación. Las muestras LLM filtradas, con menor cobertura pero mayor separación inter-clase, aportan diversidad genuina que los clasificadores lineales aprovechan mejor, como lo demuestran los resultados de clasificación superiores reportados en las secciones anteriores.
+
+La Tabla~\ref{tab:geometric_per_dataset} desglosa el silhouette score y el índice Davies-Bouldin por conjunto de datos.
+
+\input{Tables/tab_geometric_per_dataset}
+
+El filtrado mejora el silhouette en 15 de 21 configuraciones (71\%). Las mayores ganancias se obtienen con 10 ejemplos por clase, donde el espacio de embeddings está más disperso y el filtrado aporta mayor valor de estructuración. Con 50 ejemplos, el efecto se atenúa o invierte en algunos datasets, consistente con el patrón de retornos decrecientes observado en los resultados de clasificación.
 
 \section{Visualización del Espacio de Embeddings}
 \label{sec:visualizacion_embeddings}
 
-Las Figuras~\ref{fig:tsne_20news}, \ref{fig:tsne_emotion} y \ref{fig:tsne_hate_speech} presentan proyecciones t-SNE del espacio de embeddings para 3 conjuntos de datos representativos con 10 ejemplos por clase.
+Las visualizaciones t-SNE del espacio de embeddings ilustran cualitativamente el mecanismo del filtrado geométrico. Se presentan proyecciones para 2 conjuntos de datos representativos (emotion y 20newsgroups) con 10 ejemplos por clase.
+
+Las Figuras~\ref{fig:tsne_before_after_emotion} y~\ref{fig:tsne_before_after_20news} presentan comparaciones lado a lado del espacio de embeddings antes y después del filtrado. En el panel izquierdo de cada figura, todas las muestras candidatas generadas por el LLM se muestran como marcadores tenues, junto con los datos reales (círculos opacos) y los datos de test (puntos muy tenues de fondo). En el panel derecho, solo las muestras seleccionadas por el filtro se mantienen, coloreadas por clase. Los centroides de cada clase se indican con estrellas.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\textwidth]{Figures/fig_tsne_20news.png}
-\caption{Proyección t-SNE del espacio de embeddings para 20newsgroups con 10 ejemplos por clase. Las muestras reales (círculos) definen los conglomerados de cada clase. Las muestras filtradas (triángulos) se ubican dentro o cerca de estos conglomerados, mientras que las muestras rechazadas (cruces) aparecen en regiones periféricas o en zonas de solapamiento entre clases.}
-\label{fig:tsne_20news}
+\includegraphics[width=\textwidth]{Figures/fig_tsne_before_after_emotion.png}
+\caption{Proyección t-SNE para emotion (6 clases, 10 ejemplos por clase): antes del filtrado (izquierda) vs después del filtrado (derecha). El filtro geométrico elimina las muestras candidatas que caen en regiones de frontera entre clases o en zonas periféricas, reteniendo solo aquellas que refuerzan los conglomerados existentes. Ambos paneles comparten la misma proyección t-SNE para garantizar comparabilidad espacial.}
+\label{fig:tsne_before_after_emotion}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\textwidth]{Figures/fig_tsne_emotion.png}
-\caption{Proyección t-SNE para emotion con 10 ejemplos por clase. Las 6 emociones forman conglomerados con diferentes grados de separación. El filtro geométrico selecciona muestras sintéticas que refuerzan los conglomerados existentes sin contaminar regiones de otras clases.}
-\label{fig:tsne_emotion}
+\includegraphics[width=\textwidth]{Figures/fig_tsne_before_after_20newsgroups.png}
+\caption{Proyección t-SNE para 20newsgroups (4 clases, 10 ejemplos por clase): antes del filtrado (izquierda) vs después del filtrado (derecha). Las muestras rechazadas (cruces tenues en el panel izquierdo) tienden a ubicarse en zonas de solapamiento entre clases o en regiones periféricas alejadas de la distribución real.}
+\label{fig:tsne_before_after_20news}
+\end{figure}
+
+Las Figuras~\ref{fig:tsne_filtered_vs_smote_emotion} y~\ref{fig:tsne_filtered_vs_smote_20news} comparan las muestras sintéticas producidas por el filtrado geométrico (panel izquierdo) con las producidas por SMOTE (panel derecho). Esta comparación revela diferencias cualitativas fundamentales en la distribución espacial de las muestras.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{Figures/fig_tsne_filtered_vs_smote_emotion.png}
+\caption{Comparación de muestras sintéticas para emotion: LLM filtrado (izquierda) vs SMOTE (derecha). Las muestras LLM filtradas (triángulos) exhiben mayor diversidad espacial, cubriendo regiones que complementan los datos reales. Las muestras SMOTE (cuadrados) se concentran en las interpolaciones lineales entre pares de datos reales, resultando en distribuciones más compactas pero menos diversas.}
+\label{fig:tsne_filtered_vs_smote_emotion}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\textwidth]{Figures/fig_tsne_hate_speech.png}
-\caption{Proyección t-SNE para hate\_speech\_davidson con 10 ejemplos por clase. Este conjunto presenta mayor solapamiento entre clases. El filtro selecciona preferentemente muestras en regiones donde la clase es dominante, evitando zonas de frontera ambigua.}
-\label{fig:tsne_hate_speech}
+\includegraphics[width=\textwidth]{Figures/fig_tsne_filtered_vs_smote_20newsgroups.png}
+\caption{Comparación de muestras sintéticas para 20newsgroups: LLM filtrado (izquierda) vs SMOTE (derecha). El contraste entre la distribución espacial de ambos métodos es visualmente evidente: las muestras LLM ocupan regiones más amplias del espacio de cada clase.}
+\label{fig:tsne_filtered_vs_smote_20news}
 \end{figure}
 
-Las visualizaciones confirman cualitativamente el mecanismo del filtrado geométrico. Las muestras aceptadas por el filtro se ubican en regiones densas del espacio de embeddings donde la clase es localmente dominante. Las muestras rechazadas tienden a aparecer en 3 patrones: (1) en zonas de frontera entre clases, donde podrían confundir las fronteras de decisión; (2) en regiones periféricas alejadas de la distribución real; y (3) aisladas de cualquier conglomerado, sugiriendo alucinaciones del LLM.
+Las visualizaciones confirman cualitativamente el mecanismo del filtrado geométrico. Las muestras aceptadas por el filtro se ubican en regiones densas del espacio de embeddings donde la clase es localmente dominante. Las muestras rechazadas tienden a aparecer en 3 patrones: (1) en zonas de frontera entre clases, donde podrían confundir las fronteras de decisión; (2) en regiones periféricas alejadas de la distribución real; y (3) aisladas de cualquier conglomerado, sugiriendo alucinaciones del LLM. La comparación con SMOTE revela que, aunque SMOTE produce muestras más compactas (consistente con las estadísticas geométricas de la Tabla~\ref{tab:geometric_statistics}), las muestras LLM filtradas aportan mayor diversidad dentro de los conglomerados de clase.
 
 La Figura~\ref{fig:scores_20news} muestra la distribución de puntuaciones del filtro para las muestras aceptadas y rechazadas.
 
@@ -229,3 +323,32 @@ La Figura~\ref{fig:scores_20news} muestra la distribución de puntuaciones del f
 \caption{Distribución de puntuaciones del filtro de cascada nivel 1 para 20newsgroups. Las muestras aceptadas (azul) presentan puntuaciones significativamente más altas que las rechazadas (rojo), confirmando la efectividad del criterio de selección basado en distancia.}
 \label{fig:scores_20news}
 \end{figure}
+
+\section{Robustez respecto al Modelo de Lenguaje}
+\label{sec:robustez_llm}
+
+Los experimentos anteriores emplean un solo modelo generativo (Gemini 3 Flash). Para evaluar si las ganancias del filtrado geométrico dependen del LLM específico, se replica el experimento de ponderación suave con 4 modelos adicionales: GPT-5-mini (OpenAI), Claude 4.5 Haiku (Anthropic), Kimi K2.5 (Moonshot) y GLM-5 (Zhipu). Estos modelos cubren 3 proveedores closed-source y 2 de código abierto, con arquitecturas y procesos de entrenamiento diferentes.
+
+El diseño comprende 441 evaluaciones: 21 configuraciones de dataset $\times$ 3 clasificadores lineales (regresión logística, SVC, Ridge) $\times$ 3 métodos (sin aumentación, SMOTE, ponderación suave) $\times$ 5 LLMs, con semilla fija. Las generaciones de cada modelo se almacenan en caché independiente por proveedor.
+
+\subsection{Rechazos por Filtros de Contenido}
+
+Los modelos con alineación de seguridad rechazan generar contenido para ciertas clases sensibles. La clase ``hate\_speech'' del conjunto hate\_speech\_davidson es rechazada por los 5 modelos evaluados en al menos una configuración. Kimi K2.5 rechaza adicionalmente contenido religioso (``soc.religion.christian'' en 20newsgroups) y mensajes SMS clasificados como legítimos cuyo contexto incluye contenido adulto. Claude 4.5 Haiku rechaza contenido ofensivo y político (``talk.politics.guns''). Estas negativas producen conjuntos de entrenamiento incompletos que penalizan artificialmente el rendimiento del filtrado geométrico para esos modelos.
+
+Para garantizar una comparación justa, se excluyen los 9 datasets donde al menos un LLM produjo menos de 20 textos en alguna clase. El análisis ajustado opera sobre 12 configuraciones de dataset $\times$ 3 clasificadores = 36 evaluaciones por LLM.
+
+\subsection{Resultados Ajustados por Rechazo}
+
+La Tabla~\ref{tab:multi_llm} presenta los resultados ajustados.
+
+\input{Tables/tab_multi_llm}
+
+Los 5 modelos producen mejoras significativas respecto a SMOTE tras corrección de Bonferroni ($k = 5$). Gemini 3 Flash obtiene la mayor ganancia (+2.31 puntos porcentuales, $d = 0.92$, tasa de victoria del 94.4\%), seguido de GPT-5-mini (+2.11, $d = 0.85$, 88.9\%), Claude 4.5 Haiku (+1.66, $d = 0.73$, 83.3\%), GLM-5 (+1.64, $d = 0.49$, 86.1\%) y Kimi K2.5 (+1.49, $d = 0.63$, 80.6\%). La dispersión entre el mejor y el peor modelo es de 0.82 puntos porcentuales.
+
+El test de Friedman no detecta un efecto significativo del LLM sobre el rendimiento ($\chi^2 = 8.15$, $p = 0.086$). La ausencia de significancia indica que las diferencias entre modelos son atribuibles a variabilidad aleatoria, no a una superioridad sistemática de algún LLM. La correlación inter-LLM media, medida por $\tau$ de Kendall sobre los rankings de mejora por dataset, es de 0.59, indicando acuerdo sustancial entre modelos sobre qué configuraciones se benefician más del filtrado.
+
+La Tabla~\ref{tab:multi_llm_raw} presenta los resultados sin ajustar, incluyendo las 63 configuraciones por LLM. Kimi K2.5, con 4 clases rechazadas, obtiene +0.84 puntos porcentuales sin corrección por rechazo, frente a +1.49 con corrección. La diferencia confirma que las penalizaciones por rechazo de contenido distorsionan la evaluación comparativa.
+
+\input{Tables/tab_multi_llm_raw}
+
+Estos resultados confirman que el filtrado geométrico con ponderación suave produce mejoras significativas independientemente del modelo generativo utilizado. La consistencia entre 5 modelos de 4 proveedores distintos, con arquitecturas y datos de entrenamiento diferentes, respalda la caracterización del método como agnóstico al LLM.

@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Estadísticas geométricas del espacio de embeddings para 4 condiciones de aumentación. Los valores son promedios sobre las 21 configuraciones de dataset. Dist. Intra: distancia media al centroide de clase (menor = clústeres más compactos). Sep. Inter: distancia media entre centroides (mayor = mejor separación). Silhouette: cohesión + separación combinada (mayor = mejor). Davies-B.: ratio intra/inter (menor = mejor). Cobertura: fracción de datos reales cubiertos por sintéticos. Ratio Dens.: ratio de densidad sintética/real (cercano a 1.0 = mejor).}
+\label{tab:geometric_statistics}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Condición} & \textbf{Dist. Intra} & \textbf{Sep. Inter} & \textbf{Silhouette} & \textbf{Davies-B.} & \textbf{Cobertura} & \textbf{Ratio Dens.} \\
+\midrule
+Solo datos reales & 0.876 & 0.507 & 0.027 & 4.259 & 0.0\% & 1.00 \\
++ LLM sin filtrar & 0.850 & 0.571 & 0.075 & 3.822 & 19.6\% & 0.73 \\
+\rowcolor{green!10} + LLM filtrado & 0.822 & 0.616 & 0.085 & 3.370 & 15.9\% & 0.74 \\
++ SMOTE & 0.762 & 0.540 & 0.090 & 3.474 & 92.4\% & 0.54 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\small Dist. Intra: filtrado vs sin filtrar $p < 0.001$; Sep. Inter: filtrado vs sin filtrar $p < 0.001$; Silhouette: filtrado vs sin filtrar $p = 0.029$}
+\end{table}

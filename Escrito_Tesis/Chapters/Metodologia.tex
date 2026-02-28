@@ -38,7 +38,9 @@ Para verificar que los resultados no dependen de la elección específica del mo
 \section{Generación con Modelo de Lenguaje}
 \label{sec:generacion_llm}
 
-El proceso de generación de muestras sintéticas utiliza Gemini 3 Flash (\texttt{gemini-3-flash-preview}) de Google como modelo generativo. La selección responde a consideraciones prácticas: el modelo ofrece calidad de generación competitiva a un costo significativamente menor que alternativas como GPT-4 o Claude.
+El proceso de generación de muestras sintéticas utiliza Gemini 3 Flash (\texttt{gemini-3-flash-preview}) de Google como modelo generativo principal. La selección responde a consideraciones prácticas: el modelo ofrece calidad de generación competitiva a un costo significativamente menor que alternativas de escala comparable.
+
+Para verificar que los resultados no dependen del modelo generativo específico, se realiza un estudio de robustez con 4 modelos adicionales: GPT-5-mini (OpenAI), Claude 4.5 Haiku (Anthropic), Kimi K2.5 (Moonshot, código abierto) y GLM-5 (Zhipu, código abierto). Estos 5 modelos cubren 4 proveedores distintos, 3 cerrados y 2 de código abierto, con arquitecturas y datos de entrenamiento diferentes. Los resultados de esta evaluación se reportan en la Sección~\ref{sec:robustez_llm}.
 
 Para cada clase en cada configuración experimental, se proporcionan los ejemplos reales disponibles como contexto en el prompt y se solicitan variaciones del mismo estilo y tema. Se genera un excedente de 3x: por cada muestra deseada, se solicitan 3 candidatos. Este excedente permite que los filtros geométricos seleccionen las mejores muestras de un conjunto amplio de candidatos.
 
@@ -73,7 +75,7 @@ El \textbf{nivel 1} evalúa la distancia euclidiana al ancla más cercana de la 
 
 Las puntuaciones de los niveles activos se combinan mediante media geométrica, y se seleccionan los $N$ mejores candidatos por ranking, donde $N$ es el número de muestras deseadas. El parámetro \texttt{filter\_level} controla cuántos niveles se activan: un valor de 1 utiliza solo la distancia, un valor de 4 activa todos los criterios.
 
-Un hallazgo relevante de esta investigación es que el nivel 1 (solo distancia euclidiana) produce los mejores resultados. La adición de criterios no mejora la selección; al contrario, la combinación de múltiples métricas introduce ruido que degrada la calidad de la selección. Este resultado es consistente con evidencia reciente de que la calidad de la representación, y no la complejidad del algoritmo de selección, es el factor determinante en la poda de datos \cite{du2025disentangling}.
+Un hallazgo relevante de esta investigación es que el nivel 1 (solo distancia euclidiana) produce los mejores resultados. La adición de criterios no mejora la selección; al contrario, la combinación de múltiples métricas degrada la calidad de la selección. Este resultado se analiza teóricamente en la Sección~\ref{sec:analisis_complejidad}, donde se identifican tres mecanismos explicativos: la correlación entre métricas en espacios normalizados, la reducción de diversidad por intersección restrictiva, y la inestabilidad de LOF en régimen de pocos ejemplos. La conclusión es consistente con evidencia reciente de que la calidad de la representación, y no la complejidad del algoritmo de selección, es el factor determinante en la poda de datos \cite{du2025disentangling}.
 
 \subsection{Filtro Combinado}
 \label{subsec:filtro_combinado}
@@ -183,7 +185,7 @@ La evaluación emplea SpaCy para el reconocimiento de entidades y la biblioteca 
 \section{Diseño Experimental}
 \label{sec:diseno_experimental}
 
-La investigación comprende 6 experimentos complementarios que abordan las hipótesis planteadas en el Capítulo~\ref{ch:hipotesis}.
+La investigación comprende 7 experimentos complementarios que abordan las hipótesis planteadas en el Capítulo~\ref{ch:hipotesis}.
 
 El \textbf{experimento principal} evalúa 3,675 configuraciones: 7 conjuntos de datos $\times$ 3 valores de n-shot $\times$ 5 clasificadores $\times$ 7 métodos $\times$ 5 semillas. Los 7 métodos son: sin aumentación, SMOTE, sobremuestreo aleatorio, EDA, traducción inversa, filtrado binario (cascada nivel 1 con peso uniforme) y ponderación suave (cascada nivel 1 con pesos por calidad). Este experimento proporciona la evidencia principal para la hipótesis H1 y sus componentes H1a, H1b y H1d.
 
@@ -197,4 +199,6 @@ La \textbf{evaluación en conjuntos nuevos} abarca 81 configuraciones: 3 conjunt
 
 La \textbf{mejora iterativa de prompts} evalúa 120 configuraciones: 6 conjuntos $\times$ 2 filtros $\times$ 5 iteraciones $\times$ 2 comparaciones (vs SMOTE, vs pasada única). Este experimento investiga si la retroalimentación de los filtros al proceso de generación mejora las tasas de aceptación y el rendimiento final.
 
-En total, la evaluación experimental comprende más de 6,300 configuraciones individuales, proporcionando evidencia estadística robusta para las conclusiones de esta investigación.
+La \textbf{evaluación multi-LLM} comprende 441 configuraciones: 21 datasets $\times$ 3 clasificadores lineales $\times$ 3 métodos (sin aumentación, SMOTE, ponderación suave) $\times$ 5 modelos generativos. Este experimento evalúa si las ganancias del filtrado geométrico son independientes del modelo de lenguaje utilizado para la generación.
+
+En total, la evaluación experimental comprende más de 6,700 configuraciones individuales, proporcionando evidencia estadística robusta para las conclusiones de esta investigación.

@@ -1,0 +1,27 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Macro F1 por clase individual para conjuntos representativos con 10 ejemplos por clase. Valores promediados sobre 3 clasificadores lineales (regresión logística, SVC, Ridge). $\Delta$ indica mejora de la ponderación suave respecto a SMOTE.}
+\label{tab:per_class_analysis}
+\begin{tabular}{llrccr}
+\toprule
+\textbf{Dataset} & \textbf{Clase} & \textbf{N test} & \textbf{SMOTE} & \textbf{Pond. suave} & \textbf{$\Delta$} \\
+\midrule
+20Newsgroups & alt.atheism & 107 & 50.9 & 65.9 & +15.0 \\
+ & comp.graphics & 117 & 90.8 & 91.3 & +0.5 \\
+ & sci.med & 136 & 79.6 & 84.5 & +4.9 \\
+ & soc.religion.ch & 140 & 73.8 & 81.2 & +7.4 \\
+\midrule
+Emotion & anger & 200 & 27.8 & 44.6 & +16.9 \\
+ & fear & 200 & 48.8 & 59.0 & +10.2 \\
+ & joy & 200 & 29.4 & 42.6 & +13.3 \\
+ & love & 159 & 33.2 & 40.8 & +7.6 \\
+ & sadness & 200 & 41.3 & 42.3 & +1.0 \\
+ & surprise & 66 & 23.4 & 30.3 & +6.9 \\
+\midrule
+Hate Speech Davidson & hate\_speech & 18 & 10.2 & 14.9 & +4.7 \\
+ & neither & 85 & 71.4 & 67.7 & -3.6 \\
+ & offensive & 397 & 73.3 & 86.3 & +13.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
