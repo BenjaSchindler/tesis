@@ -51,14 +51,14 @@ Las 3 líneas base modernas producen resultados negativos respecto a SMOTE. La p
 
 Un resultado notable es que la ausencia de aumentación supera a SMOTE por +0.64 puntos porcentuales ($p < 0.05$). Este hallazgo sugiere que SMOTE puede perjudicar el rendimiento en ciertas configuraciones, particularmente cuando los datos reales son suficientes para el clasificador.
 
-\section{Análisis por Número de Disparos}
+\section{Análisis por Número de Ejemplos por Clase}
 \label{sec:analisis_nshot}
 
 La Tabla~\ref{tab:modern_nshot} presenta el desglose del rendimiento por número de ejemplos por clase.
 
 \input{Tables/tab_modern_nshot_breakdown}
 
-El patrón de retornos decrecientes es pronunciado. Con 10 ejemplos por clase, la ponderación suave alcanza +4.52 puntos porcentuales ($d = 1.18$, tasa de victoria del 88.6\%). Este tamaño de efecto se clasifica como muy grande. Con 25 ejemplos, la mejora se reduce a +1.88 puntos porcentuales pero la tasa de victoria alcanza su máximo del 97.1\%, indicando mejora casi universal. Con 50 ejemplos, la mejora es de solo +0.34 puntos porcentuales y no alcanza significancia estadística ($p = 0.16$).
+El patrón de retornos decrecientes es pronunciado. Con 10 ejemplos por clase, la ponderación suave alcanza +4.89 puntos porcentuales ($d = 1.48$, tasa de victoria del 90.5\%). Este tamaño de efecto se clasifica como muy grande. Con 25 ejemplos, la mejora se reduce a +2.17 puntos porcentuales ($d = 1.57$) con tasa de victoria del 95.2\%, indicando mejora casi universal. Con 50 ejemplos, la mejora se reduce a +0.76 puntos porcentuales ($d = 0.80$, tasa de victoria del 74.6\%).
 
 Este patrón tiene una interpretación directa. Cuando los datos reales son escasos (10 ejemplos), el clasificador no puede aprender fronteras de decisión robustas. Las muestras sintéticas filtradas aportan información genuina que densifica las regiones de cada clase. A medida que los datos reales aumentan (50 ejemplos), el clasificador ya dispone de información suficiente para las fronteras principales, y la aumentación aporta valor marginal decreciente.
 
@@ -75,14 +75,14 @@ Las Figuras~\ref{fig:f1_vs_nshot} y~\ref{fig:delta_by_nshot} ilustran esta tende
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{Figures/fig_f1_vs_nshot.png}
-\caption{Macro F1 absoluto en función del número de disparos para los principales métodos. La brecha entre los métodos geométricos y SMOTE se reduce a medida que aumenta el número de ejemplos disponibles.}
+\caption{Macro F1 absoluto en función del número de ejemplos por clase para los principales métodos. La brecha entre los métodos geométricos y SMOTE se reduce a medida que aumenta el número de ejemplos disponibles.}
 \label{fig:f1_vs_nshot}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{Figures/fig_delta_by_nshot.png}
-\caption{Delta respecto a SMOTE por número de disparos. La mejora del filtrado geométrico disminuye de +4.52pp (10-shot) a +0.34pp (50-shot), confirmando que el método es más valioso cuando los datos son más escasos.}
+\caption{Delta respecto a SMOTE por número de ejemplos por clase. La mejora del filtrado geométrico disminuye con más datos disponibles, confirmando que el método es más valioso cuando los datos son más escasos.}
 \label{fig:delta_by_nshot}
 \end{figure}
 
@@ -93,7 +93,7 @@ La Tabla~\ref{tab:modern_classifier} desglosa los resultados por tipo de clasifi
 
 \input{Tables/tab_modern_classifier_breakdown}
 
-Los clasificadores lineales aprovechan mejor la aumentación filtrada. El SVC lineal obtiene +2.99 puntos porcentuales ($d = 1.00$, tamaño de efecto grande). El clasificador Ridge alcanza +2.69 puntos porcentuales ($d = 1.03$). La regresión logística produce +1.98 puntos porcentuales ($d = 0.79$). El MLP obtiene +2.16 puntos porcentuales ($d = 0.73$). El bosque aleatorio produce +1.42 puntos porcentuales, pero sin significancia estadística ($p = 0.11$).
+Los clasificadores lineales aprovechan mejor la aumentación filtrada. El SVC lineal obtiene +2.98 puntos porcentuales ($d = 1.02$, tamaño de efecto grande). El clasificador Ridge alcanza +2.74 puntos porcentuales ($d = 1.04$). La regresión logística produce +2.09 puntos porcentuales ($d = 0.82$).
 
 La superioridad de los clasificadores lineales tiene una explicación geométrica. Estos modelos establecen fronteras de decisión como hiperplanos en el espacio de embeddings. Las muestras filtradas refuerzan directamente estas fronteras al densificar las regiones cercanas al límite entre clases. Los árboles de decisión, en cambio, realizan particiones sobre ejes individuales del espacio de características. Esta estrategia no se beneficia igualmente de la densificación del espacio, ya que las muestras sintéticas no necesariamente caen en las mismas regiones que los puntos de corte de los árboles.
 
@@ -177,7 +177,7 @@ La Tabla~\ref{tab:nclasses_pattern} presenta la relación entre el número de cl
 
 \input{Tables/tab_nclasses_pattern}
 
-Los conjuntos de 6 clases (emotion, trec6) obtienen las mayores ganancias: +4.55 a +5.42 puntos porcentuales. Los problemas binarios (sms\_spam, 2 clases) también se benefician con +3.18 puntos porcentuales. A medida que el número de clases aumenta, las ganancias disminuyen: 14 clases (dbpedia14) obtiene +1.32 puntos porcentuales, 20 clases (20newsgroups\_20class) +0.87 puntos porcentuales. Con 77 clases (banking77), el resultado es negativo: $-0.99$ puntos porcentuales. Con 150 clases (clinc150), el resultado es neutro: +0.01 puntos porcentuales.
+Los conjuntos de 6 clases (emotion, trec6) obtienen las mayores ganancias: +5.42 puntos porcentuales con tasa de victoria del 100\%. Los problemas binarios (sms\_spam, 2 clases) también se benefician con +3.18 puntos porcentuales. A medida que el número de clases aumenta, las ganancias disminuyen: 14 clases (dbpedia14) obtiene +0.40 puntos porcentuales, 20 clases (20newsgroups\_20class) +2.36 puntos porcentuales. Con 77 clases (banking77), el resultado es negativo: $-0.99$ puntos porcentuales. Con 150 clases (clinc150), el resultado es neutro: +0.01 puntos porcentuales.
 
 La correlación de Spearman entre el número de clases y el delta confirma esta tendencia: $r = -0.260$ ($p = 0.003$). A mayor número de clases, menor la ganancia del filtrado geométrico. La explicación reside en la fragmentación del espacio de embeddings. Con muchas clases, cada clase ocupa una región más pequeña del espacio. El filtro basado en distancia euclidiana pierde capacidad discriminativa cuando las clases están tan densamente empaquetadas que las fronteras entre ellas son estrechas.
 
@@ -188,7 +188,7 @@ La Tabla~\ref{tab:ner_results} presenta los resultados de la extensión a NER so
 
 \input{Tables/tab_ner_results}
 
-La aumentación de datos para NER con recursos limitados ha sido estudiada previamente mediante modelado de entidades enmascaradas \cite{zhou2022melm}, pero sin mecanismos de filtrado geométrico post-generación. Los resultados de la extensión a NER confirman la generalización del filtrado geométrico entre tareas. La cascada nivel 1 alcanza +9.26 puntos porcentuales sobre la línea base sin aumentación ($p = 0.0003$ con prueba t pareada, $p_{Bonf} = 0.002$ con corrección por 7 comparaciones, $d = 2.05$), con tasa de victoria del 100\%. El LOF relajado obtiene +9.28 puntos porcentuales ($p_{Bonf} = 0.003$, $d = 1.91$), en empate virtual con la cascada. Todos los filtros excepto el filtro combinado alcanzan significancia estadística tras corrección de Bonferroni ($p_{Bonf} < 0.004$ en todos los casos, $d > 1.88$). El filtro combinado no es significativo ($p = 0.29$, $d = 0.38$), consistente con sus tasas de aceptación del 0\% en la mayoría de configuraciones. Las pruebas de Wilcoxon confirman estos resultados ($p_{Bonf} = 0.027$ para todos los filtros significativos).
+La aumentación de datos para NER con recursos limitados ha sido estudiada previamente mediante modelado de entidades enmascaradas \cite{zhou2022melm}, pero sin mecanismos de filtrado geométrico post-generación. Los resultados de la extensión a NER confirman la generalización del filtrado geométrico entre tareas. La cascada nivel 1 alcanza +9.61 puntos porcentuales sobre la línea base sin aumentación ($p = 0.0003$ con prueba t pareada, $p_{Bonf} = 0.002$ con corrección por 7 comparaciones, $d = 2.05$), con tasa de victoria del 100\%. El LOF relajado obtiene +9.28 puntos porcentuales ($p_{Bonf} = 0.003$, $d = 1.91$), en empate virtual con la cascada. Todos los filtros excepto el filtro combinado alcanzan significancia estadística tras corrección de Bonferroni ($p_{Bonf} < 0.004$ en todos los casos, $d > 1.88$). El filtro combinado no es significativo ($p = 0.29$, $d = 0.38$), consistente con sus tasas de aceptación del 0\% en la mayoría de configuraciones. Las pruebas de Wilcoxon confirman estos resultados ($p_{Bonf} = 0.027$ para todos los filtros significativos).
 
 La ganancia del filtrado sobre la generación sin filtrar es de +0.86 puntos porcentuales para cascada nivel 1 vs ningún filtro, aunque esta diferencia no alcanza significancia estadística ($p = 0.27$, $d = 0.40$) con solo 9 configuraciones. La dirección del efecto es consistente (tasa de victoria del 66.7\%), sugiriendo que la potencia estadística es insuficiente para detectar una diferencia de esta magnitud con $N = 9$.
 
@@ -260,13 +260,13 @@ Las validaciones metodológicas --- incluyendo la verificación de equivalencia 
 \section{Estadísticas Geométricas del Filtrado}
 \label{sec:geometric_statistics}
 
-Para cuantificar el efecto del filtrado geométrico sobre la estructura del espacio de embeddings, se computan 6 métricas geométricas para 4 condiciones de aumentación: solo datos reales, datos reales más muestras LLM sin filtrar, datos reales más muestras LLM filtradas, y datos reales más muestras SMOTE. Las métricas se calculan sobre las 21 configuraciones de dataset.
+Para cuantificar el efecto del filtrado geométrico sobre la estructura del espacio de embeddings, se computan 6 métricas geométricas para 4 condiciones de aumentación: solo datos reales, datos reales más muestras LLM sin filtrar, datos reales más muestras LLM filtradas, y datos reales más muestras SMOTE. Las métricas se calculan sobre las 21 configuraciones de conjunto de datos.
 
 La Tabla~\ref{tab:geometric_statistics} presenta los promedios de las 6 métricas.
 
 \input{Tables/tab_geometric_statistics}
 
-El filtrado geométrico reduce la distancia intra-clase promedio de 0.850 (sin filtrar) a 0.822 ($p < 0.001$), indicando clústeres más compactos. Simultáneamente, aumenta la separación inter-clase de 0.571 a 0.616 ($p < 0.001$), lo que produce clases más distinguibles. El silhouette score mejora de 0.075 a 0.085 ($p = 0.029$) y el índice Davies-Bouldin disminuye de 3.822 a 3.370, confirmando una mejor estructura de clústeres.
+El filtrado geométrico reduce la distancia intra-clase promedio de 0.850 (sin filtrar) a 0.822 ($p < 0.001$), indicando clústeres más compactos. Simultáneamente, aumenta la separación inter-clase de 0.571 a 0.616 ($p < 0.001$), lo que produce clases más distinguibles. El \textit{silhouette score} (coeficiente de silueta) mejora de 0.075 a 0.085 ($p = 0.029$) y el índice Davies-Bouldin disminuye de 3.822 a 3.370, confirmando una mejor estructura de clústeres.
 
 Un resultado notable es que SMOTE obtiene el silhouette score más alto (0.090) y la menor distancia intra-clase (0.762). Esto se explica porque SMOTE interpola linealmente entre vecinos de la misma clase, produciendo muestras que por construcción son compactas alrededor de los datos existentes. Sin embargo, su cobertura del 92.4\% contrasta con el 15.9\% del filtrado, lo que indica que SMOTE satura las regiones ya conocidas sin explorar nuevas zonas del espacio de representación. Las muestras LLM filtradas, con menor cobertura pero mayor separación inter-clase, aportan diversidad genuina que los clasificadores lineales aprovechan mejor, como lo demuestran los resultados de clasificación superiores reportados en las secciones anteriores.
 
@@ -274,7 +274,7 @@ La Tabla~\ref{tab:geometric_per_dataset} desglosa el silhouette score y el índi
 
 \input{Tables/tab_geometric_per_dataset}
 
-El filtrado mejora el silhouette en 15 de 21 configuraciones (71\%). Las mayores ganancias se obtienen con 10 ejemplos por clase, donde el espacio de embeddings está más disperso y el filtrado aporta mayor valor de estructuración. Con 50 ejemplos, el efecto se atenúa o invierte en algunos datasets, consistente con el patrón de retornos decrecientes observado en los resultados de clasificación.
+El filtrado mejora el silhouette en 15 de 21 configuraciones (71\%). Las mayores ganancias se obtienen con 10 ejemplos por clase, donde el espacio de embeddings está más disperso y el filtrado aporta mayor valor de estructuración. Con 50 ejemplos, el efecto se atenúa o invierte en algunos conjuntos de datos, consistente con el patrón de retornos decrecientes observado en los resultados de clasificación.
 
 \section{Visualización del Espacio de Embeddings}
 \label{sec:visualizacion_embeddings}
@@ -327,15 +327,15 @@ La Figura~\ref{fig:scores_20news} muestra la distribución de puntuaciones del f
 \section{Robustez respecto al Modelo de Lenguaje}
 \label{sec:robustez_llm}
 
-Los experimentos anteriores emplean un solo modelo generativo (Gemini 3 Flash). Para evaluar si las ganancias del filtrado geométrico dependen del LLM específico, se replica el experimento de ponderación suave con 4 modelos adicionales: GPT-5-mini (OpenAI), Claude 4.5 Haiku (Anthropic), Kimi K2.5 (Moonshot) y GLM-5 (Zhipu). Estos modelos cubren 3 proveedores closed-source y 2 de código abierto, con arquitecturas y procesos de entrenamiento diferentes.
+Los experimentos anteriores emplean un solo modelo generativo (Gemini 3 Flash). Para evaluar si las ganancias del filtrado geométrico dependen del LLM específico, se replica el experimento de ponderación suave con 4 modelos adicionales: GPT-5-mini (OpenAI), Claude 4.5 Haiku (Anthropic), Kimi K2.5 (Moonshot) y GLM-5 (Zhipu). Estos modelos cubren 3 proveedores de código cerrado (\textit{closed-source}) y 2 de código abierto, con arquitecturas y procesos de entrenamiento diferentes.
 
-El diseño comprende 441 evaluaciones: 21 configuraciones de dataset $\times$ 3 clasificadores lineales (regresión logística, SVC, Ridge) $\times$ 3 métodos (sin aumentación, SMOTE, ponderación suave) $\times$ 5 LLMs, con semilla fija. Las generaciones de cada modelo se almacenan en caché independiente por proveedor.
+El diseño comprende 441 evaluaciones: 21 configuraciones de conjunto de datos $\times$ 3 clasificadores lineales (regresión logística, SVC, Ridge) $\times$ 3 métodos (sin aumentación, SMOTE, ponderación suave) $\times$ 5 LLMs, con semilla fija. Las generaciones de cada modelo se almacenan en caché independiente por proveedor.
 
 \subsection{Rechazos por Filtros de Contenido}
 
 Los modelos con alineación de seguridad rechazan generar contenido para ciertas clases sensibles. La clase ``hate\_speech'' del conjunto hate\_speech\_davidson es rechazada por los 5 modelos evaluados en al menos una configuración. Kimi K2.5 rechaza adicionalmente contenido religioso (``soc.religion.christian'' en 20newsgroups) y mensajes SMS clasificados como legítimos cuyo contexto incluye contenido adulto. Claude 4.5 Haiku rechaza contenido ofensivo y político (``talk.politics.guns''). Estas negativas producen conjuntos de entrenamiento incompletos que penalizan artificialmente el rendimiento del filtrado geométrico para esos modelos.
 
-Para garantizar una comparación justa, se excluyen los 9 datasets donde al menos un LLM produjo menos de 20 textos en alguna clase. El análisis ajustado opera sobre 12 configuraciones de dataset $\times$ 3 clasificadores = 36 evaluaciones por LLM.
+Para garantizar una comparación justa, se excluyen las 9 configuraciones donde al menos un LLM produjo menos de 20 textos en alguna clase. El análisis ajustado opera sobre 12 configuraciones de conjunto de datos $\times$ 3 clasificadores = 36 evaluaciones por LLM.
 
 \subsection{Resultados Ajustados por Rechazo}
 
@@ -345,10 +345,19 @@ La Tabla~\ref{tab:multi_llm} presenta los resultados ajustados.
 
 Los 5 modelos producen mejoras significativas respecto a SMOTE tras corrección de Bonferroni ($k = 5$). Gemini 3 Flash obtiene la mayor ganancia (+2.31 puntos porcentuales, $d = 0.92$, tasa de victoria del 94.4\%), seguido de GPT-5-mini (+2.11, $d = 0.85$, 88.9\%), Claude 4.5 Haiku (+1.66, $d = 0.73$, 83.3\%), GLM-5 (+1.64, $d = 0.49$, 86.1\%) y Kimi K2.5 (+1.49, $d = 0.63$, 80.6\%). La dispersión entre el mejor y el peor modelo es de 0.82 puntos porcentuales.
 
-El test de Friedman no detecta un efecto significativo del LLM sobre el rendimiento ($\chi^2 = 8.15$, $p = 0.086$). La ausencia de significancia indica que las diferencias entre modelos son atribuibles a variabilidad aleatoria, no a una superioridad sistemática de algún LLM. La correlación inter-LLM media, medida por $\tau$ de Kendall sobre los rankings de mejora por dataset, es de 0.59, indicando acuerdo sustancial entre modelos sobre qué configuraciones se benefician más del filtrado.
+El test de Friedman no detecta un efecto significativo del LLM sobre el rendimiento ($\chi^2 = 8.15$, $p = 0.086$). La ausencia de significancia indica que las diferencias entre modelos son atribuibles a variabilidad aleatoria, no a una superioridad sistemática de algún LLM. La correlación inter-LLM media, medida por $\tau$ de Kendall sobre los rankings de mejora por conjunto de datos, es de 0.59, indicando acuerdo sustancial entre modelos sobre qué configuraciones se benefician más del filtrado.
 
 La Tabla~\ref{tab:multi_llm_raw} presenta los resultados sin ajustar, incluyendo las 63 configuraciones por LLM. Kimi K2.5, con 4 clases rechazadas, obtiene +0.84 puntos porcentuales sin corrección por rechazo, frente a +1.49 con corrección. La diferencia confirma que las penalizaciones por rechazo de contenido distorsionan la evaluación comparativa.
 
 \input{Tables/tab_multi_llm_raw}
+
+La Figura~\ref{fig:multi_llm} visualiza la ganancia de cada modelo respecto a SMOTE.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{Figures/fig_multi_llm_comparison.png}
+\caption{Ganancia de rendimiento por modelo de lenguaje (resultados ajustados por rechazo). Todos los modelos superan significativamente a SMOTE. La dispersión entre modelos es reducida (0.82 pp), confirmando que el método es agnóstico al LLM.}
+\label{fig:multi_llm}
+\end{figure}
 
 Estos resultados confirman que el filtrado geométrico con ponderación suave produce mejoras significativas independientemente del modelo generativo utilizado. La consistencia entre 5 modelos de 4 proveedores distintos, con arquitecturas y datos de entrenamiento diferentes, respalda la caracterización del método como agnóstico al LLM.

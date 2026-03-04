@@ -1,5 +1,0 @@
-MBTI Robust Experiment Report
-Generated: 2026-02-07T02:17:05.222065
-Seeds: [42, 123, 456]
-Threshold: 150
-Total results: 36

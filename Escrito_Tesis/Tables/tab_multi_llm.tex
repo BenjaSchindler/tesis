@@ -1,17 +1,17 @@
 \begin{table}[htbp]
 \centering
 \small
-\caption{Rendimiento del filtrado geom\'etrico con ponderaci\'on suave (cascade L1) usando 5 LLMs distintos. $\Delta$ vs SMOTE y tasa de victoria promediados sobre 12 configuraciones $\times$ 3 clasificadores lineales. Se excluyen datasets donde alg\'un LLM rechaz\'o la generaci\'on por filtros de contenido. $p$ corregido con Bonferroni ($k=5$).}
+\caption{Rendimiento del filtrado geom\'etrico con ponderaci\'on suave (cascada nivel 1) usando 5 LLMs distintos. $\Delta$ vs SMOTE y tasa de victoria promediados sobre 12 configuraciones $\times$ 3 clasificadores lineales. Se excluyen datasets donde alg\'un LLM rechaz\'o la generaci\'on por filtros de contenido. $p$ corregido con Bonferroni ($k=5$).}
 \label{tab:multi_llm}
 \begin{tabular}{llcccccc}
 \toprule
 \textbf{LLM} & \textbf{Tipo} & \textbf{F1 Macro} & \textbf{$\Delta$ SMOTE} & \textbf{IC 95\%} & \textbf{$p_{\text{Bonf}}$} & \textbf{$d$} & \textbf{Victoria} \\
 \midrule
-Claude 4.5 Haiku & Closed & 76.8 & +1.66$^{*}$ & [+1.0, +2.5] & $<$0.001 & 0.73 & 83.3\% \\
-\textbf{Gemini 3 Flash} & Closed & 77.5 & \textbf{+2.31}$^{*}$ & [+1.6, +3.1] & $<$0.001 & 0.92 & 94.4\% \\
-GLM-5 & OSS & 76.8 & +1.64$^{*}$ & [+0.6, +2.7] & 0.027 & 0.49 & 86.1\% \\
-GPT-5-mini & Closed & 77.3 & +2.11$^{*}$ & [+1.4, +2.9] & $<$0.001 & 0.85 & 88.9\% \\
-Kimi K2.5 & OSS & 76.7 & +1.49$^{*}$ & [+0.8, +2.3] & 0.003 & 0.63 & 80.6\% \\
+Claude 4.5 Haiku & Cerrado & 76.8 & +1.66$^{*}$ & [+1.0, +2.5] & $<$0.001 & 0.73 & 83.3\% \\
+\textbf{Gemini 3 Flash} & Cerrado & 77.5 & \textbf{+2.31}$^{*}$ & [+1.6, +3.1] & $<$0.001 & 0.92 & 94.4\% \\
+GLM-5 & Abierto & 76.8 & +1.64$^{*}$ & [+0.6, +2.7] & 0.027 & 0.49 & 86.1\% \\
+GPT-5-mini & Cerrado & 77.3 & +2.11$^{*}$ & [+1.4, +2.9] & $<$0.001 & 0.85 & 88.9\% \\
+Kimi K2.5 & Abierto & 76.7 & +1.49$^{*}$ & [+0.8, +2.3] & 0.003 & 0.63 & 80.6\% \\
 \bottomrule
 \end{tabular}
 \par\smallskip

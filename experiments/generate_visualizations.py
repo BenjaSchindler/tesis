@@ -68,18 +68,18 @@ METHOD_COLORS = {
 }
 
 METHOD_LABELS = {
-    "no_augmentation": "No Augmentation",
+    "no_augmentation": "Sin Aumentaci\u00f3n",
     "smote": "SMOTE",
-    "random_oversample": "Random Oversample",
+    "random_oversample": "Sobremuestreo Aleatorio",
     "eda": "EDA",
-    "back_translation": "Back-Translation",
-    "binary_filter": "Binary Filter",
-    "soft_weighted": "Soft Weighted",
+    "back_translation": "Retrotraducci\u00f3n",
+    "binary_filter": "Filtro Binario",
+    "soft_weighted": "Ponderaci\u00f3n Suave",
 }
 
 DATASET_LABELS = {
     "sms_spam": "SMS Spam (2)",
-    "hate_speech_davidson": "Hate Speech (3)",
+    "hate_speech_davidson": "Discurso de Odio (3)",
     "20newsgroups": "20News-4 (4)",
     "ag_news": "AG News (4)",
     "emotion": "Emotion (6)",
@@ -142,7 +142,7 @@ def plot_heatmap(results):
         cbar_kws={"label": r"$\Delta$ F1 vs SMOTE (pp)"},
         linewidths=0.5, ax=ax,
     )
-    ax.set_title("Augmentation Method Performance vs SMOTE Baseline")
+    ax.set_title("Rendimiento por M\u00e9todo de Aumentaci\u00f3n vs L\u00ednea Base SMOTE")
     ax.set_xlabel("")
     ax.set_ylabel("")
     plt.xticks(rotation=25, ha="right")
@@ -180,9 +180,9 @@ def plot_f1_vs_nshot(results):
         ax.plot(nshots, means, marker="o", color=color, label=label, linewidth=2)
         ax.fill_between(nshots, ci_low, ci_high, alpha=0.15, color=color)
 
-    ax.set_xlabel("Samples per Class (N-shot)")
-    ax.set_ylabel("Macro F1 Score")
-    ax.set_title("Performance vs Training Set Size")
+    ax.set_xlabel("Muestras por Clase (N-shot)")
+    ax.set_ylabel("Puntuaci\u00f3n Macro F1")
+    ax.set_title("Rendimiento vs Tama\u00f1o del Conjunto de Entrenamiento")
     ax.set_xticks(nshots)
     ax.legend(loc="lower right")
     ax.grid(alpha=0.3)
@@ -238,9 +238,9 @@ def plot_boxplot_deltas(results):
         patch.set_facecolor(color)
         patch.set_alpha(0.7)
 
-    ax.axhline(0, color="red", linestyle="--", alpha=0.6, linewidth=1.5, label="SMOTE baseline")
+    ax.axhline(0, color="red", linestyle="--", alpha=0.6, linewidth=1.5, label="L\u00ednea base SMOTE")
     ax.set_ylabel(r"$\Delta$ F1 vs SMOTE (pp)")
-    ax.set_title("Distribution of Performance Gains Across All Configurations")
+    ax.set_title("Distribuci\u00f3n de Ganancias de Rendimiento")
     ax.legend(loc="upper left")
     plt.xticks(rotation=20, ha="right")
     ax.grid(axis="y", alpha=0.3)
@@ -300,9 +300,9 @@ def plot_classifier_comparison(results):
                       label=label, color=color, alpha=0.8, capsize=4)
 
     ax.axhline(0, color="red", linestyle="--", alpha=0.5, linewidth=1)
-    ax.set_xlabel("Classifier")
+    ax.set_xlabel("Clasificador")
     ax.set_ylabel(r"$\Delta$ F1 vs SMOTE (pp)")
-    ax.set_title("Performance Gain by Classifier")
+    ax.set_title("Ganancia de Rendimiento por Clasificador")
     ax.set_xticks(x)
     ax.set_xticklabels([clf_labels[c] for c in classifiers])
     ax.legend()
@@ -357,14 +357,14 @@ def plot_delta_by_nshot(results):
     for i, (bar, wr) in enumerate(zip(bars, win_rates)):
         y = bar.get_height()
         ax.text(bar.get_x() + bar.get_width() / 2, y + errs[i] + 0.15,
-                f"{wr:.0f}% win", ha="center", va="bottom", fontsize=10, fontweight="bold")
+                f"{wr:.0f}% vic.", ha="center", va="bottom", fontsize=10, fontweight="bold")
 
     ax.axhline(0, color="red", linestyle="--", alpha=0.5, linewidth=1)
-    ax.set_xlabel("Samples per Class (N-shot)")
+    ax.set_xlabel("Muestras por Clase (N-shot)")
     ax.set_ylabel(r"$\Delta$ F1 vs SMOTE (pp)")
-    ax.set_title("Soft Weighted Improvement by Training Set Size")
+    ax.set_title("Mejora de Ponderaci\u00f3n Suave por Tama\u00f1o de Entrenamiento")
     ax.set_xticks(range(len(nshots)))
-    ax.set_xticklabels([f"{ns}-shot" for ns in nshots])
+    ax.set_xticklabels([f"{ns} muestras/clase" for ns in nshots])
     ax.grid(axis="y", alpha=0.3)
 
     path = VIZ_DIR / "fig5_delta_by_nshot.png"
@@ -472,21 +472,21 @@ def plot_tsne_scatter(dataset_name="20newsgroups_10shot"):
     if len(rejected_emb) > 0:
         start = n_real + n_kept
         ax.scatter(emb_2d[start:, 0], emb_2d[start:, 1],
-                   c="#CC3311", marker="x", s=25, alpha=0.35, label=f"Rejected ({len(rejected_emb)})", zorder=1)
+                   c="#CC3311", marker="x", s=25, alpha=0.35, label=f"Rechazados ({len(rejected_emb)})", zorder=1)
 
     # Kept
     ax.scatter(emb_2d[n_real:n_real + n_kept, 0], emb_2d[n_real:n_real + n_kept, 1],
-               c="#228833", marker="^", s=40, alpha=0.6, label=f"Kept ({n_kept})", zorder=2)
+               c="#228833", marker="^", s=40, alpha=0.6, label=f"Aceptados ({n_kept})", zorder=2)
 
     # Real (foreground)
     ax.scatter(emb_2d[:n_real, 0], emb_2d[:n_real, 1],
-               c="#4477AA", marker="o", s=50, alpha=0.8, label=f"Real ({n_real})", zorder=3)
+               c="#4477AA", marker="o", s=50, alpha=0.8, label=f"Reales ({n_real})", zorder=3)
 
     ax.legend(loc="best", framealpha=0.9)
     ds_label = DATASET_LABELS.get(get_dataset_base(dataset_name), dataset_name)
-    ax.set_title(f"t-SNE: Real vs Filtered Synthetic Samples\n{ds_label}, {n_shot}-shot")
-    ax.set_xlabel("t-SNE Dimension 1")
-    ax.set_ylabel("t-SNE Dimension 2")
+    ax.set_title(f"t-SNE: Muestras Reales vs Sint\u00e9ticas Filtradas\n{ds_label}, {n_shot}-shot")
+    ax.set_xlabel("t-SNE dim. 1")
+    ax.set_ylabel("t-SNE dim. 2")
 
     path = VIZ_DIR / f"fig6_tsne_{dataset_name}.png"
     plt.savefig(path)
@@ -555,20 +555,79 @@ def plot_score_distribution(dataset_name="20newsgroups_10shot"):
     bins = np.linspace(0, 1, 35)
 
     ax.hist(all_rejected_scores, bins=bins, alpha=0.6, color="#CC3311",
-            label=f"Rejected (n={len(all_rejected_scores)})", edgecolor="white")
+            label=f"Rechazados (n={len(all_rejected_scores)})", edgecolor="white")
     ax.hist(all_kept_scores, bins=bins, alpha=0.7, color="#228833",
-            label=f"Kept (n={len(all_kept_scores)})", edgecolor="white")
+            label=f"Aceptados (n={len(all_kept_scores)})", edgecolor="white")
 
     ax.axvline(np.mean(all_kept_scores), color="#228833", linestyle="--", linewidth=2, alpha=0.8)
     ax.axvline(np.mean(all_rejected_scores), color="#CC3311", linestyle="--", linewidth=2, alpha=0.8)
 
-    ax.set_xlabel("Cascade L1 Quality Score (distance-based)")
-    ax.set_ylabel("Count")
+    ax.set_xlabel("Puntaje Cascade L1 (basado en distancia)")
+    ax.set_ylabel("Frecuencia")
     ds_label = DATASET_LABELS.get(get_dataset_base(dataset_name), dataset_name)
-    ax.set_title(f"Quality Score Distribution: Kept vs Rejected\n{ds_label}, {n_shot}-shot")
+    ax.set_title(f"Distribuci\u00f3n de Puntajes: Aceptados vs Rechazados\n{ds_label}, {n_shot}-shot")
     ax.legend()
 
     path = VIZ_DIR / f"fig7_score_dist_{dataset_name}.png"
+    plt.savefig(path)
+    plt.close()
+    print(f"  Saved: {path}")
+
+
+# ============================================================================
+# FIG 8: MULTI-LLM COMPARISON (horizontal bar chart)
+# ============================================================================
+
+def plot_multi_llm_comparison():
+    """Horizontal bar chart: delta vs SMOTE per LLM (adjusted results)."""
+    analysis_path = PROJECT_ROOT / "results" / "multi_llm" / "analysis.json"
+    if not analysis_path.exists():
+        print("  Skipping multi-LLM figure (analysis.json not found)")
+        return
+
+    with open(analysis_path) as f:
+        analysis = json.load(f)
+
+    adjusted = analysis["adjusted_results"]
+
+    # Sort by delta descending
+    llms = sorted(adjusted.keys(), key=lambda k: adjusted[k]["delta_pp"], reverse=True)
+
+    deltas = [adjusted[k]["delta_pp"] for k in llms]
+    ci_lows = [adjusted[k]["ci_95"][0] for k in llms]
+    ci_highs = [adjusted[k]["ci_95"][1] for k in llms]
+    win_rates = [adjusted[k]["win_rate"] * 100 for k in llms]
+    bonf_ps = [adjusted[k]["bonf_p"] for k in llms]
+
+    # Error bars (asymmetric)
+    xerr_low = [d - cl for d, cl in zip(deltas, ci_lows)]
+    xerr_high = [ch - d for d, ch in zip(deltas, ci_highs)]
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    y = np.arange(len(llms))
+
+    colors = ["#228833" if p < 0.05 else "#999999" for p in bonf_ps]
+
+    bars = ax.barh(y, deltas, xerr=[xerr_low, xerr_high],
+                   color=colors, alpha=0.8, capsize=4, edgecolor="white", height=0.6)
+
+    ax.axvline(0, color="red", linestyle="--", alpha=0.5, linewidth=1, label="L\u00ednea base SMOTE")
+
+    # Add win rate annotations
+    for i, (d, wr, p) in enumerate(zip(deltas, win_rates, bonf_ps)):
+        sig = "***" if p < 0.001 else "**" if p < 0.01 else "*" if p < 0.05 else "n.s."
+        ax.text(d + xerr_high[i] + 0.08, i,
+                f"{wr:.0f}% vic. {sig}", va="center", fontsize=9)
+
+    ax.set_yticks(y)
+    ax.set_yticklabels(llms)
+    ax.set_xlabel(r"Mejora F1 sobre SMOTE (pp)")
+    ax.set_title("Ganancia de Rendimiento por Modelo de Lenguaje")
+    ax.invert_yaxis()
+    ax.grid(axis="x", alpha=0.3)
+    ax.legend(loc="lower right")
+
+    path = VIZ_DIR / "fig8_multi_llm_comparison.png"
     plt.savefig(path)
     plt.close()
     print(f"  Saved: {path}")
@@ -595,14 +654,22 @@ def main():
     plot_boxplot_deltas(results)
     plot_classifier_comparison(results)
     plot_delta_by_nshot(results)
+    plot_multi_llm_comparison()
 
     # Figures requiring embedding model (slower)
+    # Set CUDA_VISIBLE_DEVICES="" to force CPU if CUDA errors occur
     print("\n--- Generating embedding-space figures ---")
     for ds in ["20newsgroups_10shot", "emotion_10shot", "hate_speech_davidson_10shot"]:
         ds_path = DATA_DIR / f"{ds}.json"
         if ds_path.exists():
-            plot_tsne_scatter(ds)
-            plot_score_distribution(ds)
+            try:
+                plot_tsne_scatter(ds)
+            except Exception as e:
+                print(f"  Error in t-SNE for {ds}: {e}")
+            try:
+                plot_score_distribution(ds)
+            except Exception as e:
+                print(f"  Error in score dist for {ds}: {e}")
         else:
             print(f"  Skipping {ds} (dataset not found)")
 

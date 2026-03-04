@@ -52,7 +52,7 @@ La métrica primaria de evaluación es el macro F1, que asigna peso unitario a c
 
 Las métricas secundarias complementan la evaluación primaria desde múltiples perspectivas. El delta respecto a SMOTE ($\Delta$F1) cuantifica la diferencia entre el macro F1 obtenido con el método evaluado y el obtenido con SMOTE, expresada en puntos porcentuales. Esta métrica permite comparaciones directas entre todos los métodos utilizando SMOTE como línea base común.
 
-La significancia estadística se evalúa mediante prueba t pareada sobre los deltas observados, con corrección de Bonferroni para comparaciones múltiples. El intervalo de confianza al 95\% se calcula mediante bootstrap, proporcionando un rango que contiene la mejora verdadera con probabilidad del 95\%.
+La significancia estadística se evalúa mediante prueba t pareada sobre los deltas observados, con corrección de Bonferroni para comparaciones múltiples. El intervalo de confianza al 95\% se calcula mediante \textit{bootstrap} (remuestreo con reemplazo), proporcionando un rango que contiene la mejora verdadera con probabilidad del 95\%.
 
 El tamaño de efecto se cuantifica mediante la d de Cohen, que normaliza la diferencia media por la desviación estándar combinada. Valores de 0.2 se interpretan como efectos pequeños, 0.5 como medianos y 0.8 como grandes. La tasa de victoria representa la fracción de configuraciones experimentales donde el método evaluado supera a SMOTE, proporcionando una medida de consistencia independiente de la magnitud de las diferencias.
 

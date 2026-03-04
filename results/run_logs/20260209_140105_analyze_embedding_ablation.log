@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/home/benja/Desktop/Tesis/filters/experiments/analyze_embedding_ablation.py", line 8, in <module>
-    import numpy as np
-ModuleNotFoundError: No module named 'numpy'

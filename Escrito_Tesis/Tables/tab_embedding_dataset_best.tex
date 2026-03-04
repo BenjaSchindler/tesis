@@ -1,10 +1,10 @@
 \begin{table}[htbp]
 \centering
-\caption{Best-Performing Embedding Model by Dataset (Averaged Across N-Shots)}
+\caption{Mejor modelo de embeddings por conjunto de datos (promedio sobre valores de n-shot)}
 \label{tab:embedding_dataset_best}
 \begin{tabular}{llrr}
 \toprule
-\textbf{Dataset} & \textbf{Best Model} & \textbf{$\Delta$ (pp)} & \textbf{Runner-Up} \\
+\textbf{Conjunto} & \textbf{Mejor modelo} & \textbf{$\Delta$ (pp)} & \textbf{Segundo mejor} \\
 \midrule
 20newsgroups                    & mpnet-base & +2.71 & e5-large \\
 20newsgroups\_20class           & mpnet-base & +2.81 & bge-small \\
@@ -14,8 +14,8 @@ emotion                         & mpnet-base & +5.29 & bge-large \\
 hate\_speech\_davidson          & bge-large  & +2.89 & mpnet-base \\
 sms\_spam                       & mpnet-base & +2.27 & e5-large \\
 \midrule
-\multicolumn{4}{l}{\small mpnet-base wins on 6/7 datasets, confirming broad applicability} \\
-\multicolumn{4}{l}{\small bge-large excels on hate\_speech (nuanced 3-class task)} \\
+\multicolumn{4}{l}{\small mpnet-base gana en 6/7 conjuntos, confirmando amplia aplicabilidad.} \\
+\multicolumn{4}{l}{\small bge-large destaca en hate\_speech (tarea matizada de 3 clases).} \\
 \bottomrule
 \end{tabular}
 \end{table}

@@ -16,7 +16,7 @@ La evaluación experimental se realiza sobre 13 conjuntos de datos que abarcan 9
 
 Los 7 conjuntos principales de clasificación cubren un rango de 2 a 20 clases. El conjunto \textbf{20newsgroups} contiene publicaciones de grupos de noticias organizadas en 4 categorías temáticas (ciencia, tecnología, política, religión). \textbf{sms\_spam} es un problema binario de detección de mensajes no deseados en SMS. \textbf{hate\_speech\_davidson} clasifica publicaciones de redes sociales en 3 categorías: discurso de odio, lenguaje ofensivo y lenguaje neutro. \textbf{ag\_news} agrupa noticias en 4 categorías (mundo, deportes, negocios, ciencia/tecnología). \textbf{emotion} clasifica textos según 6 emociones básicas (alegría, tristeza, ira, miedo, amor, sorpresa). \textbf{dbpedia14} contiene descripciones de entidades de Wikipedia organizadas en 14 categorías ontológicas. \textbf{20newsgroups\_20class} utiliza las 20 categorías originales del corpus de grupos de noticias, proporcionando un escenario de alta granularidad.
 
-Para simular escenarios de pocos ejemplos, se extraen 10, 25 o 50 muestras por clase del conjunto de entrenamiento original, manteniendo el conjunto de prueba completo intacto. Este procedimiento genera 21 configuraciones base (7 conjuntos de datos $\times$ 3 valores de n-shot). La evaluación sobre el conjunto de prueba completo proporciona estimaciones estables del rendimiento real del clasificador.
+Para simular escenarios de pocos ejemplos, se extraen 10, 25 o 50 muestras por clase del conjunto de entrenamiento original, manteniendo el conjunto de prueba completo intacto. Este procedimiento genera 21 configuraciones base (7 conjuntos de datos $\times$ 3 valores de \textit{n-shot}, es decir, número de ejemplos por clase). La evaluación sobre el conjunto de prueba completo proporciona estimaciones estables del rendimiento real del clasificador.
 
 \subsection{Conjuntos Adicionales para Análisis de Escalabilidad}
 
@@ -46,7 +46,7 @@ Para cada clase en cada configuración experimental, se proporcionan los ejemplo
 
 La plantilla de prompt sigue una estructura directa. Se indica al modelo la categoría objetivo, se proporcionan los ejemplos reales como referencia, y se solicita la generación de nuevos ejemplos que mantengan las características estilísticas y temáticas de la clase. No se emplea fine-tuning del modelo generativo; toda la especificidad proviene del aprendizaje en contexto (in-context learning).
 
-Las respuestas del LLM se procesan mediante un pipeline de parsing simple. Cada línea de la respuesta se trata como un candidato potencial. Se eliminan prefijos numéricos y marcadores de lista (caracteres como dígitos, puntos, paréntesis, guiones y asteriscos). Solo se retienen líneas con más de 10 caracteres después de la limpieza, descartando líneas vacías o fragmentos demasiado cortos para constituir ejemplos válidos.
+Las respuestas del LLM se procesan mediante un procedimiento de análisis sintáctico simple. Cada línea de la respuesta se trata como un candidato potencial. Se eliminan prefijos numéricos y marcadores de lista (caracteres como dígitos, puntos, paréntesis, guiones y asteriscos). Solo se retienen líneas con más de 10 caracteres después de la limpieza, descartando líneas vacías o fragmentos demasiado cortos para constituir ejemplos válidos.
 
 Todas las respuestas del LLM se almacenan en caché mediante hash MD5 del prompt completo. Este mecanismo cumple dos funciones: garantiza reproducibilidad exacta entre ejecuciones con la misma configuración, y reduce costos al evitar llamadas redundantes a la API. La caché se almacena en disco como archivos JSON indexados por hash.
 
@@ -158,7 +158,7 @@ Todos los clasificadores se inicializan con \texttt{random\_state=42} para garan
 
 La métrica primaria es el macro F1, que pondera equitativamente cada clase independientemente de su frecuencia. Esta métrica se calcula sobre el conjunto de prueba completo para cada configuración experimental.
 
-La evaluación emplea un diseño de holdout con 5 semillas aleatorias $[42, 123, 456, 789, 1011]$ que controlan el muestreo de los datos de entrenamiento de pocos ejemplos. El conjunto de prueba se mantiene fijo. Para cada configuración, se calcula el delta respecto a SMOTE: $\Delta = F1_{\mathrm{method}} - F1_{\mathrm{SMOTE}}$, expresado en puntos porcentuales.
+La evaluación emplea un diseño de \textit{holdout} (partición fija de entrenamiento y prueba) con 5 semillas aleatorias $[42, 123, 456, 789, 1011]$ que controlan el muestreo de los datos de entrenamiento de pocos ejemplos. El conjunto de prueba se mantiene fijo. Para cada configuración, se calcula el delta respecto a SMOTE: $\Delta = F1_{\mathrm{method}} - F1_{\mathrm{SMOTE}}$, expresado en puntos porcentuales.
 
 La significancia estadística se evalúa mediante prueba t pareada sobre los deltas observados en todas las configuraciones. Para las comparaciones entre métodos, se aplica corrección de Bonferroni que divide el umbral de significancia por el número de comparaciones realizadas, controlando la tasa de error familiar. Un resultado se considera significativo cuando $p_{Bonferroni} < 0.05$.
 
@@ -199,6 +199,6 @@ La \textbf{evaluación en conjuntos nuevos} abarca 81 configuraciones: 3 conjunt
 
 La \textbf{mejora iterativa de prompts} evalúa 120 configuraciones: 6 conjuntos $\times$ 2 filtros $\times$ 5 iteraciones $\times$ 2 comparaciones (vs SMOTE, vs pasada única). Este experimento investiga si la retroalimentación de los filtros al proceso de generación mejora las tasas de aceptación y el rendimiento final.
 
-La \textbf{evaluación multi-LLM} comprende 441 configuraciones: 21 datasets $\times$ 3 clasificadores lineales $\times$ 3 métodos (sin aumentación, SMOTE, ponderación suave) $\times$ 5 modelos generativos. Este experimento evalúa si las ganancias del filtrado geométrico son independientes del modelo de lenguaje utilizado para la generación.
+La \textbf{evaluación multi-LLM} comprende 441 configuraciones: 21 conjuntos de datos $\times$ 3 clasificadores lineales $\times$ 3 métodos (sin aumentación, SMOTE, ponderación suave) $\times$ 5 modelos generativos. Este experimento evalúa si las ganancias del filtrado geométrico son independientes del modelo de lenguaje utilizado para la generación.
 
 En total, la evaluación experimental comprende más de 6,700 configuraciones individuales, proporcionando evidencia estadística robusta para las conclusiones de esta investigación.
