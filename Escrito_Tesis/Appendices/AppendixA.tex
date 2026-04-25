@@ -6,11 +6,11 @@
 \section{Validación de la Implementación de SMOTE}
 \label{sec:validacion_smote}
 
-La Tabla~\ref{tab:smote_validation} presenta la comparación entre la implementación dummy-binary utilizada en esta investigación y la implementación estándar de SMOTE.
+La Tabla~\ref{tab:smote_validation} presenta la comparación entre la implementación \textit{dummy-binary} utilizada en esta investigación (que crea un problema binario auxiliar por clase con ruido gaussiano como clase ficticia) y la implementación estándar multiclase de SMOTE (que utiliza máscara binaria objetivo vs resto). Ambas implementaciones invocan internamente el algoritmo \texttt{SMOTE} de la biblioteca \texttt{imbalanced-learn}.
 
 \input{Tables/tab_smote_validation}
 
-La diferencia máxima entre ambas implementaciones es de 0.0000 puntos porcentuales en las 27 comparaciones realizadas (9 configuraciones $\times$ 3 clasificadores). Este resultado confirma que la implementación dummy-binary produce resultados idénticos a SMOTE estándar. Las ganancias reportadas en esta investigación no se deben a una línea base artificialmente débil.
+La diferencia máxima entre ambas implementaciones es exactamente $0.0000$ puntos porcentuales en las 27 comparaciones realizadas. Este resultado, que a primera vista podría parecer inverosímil, es matemáticamente esperado: con \texttt{random\_state} fijo, el algoritmo SMOTE de \texttt{imbalanced-learn} aplica $k$-vecinos más cercanos exclusivamente sobre las muestras de la clase objetivo. Como en ambas implementaciones el conjunto de embeddings reales de la clase es idéntico, la búsqueda de vecinos produce los mismos pares y los puntos aleatorios de interpolación son idénticos al estar inicializados por la misma semilla. La consecuencia es que las muestras sintéticas generadas son bit-a-bit idénticas, lo que produce conjuntos de entrenamiento aumentados idénticos y, por tanto, clasificadores deterministas con $F1$ idénticos. Cualquier diferencia distinta de cero indicaría un error en la implementación. Este resultado confirma que las ganancias reportadas en esta investigación no se deben a una línea base artificialmente débil.
 
 \section{Análisis de Asimetría de Semillas}
 \label{sec:asimetria_semillas}

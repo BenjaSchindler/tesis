@@ -33,12 +33,12 @@ La representación vectorial emplea el modelo \texttt{all-mpnet-base-v2} de la b
 
 Cada texto se codifica como un vector unitario en $\mathbb{R}^{768}$. La normalización L2 garantiza que la similitud coseno entre vectores equivalga al producto punto, simplificando los cálculos geométricos. Todas las operaciones de filtrado, clasificación y evaluación operan sobre estos embeddings.
 
-Para verificar que los resultados no dependen de la elección específica del modelo de embeddings, se realiza un estudio de ablación con 3 modelos adicionales: \texttt{bge-large-en-v1.5} (1024 dimensiones), \texttt{e5-large-v2} (1024 dimensiones) y \texttt{bge-small-en-v1.5} (384 dimensiones). Los resultados de esta ablación se reportan en la Sección~\ref{sec:robustez_embeddings}.
+Para verificar que los resultados no dependen de la elección específica del modelo de embeddings, se realiza un estudio de ablación con 3 modelos adicionales: \texttt{bge\hyp{}large\hyp{}en\hyp{}v1.5} (1024 dimensiones), \texttt{e5\hyp{}large\hyp{}v2} (1024 dimensiones) y \texttt{bge\hyp{}small\hyp{}en\hyp{}v1.5} (384 dimensiones). Los resultados de esta ablación se reportan en la Sección~\ref{sec:robustez_embeddings}.
 
 \section{Generación con Modelo de Lenguaje}
 \label{sec:generacion_llm}
 
-El proceso de generación de muestras sintéticas utiliza Gemini 3 Flash (\texttt{gemini-3-flash-preview}) de Google como modelo generativo principal. La selección responde a consideraciones prácticas: el modelo ofrece calidad de generación competitiva a un costo significativamente menor que alternativas de escala comparable.
+El proceso de generación de muestras sintéticas utiliza Gemini 3 Flash (\texttt{gemini\hyp{}3\hyp{}flash\hyp{}preview}) de Google como modelo generativo principal. La selección responde a consideraciones prácticas: el modelo ofrece calidad de generación competitiva a un costo significativamente menor que alternativas de escala comparable.
 
 Para verificar que los resultados no dependen del modelo generativo específico, se realiza un estudio de robustez con 4 modelos adicionales: GPT-5-mini (OpenAI), Claude 4.5 Haiku (Anthropic), Kimi K2.5 (Moonshot, código abierto) y GLM-5 (Zhipu, código abierto). Estos 5 modelos cubren 4 proveedores distintos, 3 cerrados y 2 de código abierto, con arquitecturas y datos de entrenamiento diferentes. Los resultados de esta evaluación se reportan en la Sección~\ref{sec:robustez_llm}.
 

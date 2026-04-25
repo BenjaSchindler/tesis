@@ -42,6 +42,12 @@ table
 
 \usepackage{xcolor}
 
+% Forzar punto como separador decimal en modo matemático (estándar internacional para papers)
+\AtBeginDocument{\spanishdecimal{.}}
+
+% Permitir cortes de línea en guiones de identificadores en modo \texttt
+\usepackage{hyphenat}
+
 \usepackage{soul}
 \usepackage{graphicx}
 %\usepackage{subfig}
@@ -102,16 +108,16 @@ table
 \thesistitleEnglish{Data Augmentation with LLMs: Geometric Filtering for Text Classification} % Your thesis title, this is used in the title and abstract, print it elsewhere with \ttitleEnglish
 \supervisor{Gonzalo Ruz} % Your supervisor's name, this is used in the title page, print it elsewhere with \supname
 \examiner{NOMBRE COMISON\\2DO NOMBRE COMISION} % Your examiner's name, this is not currently used anywhere in the template, print it elsewhere with \examname
-\degree{Master of Science in Data Science} % Your degree name, this is used in the title page and abstract, print it elsewhere with \degreename
+\degree{Master of Science in Data Science,\\ Ingeniería Civil Informática e\\ Ingeniería Civil Industrial} % Your degree name, this is used in the title page and abstract, print it elsewhere with \degreename
 \degreeEnglish{Master of Science in Data Science}
 \author{Benjamín Schindler} % Your name, this is used in the title page and abstract, print it elsewhere with \authorname
 \addresses{} % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
 \subject{Machine Learning} % Your subject area, this is not currently used anywhere in the template, print it elsewhere with \subjectname
 \keywords{clasificación de texto, aumentación de datos, modelos de lenguaje, filtrado geométrico, embeddings, SMOTE, pocos ejemplos} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
-\university{\href{https://www.uai.cl/}{Universidad Adolfo Ibañez}} % Your university's name and URL, this is used in the title page and abstract, print it elsewhere with \univname
+\university{\href{https://www.uai.cl/}{Universidad Adolfo Ibáñez}} % Your university's name and URL, this is used in the title page and abstract, print it elsewhere with \univname
 \department{\href{https://ingenieria.uai.cl/}{Facultad de Ingeniería y Ciencias}} % Your department's name and URL, this is used in the title page and abstract, print it elsewhere with \deptname
 \faculty{\href{https://ingenieria.uai.cl/}{Facultad de Ingeniería y Ciencias}} % Your faculty's name and URL, this is used in the title page and abstract, print it elsewhere with \facname
-\facultyEnglish{\href{https://ingenieria.uai.cl/}{Faculty of Engineering and Science}} % Your faculty's name and URL, this is used in the title page and abstract, print it elsewhere with \facname
+\facultyEnglish{\href{https://ingenieria.uai.cl/}{Faculty of Engineering and Sciences}} % Your faculty's name and URL, this is used in the title page and abstract, print it elsewhere with \facname
 
 \AtBeginDocument{
 \hypersetup{pdftitle=\ttitle} % Set the PDF's title to your title
@@ -166,7 +172,7 @@ table
  
 \vfill
 
-{\large \today}\\[0.8cm] % Date
+{\large Abril 2026}\\[0.8cm] % Date
 \includegraphics[width=4cm]{fic.png} % University/department logo
 
 \end{center}

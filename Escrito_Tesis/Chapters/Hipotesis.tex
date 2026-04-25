@@ -3,7 +3,7 @@
 \chapter{Hipótesis y Objetivos}
 \label{ch:hipotesis}
 
-Las deficiencias metodológicas identificadas en el Capítulo~\ref{ch:problema}---ausencia de validación post-generación, ponderación uniforme de muestras sintéticas, y falta de validación multi-tarea---motivan el planteamiento de hipótesis específicas y objetivos de investigación que guían el diseño experimental de esta tesis.
+Las deficiencias metodológicas identificadas en el Capítulo~\ref{ch:problema} (ausencia de validación post-generación, ponderación uniforme de muestras sintéticas, y falta de validación multi-tarea) motivan el planteamiento de hipótesis específicas y objetivos de investigación que guían el diseño experimental de esta tesis.
 
 \section{Hipótesis Principal}
 \label{sec:hipotesis_principal}
@@ -35,15 +35,13 @@ El objetivo general de esta investigación es desarrollar, implementar y validar
 \section{Objetivos Específicos}
 \label{sec:objetivos_especificos}
 
-El primer objetivo específico consiste en diseñar e implementar un sistema de filtros geométricos multi-nivel que evalúe la calidad de muestras sintéticas en el espacio de embeddings. El sistema debe incluir filtros basados en distancia, densidad local y coherencia con la distribución de clase, organizados en una arquitectura de cascada configurable.
+Esta investigación se articula en torno a tres objetivos específicos. El primero consiste en diseñar e implementar un sistema de filtrado geométrico con ponderación suave de muestras sintéticas en el espacio de embeddings. El segundo es comparar el sistema propuesto contra métodos clásicos y modernos de aumentación de datos sobre múltiples conjuntos de datos y clasificadores. El tercero es demostrar la generalización del filtrado a la tarea de reconocimiento de entidades nombradas (NER).
 
-El segundo objetivo busca evaluar la ponderación suave como alternativa al filtrado binario. En lugar de la decisión discreta aceptar/rechazar, se propone utilizar las puntuaciones del filtro geométrico como pesos de muestra durante el entrenamiento del clasificador, permitiendo una contribución gradual según la calidad estimada de cada ejemplo sintético.
+El primer objetivo integra dos componentes: un sistema de filtros geométricos multi-nivel basado en distancia, densidad local y coherencia con la distribución de clase, organizado en una arquitectura de cascada configurable; y un mecanismo de ponderación suave que utiliza las puntuaciones del filtro como pesos de muestra durante el entrenamiento, en lugar de la decisión binaria aceptar/rechazar.
 
-El tercer objetivo consiste en comparar el sistema propuesto contra 9 métodos de aumentación de datos, incluyendo técnicas clásicas (SMOTE, sobremuestreo aleatorio, EDA, traducción inversa), líneas base modernas (paráfrasis con T5, aumentación contextual con BERT, mixup en embeddings) y la ausencia de aumentación. Esta comparación debe realizarse sobre múltiples conjuntos de datos que abarquen dominios textuales distintos.
+El segundo objetivo evalúa el sistema frente a 9 métodos de aumentación, desde técnicas clásicas (SMOTE, sobremuestreo aleatorio, EDA, traducción inversa) hasta líneas base modernas (paráfrasis con T5, aumentación contextual con BERT, mixup en embeddings). La comparación abarca múltiples dominios textuales y se valida estadísticamente con múltiples semillas, corrección de Bonferroni, tamaños de efecto (d de Cohen) e intervalos de confianza al 95\%.
 
-El cuarto objetivo busca demostrar la generalización del filtrado geométrico a la tarea de reconocimiento de entidades nombradas. Los mismos filtros desarrollados para clasificación de texto deben aplicarse sin modificación a la selección de oraciones sintéticas para entrenamiento de modelos de NER.
-
-El quinto objetivo consiste en validar estadísticamente todos los resultados mediante un protocolo riguroso que incluya múltiples semillas aleatorias, corrección de Bonferroni para comparaciones múltiples, tamaños de efecto (d de Cohen) e intervalos de confianza al 95\%.
+El tercer objetivo aplica los mismos filtros, sin modificación, a la selección de oraciones sintéticas para entrenamiento de modelos de NER, evaluando si las propiedades geométricas del espacio de embeddings capturan características de calidad agnósticas a la tarea.
 
 \section{Métricas de Evaluación}
 \label{sec:metricas_evaluacion}

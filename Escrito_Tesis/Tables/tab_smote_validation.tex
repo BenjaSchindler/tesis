@@ -1,19 +1,28 @@
 \begin{table}[htbp]
 \centering
-\caption{Validación de la implementación de SMOTE: por clase (dummy-binary) vs estándar multiclase}
+\caption{Validación de la implementación de SMOTE: por clase (\textit{dummy-binary}) vs estándar multiclase. Macro F1 con regresión logística sobre las 9 combinaciones conjunto $\times$ semilla. Las dos columnas son idénticas porque, fijada la semilla, ambas implementaciones invocan el mismo algoritmo \texttt{imblearn.SMOTE} con los mismos $k$-vecinos intra-clase, generando muestras sintéticas bit-a-bit idénticas.}
 \label{tab:smote_validation}
-\begin{tabular}{lrrr}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrr}
 \toprule
-\textbf{Conjunto} & \textbf{$N$ comp.} & \textbf{$|\Delta|$ medio (pp)} & \textbf{$|\Delta|$ máx (pp)} \\
+\textbf{Conjunto} & \textbf{Sem.} & \textbf{F1 \textit{dummy}} & \textbf{F1 multic.} & \textbf{$|\Delta|$ (pp)} \\
 \midrule
-sms\_spam\_10shot              & 9 & 0.0000 & 0.0000 \\
-20newsgroups\_10shot           & 9 & 0.0000 & 0.0000 \\
-hate\_speech\_davidson\_10shot & 9 & 0.0000 & 0.0000 \\
+sms\_spam\_10shot              & 42  & 0.8683 & 0.8683 & 0.0000 \\
+                               & 123 & 0.8853 & 0.8853 & 0.0000 \\
+                               & 456 & 0.8742 & 0.8742 & 0.0000 \\
 \midrule
-\textbf{Total}                 & \textbf{27} & \textbf{0.0000} & \textbf{0.0000} \\
+20newsgroups\_10shot           & 42  & 0.7493 & 0.7493 & 0.0000 \\
+                               & 123 & 0.7396 & 0.7396 & 0.0000 \\
+                               & 456 & 0.7409 & 0.7409 & 0.0000 \\
 \midrule
-\multicolumn{4}{l}{\small 3 clasificadores (LR, SVC, Ridge) $\times$ 3 semillas $\times$ 3 conjuntos = 27 comp.} \\
-\multicolumn{4}{l}{\small Umbral: $<$0.1pp. \textbf{Resultado: VALIDADO.} Implementaciones equivalentes.} \\
+hate\_speech\_davidson\_10shot & 42  & 0.5249 & 0.5249 & 0.0000 \\
+                               & 123 & 0.5271 & 0.5271 & 0.0000 \\
+                               & 456 & 0.5298 & 0.5298 & 0.0000 \\
+\midrule
+\multicolumn{2}{l}{\textbf{Total} (27 comparaciones, 3 clasificadores: LR, SVC, Ridge)} & \multicolumn{2}{r}{$|\Delta|$ máximo:} & \textbf{0.0000} \\
+\midrule
+\multicolumn{5}{l}{\small Umbral de validación: $|\Delta| < 0.1$ pp. \textbf{Resultado: validado.}} \\
 \bottomrule
 \end{tabular}
 \end{table}
