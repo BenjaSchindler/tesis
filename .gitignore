@@ -72,5 +72,16 @@ Escrito_Tesis/Figures/**/*.pdf
 Escrito_Tesis/Figures/*.png
 Escrito_Tesis/Figures/*.pdf
 
+# IEEE paper build artifacts and bundled PDFs
+Escrito_Tesis_IEEE/*.aux
+Escrito_Tesis_IEEE/*.bbl
+Escrito_Tesis_IEEE/*.blg
+Escrito_Tesis_IEEE/*.log
+Escrito_Tesis_IEEE/*.out
+Escrito_Tesis_IEEE/*.synctex.gz
+Escrito_Tesis_IEEE/paper.pdf
+Escrito_Tesis_IEEE/conference_101719.pdf
+Escrito_Tesis_IEEE/IEEEtran_HOWTO.pdf
+
 # Misc logs
 texput.log
