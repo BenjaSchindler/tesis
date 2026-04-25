@@ -1,0 +1,204 @@
+% =============================================================================
+% Bloque 6: Metodología (slides 12–16)
+% =============================================================================
+
+\section{Metodología}
+
+% --- Slide 12: Pipeline arquitectónico ---
+\begin{frame}{Pipeline: del texto real al clasificador entrenado}
+\centering
+\begin{tikzpicture}[
+    every node/.style={font=\scriptsize},
+    box/.style={draw=uaiblue, rounded corners, fill=uaibluelight!15,
+                minimum width=2cm, minimum height=0.9cm, text width=2cm, align=center},
+    box2/.style={draw=uaiorange, very thick, rounded corners, fill=uaiorange!15,
+                 minimum width=2cm, minimum height=0.9cm, text width=2cm, align=center},
+    box3/.style={draw=uaigreen, very thick, rounded corners, fill=uaigreen!15,
+                 minimum width=2cm, minimum height=0.9cm, text width=2cm, align=center},
+    arrow/.style={->, >=Stealth, thick, uaiblue!70}
+  ]
+  % Fila superior
+  \node[box]  (real)  at (0,2)    {\textbf{Datos\\reales}\\\tiny $n$-shot 10/25/50};
+  \node[box]  (enc)   at (2.6,2)  {\textbf{Encoder}\\\tiny mpnet-base-v2\\\tiny 768 dims};
+  \node[box]  (llm)   at (5.2,2)  {\textbf{LLM}\\\tiny Gemini 3 Flash\\\tiny $3\times$ excedente};
+  \node[box]  (cands) at (7.8,2)  {\textbf{Candidatas}\\\tiny embeddings};
+  \node[box2] (filt)  at (10.4,2) {\textbf{Filtros}\\\tiny geométricos};
+
+  % Fila inferior
+  \node[box2] (weight) at (10.4,0)  {\textbf{Pesos}\\\tiny softw.\ $T=0.5$};
+  \node[box3] (clf)    at (5.2,0)   {\textbf{Clasificador}\\\tiny LR / SVC / Ridge};
+  \node[box]  (eval)   at (0,0)     {\textbf{Macro F1}\\\tiny test fijo};
+
+  % Flechas
+  \draw[arrow] (real)  -- (enc);
+  \draw[arrow] (enc)   -- (llm);
+  \draw[arrow] (llm)   -- (cands);
+  \draw[arrow] (cands) -- (filt);
+  \draw[arrow] (filt)  -- (weight);
+  \draw[arrow] (weight) -- (clf);
+  \draw[arrow] (real.south)  .. controls +(0,-0.6) and +(-0.5,0) .. (clf.west);
+  \draw[arrow] (clf)   -- (eval);
+\end{tikzpicture}
+
+\vspace{0.5em}
+\mensaje{Filtrado y ponderación: dos contribuciones desacopladas del LLM.}
+\end{frame}
+
+% --- Slide 13: Los 5 filtros ---
+\begin{frame}{Cinco estrategias de filtrado evaluadas}
+\small
+\begin{tabular}{@{}p{2.6cm}p{4.6cm}p{4.6cm}@{}}
+\toprule
+\textbf{Filtro} & \textbf{Criterio} & \textbf{Parámetros} \\
+\midrule
+\textit{None} (control)        & Sin filtrado, todas las muestras LLM. & --- \\[2pt]
+\textit{LOF}                   & Densidad local (Local Outlier Factor). & $k=20$, threshold $=0$ \\[2pt]
+\textit{Cascade L1} \alert{$\star$} & Distancia euclidiana al ancla. Top-$N$ por ranking. & $k=10$, niveles 1--4 \\[2pt]
+\textit{Combined}              & LOF \textbf{Y} similitud coseno. & $\tau_{\cos}=0.5$ \\[2pt]
+\textit{Embedding-Guided}      & Cobertura $0.6$ + calidad $0.4$, voraz. & multi-criterio \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+{\scriptsize\itshape\alert{$\star$} Cascade nivel 1 = mejor configuración encontrada.}
+
+\vfill
+\mensaje{Cinco diseños, una pregunta: ¿filtros simples o complejos?}
+\end{frame}
+
+% --- Slide 14: Cascade — pieza central ---
+\begin{frame}{Cascada de filtros: niveles 1--4}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\small
+\textbf{Score compuesto} (media geométrica):
+\[
+s(x) = \left(\prod_{i=1}^{L} s_i(x)\right)^{1/L}
+\]
+\begin{description}\scriptsize
+  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al ancla.
+  \item[Nivel 2] Similitud coseno.
+  \item[Nivel 3] Pureza KNN ($k$=10).
+  \item[Nivel 4] Distancia al centroide.
+\end{description}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Con vectores L2-normalizados, niveles 1 y 2 son redundantes; los niveles 3--4 introducen ruido en pocos ejemplos.
+\end{insight}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={font=\tiny}]
+  % Pirámide de niveles
+  \fill[uaiorange!40] (-2.5,2) rectangle (2.5,2.7);
+  \node[font=\scriptsize\bfseries] at (0,2.35) {Nivel 1: Distancia $\star$};
+
+  \fill[uaibluelight!30] (-2.2,1.2) rectangle (2.2,1.9);
+  \node[font=\scriptsize] at (0,1.55) {Nivel 2: Similitud};
+
+  \fill[uaibluelight!20] (-1.9,0.4) rectangle (1.9,1.1);
+  \node[font=\scriptsize] at (0,0.75) {Nivel 3: KNN-purity};
+
+  \fill[uaibluelight!10] (-1.6,-0.4) rectangle (1.6,0.3);
+  \node[font=\scriptsize] at (0,-0.05) {Nivel 4: Centroide};
+
+  % Flecha de score
+  \draw[->, very thick, uaiorange] (-3.2,-0.4) -- (-3.2,2.7);
+  \node[font=\tiny, rotate=90] at (-3.6,1.15) {score $\uparrow$};
+\end{tikzpicture}\\[4pt]
+{\scriptsize Selecciona top-$N$ por ranking,\\ \textbf{sin umbral binario}.}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- Slide 15: Ponderación suave ---
+\begin{frame}{Ponderación suave: la 2.\textsuperscript{a} contribución}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\small
+En vez de \textbf{aceptar / rechazar}, asignamos un \textit{peso} a cada muestra.
+
+\vspace{0.4em}
+\textbf{Eq. 1 — Normalización min-max:}
+\[
+\tilde{s}(x) = \frac{s(x) - s_{\min}}{s_{\max} - s_{\min}}
+\]
+\textbf{Eq. 2 — Escalado por temperatura:}
+\[
+w(x) = \max\!\left(w_{\min},\ \tilde{s}(x)^{\,1/T}\right)
+\]
+
+{\scriptsize $T=0.5$, $w_{\min}=0$, datos reales $\Rightarrow$ peso 1.}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={font=\tiny}]
+  % Eje
+  \draw[->,uaigray] (0,0) -- (4.5,0) node[right]{$\tilde{s}(x)$};
+  \draw[->,uaigray] (0,0) -- (0,3.2) node[above]{$w(x)$};
+  \node[font=\tiny] at (4,-0.25) {1};
+  \node[font=\tiny] at (-0.2,3) {1};
+
+  % Curva T=0.5 (peaked) — w = s^2
+  \draw[very thick, uaiorange, domain=0:4, samples=40, smooth] plot (\x, {3*(\x/4)^2});
+  \node[uaiorange, font=\scriptsize] at (3.6,2.6) {$T=0.5$};
+
+  % Curva T=1 (linear)
+  \draw[thick, uaiblue, dashed, domain=0:4, samples=40] plot (\x, {3*(\x/4)});
+  \node[uaiblue, font=\scriptsize] at (3.6,1.5) {$T=1$};
+
+  \node[align=center, font=\tiny] at (2.2,-0.7) {Score normalizado};
+\end{tikzpicture}\\[4pt]
+{\scriptsize $T<1$ amplifica diferencias entre buenas y malas.}
+\end{column}
+
+\end{columns}
+
+\mensaje{Las muestras se entregan al clasificador como \texttt{sample\_weight}.}
+\end{frame}
+
+% --- Slide 16: Protocolo experimental ---
+\begin{frame}{Protocolo experimental: 8.000+ configuraciones}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{Datos y modelos:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \textbf{13 datasets} en 9 dominios:
+        \dataset{20news}, \dataset{emotion}, \dataset{ag\_news}, \dataset{hate-speech}, \dataset{sms-spam}, \dataset{trec6}, \dataset{banking77}, \dataset{clinc150}\dots
+  \item \textbf{$n$-shot:} 10 / 25 / 50 ejemplos por clase.
+  \item \textbf{5 clasificadores:} LR, SVC, Ridge, RF, MLP.
+  \item \textbf{10 métodos} de aumentación.
+  \item \textbf{5 LLMs} (Gemini, GPT-5, Claude, Kimi, GLM).
+  \item \textbf{4 modelos} de embeddings.
+  \item \textbf{5 semillas:} 42, 123, 456, 789, 1011.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\textbf{Protocolo estadístico:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Métrica: \textbf{macro F1}.
+  \item $\Delta$F1 vs.\ SMOTE (puntos porcentuales).
+  \item \textbf{$t$-pareada} con corrección de Bonferroni.
+  \item Bootstrap CI 95\% (10\,000 remuestreos).
+  \item $d$ de Cohen como tamaño de efecto.
+  \item Win-rate como medida de consistencia.
+\end{itemize}
+
+\vspace{0.3em}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{Volumen}
+\centering\bfseries\large 8.000+ configuraciones
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}

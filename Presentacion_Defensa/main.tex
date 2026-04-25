@@ -1,0 +1,130 @@
+% =============================================================================
+% Presentación de Defensa de Tesis
+% Aumentación de Datos con LLMs: Filtrado Geométrico para Clasificación de Texto
+% Benjamín Schindler — Universidad Adolfo Ibáñez — Abril 2026
+% Profesor guía: Gonzalo Ruz
+% Compilar con: xelatex (preferido) o lualatex
+% =============================================================================
+
+\documentclass[10pt,aspectratio=169]{beamer}
+
+% --- Tema Metropolis con paleta UAI ---
+\usetheme[
+  progressbar=frametitle,
+  sectionpage=progressbar,
+  numbering=fraction,
+  block=fill
+]{metropolis}
+
+% --- Paquetes base ---
+\usepackage[spanish,es-tabla,es-noindentfirst]{babel}
+\usepackage{fontspec}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,multirow,multicol}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows.meta,positioning,fit,calc,backgrounds,shadows.blur}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{appendixnumberbeamer}
+\usepackage{pifont}
+\usepackage{caption}
+\captionsetup{font=scriptsize, labelfont={bf,scriptsize}}
+
+% --- Fuente: Cantarell (similar a Fira Sans, instalada en sistema) ---
+\setsansfont{Cantarell}[
+  Extension       = .otf,
+  UprightFont     = *-Regular,
+  ItalicFont      = *-Regular,
+  BoldFont        = *-Bold,
+  BoldItalicFont  = *-Bold,
+  Path            = /usr/share/fonts/opentype/cantarell/,
+  Scale           = 0.95
+]
+\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+
+% --- Estilos custom UAI ---
+\usepackage{style/uai-colors}
+\usepackage{style/beamer-blocks}
+
+% --- Configuración Metropolis adicional ---
+\setbeamertemplate{section in toc}[sections numbered]
+\metroset{titleformat=regular}
+
+% --- Section page custom: título grande + indicador lateral ---
+\setbeamertemplate{section page}{%
+  \begin{centering}
+  \vspace{0.3em}
+  \begin{minipage}{0.94\textwidth}
+    \begin{columns}[c]
+      \begin{column}{0.52\textwidth}
+        \raggedright
+        {\color{uaiorange}\fontsize{42}{46}\selectfont\bfseries\thesecnum.}\\[0.3em]
+        {\color{uaibluedark}\Large\bfseries\insertsectionhead}
+      \end{column}
+      \begin{column}{0.46\textwidth}
+        \sectionnav{\value{secnum}}
+      \end{column}
+    \end{columns}
+  \end{minipage}
+  \end{centering}%
+}
+\AtBeginSection[]{%
+  \stepcounter{secnum}%
+  \begin{frame}[plain,c,noframenumbering]\sectionpage\end{frame}%
+}
+
+% --- Ruta de figuras ---
+\graphicspath{{figuras/}{logos/}}
+
+% --- Comandos abreviados ---
+\newcommand{\dataset}[1]{\texttt{\small #1}}
+\newcommand{\filter}[1]{\textit{#1}}
+\newcommand{\good}{\textcolor{uaigreen}{\ding{51}}}
+\newcommand{\bad}{\textcolor{uaiorange}{\ding{55}}}
+
+% --- Información título ---
+\title{Aumentación de Datos con LLMs}
+\subtitle{Filtrado Geométrico para Clasificación de Texto en Pocos Ejemplos}
+\author{\textbf{Benjamín Schindler}}
+\institute{
+  Magíster en Ciencia de Datos\\
+  Facultad de Ingeniería y Ciencias\\
+  Universidad Adolfo Ibáñez\\[4pt]
+  \footnotesize Profesor guía: Gonzalo Ruz
+}
+\date{Abril 2026}
+\titlegraphic{\hfill\includegraphics[height=1.2cm]{logos/fic.png}}
+
+% =============================================================================
+\begin{document}
+
+% --- Bloque 1: Apertura ---
+\input{secciones/00_portada}
+
+% --- Bloque 2: Introducción ---
+\input{secciones/01_introduccion}
+
+% --- Bloque 3: Problema ---
+\input{secciones/02_problema}
+
+% --- Bloque 4: Estado del Arte ---
+\input{secciones/03_estado_arte}
+
+% --- Bloque 5: Hipótesis y Objetivos ---
+\input{secciones/04_hipotesis}
+
+% --- Bloque 6: Metodología ---
+\input{secciones/05_metodologia}
+
+% --- Bloque 7: Resultados ---
+\input{secciones/06_resultados}
+
+% --- Bloque 8: Conclusiones y cierre ---
+\input{secciones/07_conclusiones}
+
+% --- Bloque 9: Backup (slides para Q&A) ---
+\appendix
+\input{secciones/08_backup}
+
+\end{document}

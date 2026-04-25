@@ -1,0 +1,156 @@
+% =============================================================================
+% Bloque 9: Backup (slides B1–B5) — para Q&A
+% =============================================================================
+
+% --- B1: Validación de SMOTE ---
+\begin{frame}{Backup B1: SMOTE — validación de implementación}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{Crítica anticipada del comité:}
+\begin{quote}\itshape\scriptsize
+``¿Su SMOTE \textit{dummy-binary} es equivalente al SMOTE estándar binary-mask?''
+\end{quote}
+
+\textbf{Validación:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item 27 comparaciones lado a lado.
+  \item Diferencia máxima: $0{.}0000$ pp.
+  \item F1 idénticos en todos los datasets.
+\end{itemize}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Línea base SMOTE \textbf{robusta y reproducible}.
+\end{insight}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{Resumen}
+\scriptsize
+\begin{tabular}{@{}lr@{}}
+\toprule
+Implementación   & F1 medio \\
+\midrule
+dummy-binary     & 0.7124 \\
+binary-mask std. & 0.7124 \\
+\midrule
+Diferencia       & \textbf{0.0000} \\
+\bottomrule
+\end{tabular}
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- B2: Seed asymmetry ---
+\begin{frame}{Backup B2: Asimetría de semillas y caching}
+\small
+\textbf{Observación:} 80\% de combinaciones LLM $\times$ clasificador determinista
+tienen \textbf{varianza cero} entre semillas (la generación está cacheada).
+
+\vspace{0.4em}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{Validación rigurosa:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Filtramos a clasificadores estocásticos\\(MLP, RandomForest).
+  \item $\Delta$F1 = $+1{.}79$ pp.
+  \item $p = 0{.}0015$, $d = 0{.}52$.
+  \item Significancia se mantiene.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{Implicancia}
+\scriptsize
+Los CIs subestiman la varianza real, pero las pruebas $t$ pareadas \textbf{siguen siendo válidas}.
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- B3: Closed-loop (iterative prompting) ---
+\begin{frame}{Backup B3: Closed-loop vs.\ pasada única}
+\small
+\textbf{Hipótesis exploratoria:} ¿mejora si re-prompteamos al LLM con feedback de los rechazos?
+
+\vspace{0.5em}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Estrategia                          & $\Delta$F1 vs.\ SMOTE & Win-rate \\
+\midrule
+Closed-loop (5 iteraciones)         & $+1{.}12$             & 52\% \\
+Pasada única \alert{$\star$}        & $+2{.}08$             & 80\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\textbf{¿Por qué falla closed-loop?}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Tasas de aceptación \textbf{decrecen} con iteraciones (-12.3 pp).
+  \item Fallo dominante: \texttt{DISTANCE\_OUTLIER} (77\%).
+  \item Cuello de botella: \textbf{el LLM}, no el prompt.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{insight}
+\scriptsize Pasada única + filtro simple $>$ ingeniería iterativa de prompt.
+\end{insight}
+\end{frame}
+
+% --- B4: Geometric vs Teacher ---
+\begin{frame}{Backup B4: Filtrado geométrico vs.\ \textit{teacher}}
+\small
+\textbf{Comparación con un filtrado supervisado (teacher classifier):}
+
+\vspace{0.5em}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Filtro & $\Delta$F1 vs.\ SMOTE & $p$ & Costo extra \\
+\midrule
+Geométrico (binary) & \alert{$+2{.}78$} & $<0{.}001$ & ninguno \\
+Teacher (binary)    & $+2{.}43$         & $<0{.}001$ & entrenar clf adicional \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\begin{insight}
+\scriptsize El filtro geométrico es \textbf{más general} (no se especializa en separabilidad lineal) y \textbf{más eficiente} (no requiere entrenamiento extra).
+\end{insight}
+\end{frame}
+
+% --- B5: Tabla completa de baselines modernos ---
+\begin{frame}{Backup B5: Comparación con baselines modernos}
+\small
+\textbf{1.890 configuraciones, 10 métodos, 3 clasificadores:}
+
+\vspace{0.5em}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Método                         & $\Delta$F1 vs.\ SMOTE & $p$ Bonf. & Win-rate \\
+\midrule
+\textbf{Soft-weighted (ours)}  & \alert{$+2{.}61$}     & $<0{.}0001$ & 88.9\% \\
+\textbf{Binary-filter (ours)}  & $+2{.}39$             & $<0{.}0001$ & 79.4\% \\
+No augmentation                & $+0{.}64$             & $<0{.}05$   & 56.0\% \\
+Embedding mixup                & $-0{.}01$             & n.s.        & 51.0\% \\
+Contextual BERT                & $-0{.}26$             & n.s.        & 48.0\% \\
+T5 paraphrase                  & $-0{.}35$             & n.s.        & 47.0\% \\
+Random oversample              & $-0{.}32$             & n.s.        & 47.0\% \\
+EDA                            & $-0{.}49$             & $<0{.}05$   & 41.0\% \\
+Back-translation               & $-0{.}50$             & $<0{.}05$   & 40.0\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{insight}
+\scriptsize Todas las técnicas modernas \textbf{pierden} contra SMOTE; solo el filtrado geométrico gana.
+\end{insight}
+\end{frame}

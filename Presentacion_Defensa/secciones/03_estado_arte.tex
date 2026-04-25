@@ -1,0 +1,118 @@
+% =============================================================================
+% Bloque 4: Estado del Arte (slides 8–10)
+% =============================================================================
+
+\section{Estado del arte}
+
+% --- Slide 8: Timeline de 4 paradigmas ---
+\begin{frame}{Cuatro paradigmas, una década de evolución}
+\centering
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  % Línea de tiempo
+  \draw[->, very thick, uaiblue!70] (0,0) -- (12,0) node[right, font=\scriptsize]{año};
+  \foreach \x/\year in {0.5/2002, 3.5/2019, 6.5/2023, 9.5/2025}{
+    \draw[uaiblue] (\x,-0.1) -- (\x,0.1);
+    \node[below, font=\tiny] at (\x,-0.15) {\year};
+  }
+
+  % Paradigma 1
+  \node[draw=uaiblue, fill=uaibluelight!15, rounded corners, text width=2.4cm, align=center,
+        minimum height=1.2cm, font=\tiny] at (1.5, 1.5) (p1)
+        {\textbf{Geométrico clásico}\\SMOTE, ADASYN, EDA};
+  \draw[->, uaiblue!50] (0.5,0) -- (p1);
+
+  % Paradigma 2
+  \node[draw=uaiblue, fill=uaibluelight!15, rounded corners, text width=2.4cm, align=center,
+        minimum height=1.2cm, font=\tiny] at (4.5, 1.5) (p2)
+        {\textbf{Embeddings profundos}\\mixup, MixText, SMOTExT};
+  \draw[->, uaiblue!50] (3.5,0) -- (p2);
+
+  % Paradigma 3
+  \node[draw=uaiblue, fill=uaibluelight!15, rounded corners, text width=2.4cm, align=center,
+        minimum height=1.2cm, font=\tiny] at (7.5, 1.5) (p3)
+        {\textbf{Generación LLM}\\GPT-3/4, Gemini, Claude};
+  \draw[->, uaiblue!50] (6.5,0) -- (p3);
+
+  % Paradigma 4
+  \node[draw=uaiorange, very thick, fill=uaiorange!15, rounded corners, text width=2.4cm, align=center,
+        minimum height=1.2cm, font=\tiny] at (10.5, 1.5) (p4)
+        {\textbf{Híbridos + filtros}\\\textit{esta tesis}};
+  \draw[->, uaiorange] (9.5,0) -- (p4);
+
+  % Notas debajo
+  \node[font=\tiny, text width=2.6cm, align=center] at (1.5,-1) {Chawla 2002\\Wei \& Zou 2019};
+  \node[font=\tiny, text width=2.6cm, align=center] at (4.5,-1) {Zhang 2018\\Bayer 2023};
+  \node[font=\tiny, text width=2.6cm, align=center] at (7.5,-1) {Suhaeni \& Yong\\\textbf{+12.7\%} acc};
+  \node[font=\tiny, text width=2.6cm, align=center] at (10.5,-1) {Cegin 2025, ImbLLM\\Springer 2025};
+\end{tikzpicture}
+
+\vfill
+\mensaje{Cada paradigma resuelve un problema y crea otro nuevo.}
+\end{frame}
+
+% --- Slide 9: Insights teóricos ---
+\begin{frame}{¿Por qué la distancia euclidiana basta?}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Hipótesis del manifold}
+Los datos viven cerca de una variedad de baja dimensión.
+\vspace{0.3em}\\
+{\scriptsize Inliers $\approx$ buenas muestras.}
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Concentración de la medida}
+En $\mathbb{R}^{768}$ la similitud coseno se concentra en un rango muy estrecho.
+\vspace{0.3em}\\
+{\scriptsize \cita{Tessari et al.\ 2024}}
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Robinson 2025}
+Los embeddings de LLM violan la hipótesis del manifold; la \textbf{distancia euclidiana} es más robusta que LOF.
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.5em}
+\begin{tikzpicture}[scale=0.9]
+  \node[font=\scriptsize] at (0,0) {Para vectores L2-normalizados:};
+  \node[font=\normalsize] at (4.5,0) {$\|u-v\|^2 = 2(1-\cos(u,v))$};
+  \node[font=\scriptsize, color=uaiorange] at (10.5,0) {$\Rightarrow$ rankings idénticos};
+\end{tikzpicture}
+
+\mensaje{Lo simple gana porque las métricas complejas son redundantes.}
+\end{frame}
+
+% --- Slide 10: Posicionamiento ---
+\begin{frame}{Dónde encaja esta propuesta}
+\begin{center}
+\begin{tikzpicture}[scale=0.72, every node/.style={font=\scriptsize}, transform shape]
+  \fill[uaiblue!25, opacity=0.7] (-1.4,0) circle (1.9);
+  \fill[uaigreen!25, opacity=0.7] (1.4,0) circle (1.9);
+  \fill[uaiamber!25, opacity=0.7] (0,-1.9) circle (1.9);
+
+  \node[font=\bfseries\small, color=uaiblue, text width=2.4cm, align=center] at (-3.2,1.4) {Validación post-generación};
+  \node[font=\bfseries\small, color=uaigreen!70!black, text width=2.4cm, align=center] at (3.2,1.4) {Ponderación adaptativa};
+  \node[font=\bfseries\small, color=uaiamber!70!black, text width=2.6cm, align=center] at (0,-3.4) {Validación multi-tarea (NER)};
+
+  \node[font=\tiny, color=uaiblue!70!black] at (-2.2,0) {LOF};
+  \node[font=\tiny, color=uaigreen!60!black, text width=1.9cm, align=center] at (2.2,0) {Importance Sampling};
+  \node[font=\tiny, color=uaiamber!70!black] at (0,-1.3) {MELM 2022};
+
+  \node[draw=uaiorange, very thick, fill=white, rounded corners,
+        font=\bfseries\scriptsize, text width=1.9cm, align=center,
+        minimum height=0.8cm] at (0,-0.3) {Esta propuesta};
+\end{tikzpicture}
+\end{center}
+
+\mensaje{Contribución: integrar las tres dimensiones por primera vez.}
+\end{frame}

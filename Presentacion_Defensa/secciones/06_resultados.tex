@@ -1,0 +1,289 @@
+% =============================================================================
+% Bloque 7: Resultados (slides 17–24) — corazón de la defensa
+% =============================================================================
+
+\section{Resultados}
+
+% --- Slide 17: HEADLINE ---
+\begin{frame}{Resultado principal}
+\begin{columns}[T]
+
+\begin{column}{0.42\textwidth}
+\vspace{0.4em}
+\begin{headline}
+\cifra{$+2.25$ pp}{vs.\ SMOTE\\ (macro F1)}
+\end{headline}
+
+\vspace{0.5em}
+\small
+\begin{itemize}\setlength\itemsep{2pt}
+  \item $p < 0{.}0001$ \cita{Bonferroni}
+  \item $d$ de Cohen $= 0{.}74$ \cita{efecto medio-grande}
+  \item Win-rate $= 83{.}8\%$
+  \item $N = 3{.}675$ configuraciones
+  \item Clasificación absoluta: \textbf{73.49\%} vs.\ 71.24\%
+\end{itemize}
+\end{column}
+
+\begin{column}{0.58\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=6.5cm, keepaspectratio]{fig_boxplot_deltas.png}\\[2pt]
+{\scriptsize Distribución de $\Delta$F1 por método.}
+\end{column}
+
+\end{columns}
+
+\mensaje{El método propuesto supera todas las líneas base, incluidas las modernas.}
+\end{frame}
+
+% --- Slide 18: t-SNE before/after ---
+\begin{frame}{¿Qué hace el filtro? Visualización t-SNE}
+\centering
+\includegraphics[width=0.85\linewidth, height=6.5cm, keepaspectratio]{fig_tsne_filtered_vs_smote_emotion.png}
+
+\vspace{0.2em}
+{\scriptsize Dataset \dataset{emotion} (6 clases, 10-shot): triángulos = LLM filtrado, cuadrados = SMOTE.}
+
+\mensaje{El filtro rechaza candidatas en zonas de cruce y aporta diversidad real.}
+\end{frame}
+
+% --- Slide 19: F1 vs n-shot ---
+\begin{frame}{Retornos decrecientes con más datos}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=5.8cm, keepaspectratio]{fig_delta_by_nshot.png}\\[2pt]
+{\scriptsize $\Delta$F1 por valor de $n$-shot.}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\small
+\textbf{El método brilla donde más se necesita:}
+\vspace{0.3em}
+
+\begin{tabular}{@{}lcc@{}}
+\toprule
+$n$-shot & $\Delta$F1 & $d$ \\
+\midrule
+\textbf{10} & \alert{$+4{.}89$} & 1.48 \\
+25          & $+2{.}17$         & 1.57 \\
+50          & $+0{.}76$         & 0.80 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{insight}
+\scriptsize Cuanto menos datos hay, más útil es el filtrado.
+\end{insight}
+\end{column}
+
+\end{columns}
+
+\mensaje{Caso de uso ideal: 10 ejemplos por clase.}
+\end{frame}
+
+% --- Slide 20: Por clasificador ---
+\begin{frame}{El clasificador importa: lineales ganan}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=5.5cm, keepaspectratio]{fig_classifier_comparison.png}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\small
+\begin{tabular}{@{}lr@{\hspace{6pt}}r@{}}
+\toprule
+Clasificador & $\Delta$F1 & $d$ \\
+\midrule
+SVC (lineal)        & \alert{$+2{.}99$} & 1.02 \\
+Ridge               & $+2{.}69$         & 1.04 \\
+MLP                 & $+2{.}16$         & 0.73 \\
+Logistic Regression & $+1{.}98$         & 0.82 \\
+Random Forest       & $+1{.}42$         & n.s. \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+{\scriptsize H1d confirmada: \textbf{ensambles de árboles}\\ no aprovechan los pesos suaves.}
+\end{column}
+
+\end{columns}
+
+\mensaje{Modelos lineales explotan mejor la señal geométrica.}
+\end{frame}
+
+% --- Slide 21: Sweet spot por número de clases ---
+\begin{frame}{¿Cuándo conviene aplicarlo? Por número de clases}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=5.5cm, keepaspectratio]{fig_heatmap_methods.png}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\small
+\textbf{Sweet spot: pocas clases.}
+\vspace{0.2em}
+
+\begin{tabular}{@{}lr@{}}
+\toprule
+\# Clases (dataset)     & $\Delta$F1 \\
+\midrule
+6 (\dataset{trec6, emotion}) & \alert{$+5{.}42$} \\
+4 (\dataset{20news, ag})     & $+2{.}80$ \\
+2 (binarios)                 & $+3{.}18$ \\
+77 (\dataset{banking77})     & $-0{.}99$ \\
+150 (\dataset{clinc150})     & $+0{.}01$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.4em}
+{\scriptsize Spearman $\rho = -0{.}260$, $p=0{.}003$.}
+\end{column}
+
+\end{columns}
+
+\mensaje{Saturación con $\geq 77$ clases: el espacio se fragmenta.}
+\end{frame}
+
+% --- Slide 22: Hallazgo contra-intuitivo ---
+\begin{frame}{Hallazgo contra-intuitivo: simple $>$ complejo}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \draw[->,thick,uaigray] (0,0) -- (5,0) node[right]{$\Delta$F1 vs.\ SMOTE};
+  \draw[uaigray] (0,0) -- (0,4.5);
+  \draw[uaigray, dashed] (1.5,0) -- (1.5,4.5);
+  \node[below, font=\tiny] at (1.5,-0.05) {0};
+
+  \fill[methodOurs] (1.5,4) rectangle (3.0,4.4);
+  \node[right, font=\tiny, text width=2cm, align=left] at (3.05,4.2) {Cascade L1 \textbf{+1.45}};
+
+  \fill[methodOurs!70] (1.5,3.2) rectangle (2.85,3.6);
+  \node[right, font=\tiny] at (2.9,3.4) {LOF +0.88};
+
+  \fill[methodOther] (1.5,2.4) rectangle (2.78,2.8);
+  \node[right, font=\tiny] at (2.83,2.6) {None +0.72};
+
+  \fill[methodWorse] (0.21,1.6) rectangle (1.5,2.0);
+  \node[left, font=\tiny, text width=2cm, align=right] at (0.16,1.8) {Embedding-Guided $-1.29$};
+
+  \fill[methodWorse] (-0.78,0.8) rectangle (1.5,1.2);
+  \node[left, font=\tiny, color=uaiorange] at (-0.83,1.0) {\textbf{Combined $-3.28$}};
+\end{tikzpicture}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{Insight clave}
+Filtros multi-criterio \textbf{degradan} el rendimiento.
+\vspace{0.4em}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Distancia y similitud son redundantes en L2-norm.
+  \item LOF inestable con $n=10$.
+  \item Restricciones conjuntivas matan la diversidad.
+\end{itemize}
+\end{block}
+
+\vspace{0.4em}
+\begin{insight}
+\scriptsize\centering
+Más filtrado $\neq$ mejor filtrado.\\Generar muchos, filtrar poco.
+\end{insight}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- Slide 23: Robustez multi-LLM y multi-embedding ---
+\begin{frame}{Robustez: ¿depende del LLM o del embedding?}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=4.6cm, keepaspectratio]{fig_multi_llm_comparison.png}\\[2pt]
+\textbf{5 LLMs probados}\\
+{\scriptsize Gemini, GPT-5, Claude, Kimi, GLM}\\
+{\scriptsize $\Delta$F1 entre $+1{.}49$ y $+2{.}31$ pp}\\
+{\scriptsize Friedman $p=0{.}086$ \cita{no significativo}}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{4 modelos de embeddings}
+\scriptsize
+\begin{tabular}{@{}lr@{}}
+\toprule
+Modelo & $\Delta$F1 \\
+\midrule
+mpnet-base-v2 (768d)     & $+2{.}74$ \\
+bge-large (1024d)        & $+2{.}04$ \\
+bge-small (384d)         & $+2{.}00$ \\
+e5-large (1024d)         & $+0{.}97$ \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}\\
+{\scriptsize 90.5\% acuerdo entre modelos.}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{El método es agnóstico al LLM y al modelo de embeddings.}
+\end{frame}
+
+% --- Slide 24: NER ---
+\begin{frame}{Generalización a NER: \textit{el filtro funciona en otra tarea}}
+\begin{columns}[T]
+
+\begin{column}{0.45\textwidth}
+\small
+\textbf{Reconocimiento de entidades nombradas:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item 3 corpus: \dataset{MultiNERD}, \dataset{WikiANN}, \dataset{Few-NERD}
+  \item Adaptación: clase = tipo de entidad dominante por oración.
+  \item \textbf{Filtros sin modificación.}
+\end{itemize}
+
+\vspace{0.4em}
+\begin{headline}
+\cifra{$+9{.}61$ pp}{Cascade L1\\ ($p=0.0003$, $d=2.05$)}
+\end{headline}
+\end{column}
+
+\begin{column}{0.55\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \draw[->,thick,uaigray] (0,0) -- (5.5,0) node[right]{$\Delta$F1 (pp)};
+  \draw[uaigray] (0,0) -- (0,3.6);
+  \foreach \x in {0,3,6,9,12,15}{
+    \draw[uaigray!50] (\x*0.3,0.05) -- (\x*0.3,-0.05) node[below, font=\tiny]{\x};
+  }
+
+  \fill[methodOurs] (0,3.0) rectangle (4.5,3.5);
+  \node[right, font=\scriptsize\bfseries] at (4.55,3.25) {Cascade L1 +9.61};
+
+  \fill[methodOurs!80] (0,2.3) rectangle (4.35,2.8);
+  \node[right, font=\scriptsize] at (4.4,2.55) {LOF +9.28};
+
+  \fill[methodSMOTE] (0,1.6) rectangle (1.0,2.1);
+  \node[right, font=\scriptsize] at (1.05,1.85) {None (ref)};
+
+  \fill[methodWorse] (-0.5,0.9) rectangle (0,1.4);
+  \node[right, font=\scriptsize] at (0.05,1.15) {Combined: 0\% aceptación};
+
+  \node[font=\tiny, color=uaigreen!50!black] at (3.5,0.4) {10-shot: $+15.15$ pp};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\mensaje{La calidad geométrica es agnóstica a la tarea.}
+\end{frame}

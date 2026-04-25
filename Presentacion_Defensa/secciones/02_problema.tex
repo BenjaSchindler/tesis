@@ -1,0 +1,64 @@
+% =============================================================================
+% Bloque 3: El Gap (Problema) (slides 6–7)
+% =============================================================================
+
+\section{El gap del estado del arte}
+
+% --- Slide 6: Las 3 deficiencias ---
+\begin{frame}{Tres deficiencias en los métodos actuales}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{1. Sin validación}
+Las muestras del LLM se aceptan \textbf{todas}, sin verificar si caen en la región correcta del espacio.
+\vspace{0.3em}\\
+{\scriptsize Texto gramatical $\neq$ texto en la zona correcta.}
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{2. Peso uniforme}
+Todas las muestras pesan igual en el clasificador, ignorando la \textbf{calidad geométrica} de cada una.
+\vspace{0.3em}\\
+{\scriptsize Una en zona densa = una en zona dispersa.}
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{3. Un solo dataset}
+Casi todos los estudios validan en \textbf{un único} corpus o tarea.
+\vspace{0.3em}\\
+{\scriptsize ¿Generaliza el filtrado entre dominios y tareas?}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vfill
+\begin{tikzpicture}[overlay,remember picture]
+\end{tikzpicture}
+
+\mensaje{La señal geométrica está disponible y nadie la está usando.}
+\end{frame}
+
+% --- Slide 7: Pregunta de investigación ---
+\begin{frame}{Pregunta de investigación}
+\vfill
+\begin{center}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{tcolorbox}[colback=white, colframe=uaibluedark, coltitle=white,
+                  title=\centering\textbf{Pregunta central},
+                  width=0.9\linewidth, halign=center, arc=4pt, boxrule=2pt]
+\Large\itshape ¿Puede un sistema de filtrado geométrico\\
+post-generación, desacoplado del LLM,\\[0.4em]
+\textbf{mejorar significativamente} la aumentación\\
+de datos para clasificación de texto\\
+con pocos ejemplos por clase?
+\end{tcolorbox}
+\end{center}
+\vfill
+\end{frame}

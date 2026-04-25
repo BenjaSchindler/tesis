@@ -83,5 +83,16 @@ Escrito_Tesis_IEEE/paper.pdf
 Escrito_Tesis_IEEE/conference_101719.pdf
 Escrito_Tesis_IEEE/IEEEtran_HOWTO.pdf
 
+# Defense presentation build artifacts and PDF
+Presentacion_Defensa/*.aux
+Presentacion_Defensa/*.log
+Presentacion_Defensa/*.out
+Presentacion_Defensa/*.toc
+Presentacion_Defensa/*.nav
+Presentacion_Defensa/*.snm
+Presentacion_Defensa/*.vrb
+Presentacion_Defensa/*.synctex.gz
+Presentacion_Defensa/*.pdf
+
 # Misc logs
 texput.log

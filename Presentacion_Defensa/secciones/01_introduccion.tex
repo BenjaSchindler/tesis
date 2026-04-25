@@ -1,0 +1,145 @@
+% =============================================================================
+% Bloque 2: Motivación e Introducción (slides 3–5)
+% =============================================================================
+
+\section{Motivación}
+
+% --- Slide 3: Hook + spoiler del resultado ---
+\begin{frame}{¿Cuántas muestras se necesitan para clasificar texto?}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\small
+Imagina entrenar un clasificador de \textbf{6 emociones} con apenas\\
+\textbf{10 ejemplos por clase}.
+\begin{itemize}
+  \item Total: \alert{60 muestras de entrenamiento}.
+  \item SMOTE no produce texto coherente.
+  \item Un LLM puede generar miles\dots\\
+        \cita{pero, ¿son útiles todas?}
+\end{itemize}
+
+\vspace{0.4em}
+\begin{insight}
+Esta tesis: \textbf{filtrar geométricamente} las muestras del LLM.\\
+Resultado: \textbf{\textcolor{uaiorange}{+2.25 pp}} sobre SMOTE,\\
+\textit{p}\,$<$\,0.0001,\, $d$\,=\,0.74,\, win-rate 83.8\%.
+\end{insight}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.95, every node/.style={font=\tiny}]
+  % Eje horizontal (cero en x=0; positivos a la derecha, negativos a la izquierda)
+  \draw[->,thick,uaigray] (-1.2,0) -- (3.4,0) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \draw[uaigray, dashed] (0,-0.1) -- (0,4.4);
+  \foreach \x in {-1,0,1,2}{
+    \draw[uaigray!60] (\x,0.07) -- (\x,-0.07) node[below, font=\tiny]{\x};
+  }
+
+  % Barras (positivas a la derecha de 0)
+  \fill[methodOurs] (0,3.7) rectangle (2.25,4.1);
+  \node[right, font=\scriptsize\bfseries, color=uaibluedark] at (2.30,3.9) {Pond.\ suave \textbf{+2.25}};
+
+  \fill[methodOurs!70] (0,2.95) rectangle (2.11,3.35);
+  \node[right, font=\scriptsize] at (2.16,3.15) {Filtro binario \,+2.11};
+
+  \fill[methodSMOTE] (-0.04,2.2) rectangle (0.04,2.6);
+  \node[right, font=\scriptsize] at (0.10,2.40) {SMOTE (ref.)\,\,\,\,0.00};
+
+  % Barras negativas a la izquierda de 0
+  \fill[methodOther] (-0.22,1.45) rectangle (0,1.85);
+  \node[left, font=\scriptsize] at (-0.27,1.65) {EDA \,$-$0.22};
+
+  \fill[methodOther] (-0.19,0.7) rectangle (0,1.1);
+  \node[left, font=\scriptsize] at (-0.24,0.9) {Trad.\ inversa \,$-$0.19};
+\end{tikzpicture}\\[2pt]
+{\scriptsize\itshape Vista previa: nuestro método vs.\ baselines.}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- Slide 4: Escasez de datos en la práctica ---
+\begin{frame}{Escasez de datos: un problema cotidiano}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\small
+\textbf{Casos reales que sufren pocos ejemplos:}
+\begin{itemize}
+  \item Detección de \textbf{discurso de odio} en idiomas minorizados.
+  \item Triaje clínico, clasificación de notas médicas.
+  \item Categorización de \textbf{tickets de soporte} en empresas.
+  \item Spam emergente y nuevos esquemas de fraude.
+\end{itemize}
+\vspace{0.4em}
+\textbf{Por qué duele:}
+\begin{itemize}
+  \item Etiquetado humano = \alert{caro, lento y sesgado}.
+  \item Multiclase $+$ desbalance $\Rightarrow$ macro F1 colapsa.
+  \cita{Gopali 2024; Whitehouse 2023}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  % Iconos representando dominios
+  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (a) at (-1.3,3) {\textbf{Hate speech}\\\tiny minoría: $<$30 ej.};
+  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (b) at (1.3,3) {\textbf{Clínico}\\\tiny rare disease};
+  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (c) at (-1.3,1.5) {\textbf{Soporte TI}\\\tiny producto nuevo};
+  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (d) at (1.3,1.5) {\textbf{Spam}\\\tiny esquema emergente};
+  \node[draw=uaiorange, very thick, rounded corners, fill=uaiorange!15, minimum width=4.8cm, minimum height=0.8cm, text width=4.6cm, align=center] at (0,0.2) {\textbf{Común:} 10--50 ejemplos por clase};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- Slide 5: Trade-off SMOTE vs LLM ---
+\begin{frame}{El dilema: SMOTE vs.\ LLMs}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=methodSMOTE}
+\begin{block}{SMOTE / interpolación}
+\small
+\good\ Geometría controlada\\
+\good\ Garantías formales\\[2pt]
+\bad\ Vectores sin texto coherente\\
+\bad\ Solo rellena lo conocido
+\end{block}
+\vspace{0.4em}
+\begin{tikzpicture}[scale=0.85]
+  \fill[methodSMOTE!20] (0,0) circle (1.4);
+  \foreach \pt in {(0,0.4),(0.7,0.2),(-0.5,0.6),(0.3,-0.5),(-0.7,-0.3),(0.6,-0.7)} {\fill[methodSMOTE] \pt circle (2pt);}
+  \foreach \pt in {(0.4,0),(-0.2,0.1),(0.1,0.5),(-0.4,-0.5),(0.45,-0.2)} {\draw[uaiorange,thick] \pt circle (2pt);}
+  \node[font=\tiny] at (0,-1.7) {Interpolación lineal};
+\end{tikzpicture}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=methodOurs}
+\begin{block}{LLM (Gemini, GPT, Claude\dots)}
+\small
+\good\ Texto fluido y coherente\\
+\good\ Diversidad lingüística\\[2pt]
+\bad\ Geometría descontrolada\\
+\bad\ Ruido y solapamiento entre clases
+\end{block}
+\vspace{0.4em}
+\begin{tikzpicture}[scale=0.85]
+  \fill[methodOurs!15] (0,0) circle (1.6);
+  \foreach \pt in {(0,0.4),(0.7,0.2),(-0.5,0.6),(0.3,-0.5)} {\fill[methodOurs] \pt circle (2pt);}
+  \foreach \pt in {(0.4,0),(-0.2,0.1),(0.1,0.5),(1.4,0.3),(-1.2,-0.4),(0.9,-1.0),(-0.8,1.1)} {\draw[uaiorange,thick] \pt circle (2pt);}
+  \node[font=\tiny] at (0,-1.9) {Generación abierta};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\mensaje{¿Podemos quedarnos con lo mejor de ambos mundos?}
+\end{frame}

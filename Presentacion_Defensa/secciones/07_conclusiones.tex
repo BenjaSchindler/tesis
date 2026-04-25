@@ -1,0 +1,147 @@
+% =============================================================================
+% Bloque 8: Discusión, Utilidad Real, Cierre (slides 25–27)
+% =============================================================================
+
+\section{Discusión y aplicaciones}
+
+% --- Slide 25: Contribuciones agrupadas ---
+\begin{frame}{Contribuciones de la tesis}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Metodológica}
+\scriptsize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Sistema de filtros geométricos multi-nivel.
+  \item Ponderación suave por temperatura.
+  \item Desacoplado del LLM.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{Empírica}
+\scriptsize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item +2.25 pp vs.\ SMOTE\\(\textit{p}\,$<$\,0.0001).
+  \item Supera a 9 baselines\\incluidos T5 y BERT.
+  \item Robusto a 5 LLMs y 4 embeddings.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{Generalización}
+\scriptsize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item NER: +9.61 pp sin modificar nada.
+  \item Hallazgo: simple $>$ complejo.
+  \item Beneficio en clases difíciles: +10.44 pp.
+\end{itemize}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.5em}
+\begin{insight}
+\scriptsize\centering
+\textbf{Insight central:} la información geométrica del espacio de embeddings\\
+captura calidad de manera agnóstica a la tarea, siempre que el filtro sea simple.
+\end{insight}
+\end{frame}
+
+% --- Slide 26: Utilidad real / aplicaciones ---
+\begin{frame}{¿Cuándo y cómo usarlo? Utilidad práctica}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{Receta de aplicación:}
+\begin{enumerate}\setlength\itemsep{1pt}
+  \item Tienes \alert{10--25 ejemplos por clase}.
+  \item Tienes \alert{4--10 clases}.
+  \item Generas $3\times$ candidatas con un LLM.
+  \item Filtras con cascade nivel 1 (distancia).
+  \item Ponderas suavemente y entrenas un\\
+        clasificador \textbf{lineal}.
+\end{enumerate}
+
+\vspace{0.4em}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{Costo real}
+$\sim 10$--$50$ llamadas LLM por clase.\\
+A precios actuales: \textbf{centavos por dataset}.
+\end{block}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\textbf{Casos de aplicación inmediata:}
+\begin{itemize}\setlength\itemsep{1pt}
+  \item Detectar contenido tóxico nuevo.
+  \item Triaje clínico con notas escasas.
+  \item Categorización de tickets de soporte.
+  \item Monitoreo de marca / tópicos emergentes.
+  \item Clasificación de eventos en logs.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Quién no debería usarlo:}
+\begin{itemize}\setlength\itemsep{1pt}
+  \item Más de 50 ejemplos por clase: SMOTE basta.
+  \item $\geq 77$ clases: el espacio se fragmenta.
+  \item Modelos de árbol como única opción.
+\end{itemize}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- Slide 27: Limitaciones, futuro y cierre ---
+\begin{frame}{Limitaciones, trabajo futuro y cierre}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{Limitaciones honestas}
+\scriptsize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Evaluación solo en \textbf{inglés}.
+  \item Caching reduce varianza\\\cita{$+1{.}79$pp persistente en stochastic clf}.
+  \item Pierde efectividad con $\geq 77$ clases.
+  \item LLMs comerciales filtran contenido sensible (hate-speech).
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Trabajo futuro}
+\scriptsize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Embeddings y LLMs \textbf{multilingües}.
+  \item LLMs locales (Llama, Mistral) sin filtros de contenido.
+  \item Temperatura $T$ \textbf{adaptativa por clase}.
+  \item Presupuesto generativo adaptativo.
+  \item Otras tareas: QA, resumen, generación de preguntas.
+\end{itemize}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.6em}
+\begin{center}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{tcolorbox}[colback=uaibluedark, colframe=uaibluedark, coltext=white,
+                  width=0.85\linewidth, halign=center, arc=4pt]
+\textbf{Gracias.}\\[0.2em]
+{\small Preguntas, comentarios, contraejemplos: bienvenidos.}
+\end{tcolorbox}
+\end{center}
+\end{frame}

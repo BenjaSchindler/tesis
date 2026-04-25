@@ -1,0 +1,50 @@
+% =============================================================================
+% Bloque 5: Hipótesis y Objetivos (slide 11)
+% =============================================================================
+
+\section{Hipótesis y objetivos}
+
+% --- Slide 11: H1 + sub-hipótesis + objetivos ---
+\begin{frame}{Hipótesis y objetivos}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{H1 — Hipótesis principal}
+\small
+El filtrado geométrico de muestras LLM en el espacio de embeddings produce
+mejoras \textbf{estadísticamente significativas} en macro F1 respecto a SMOTE,
+en clasificación con pocos ejemplos por clase.
+\end{block}
+
+\vspace{0.4em}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Sub-hipótesis verificables}
+\scriptsize
+\begin{description}
+  \item[H1a] Filtrado por distancia $>$ sin filtrar.
+  \item[H1b] Ponderación suave $\geq$ filtrado binario.
+  \item[H1c] Generaliza a NER sin modificación.
+  \item[H1d] Lineales $>$ ensambles de árboles.
+\end{description}
+\end{block}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{Objetivos específicos}
+\scriptsize
+\begin{enumerate}
+  \item Diseñar e implementar un sistema de filtros con ponderación suave.
+  \item Comparar contra \textbf{9 métodos} (clásicos + modernos) sobre múltiples datasets.
+  \item Demostrar generalización a \textbf{NER}.
+\end{enumerate}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.4em}
+{\scriptsize\itshape Criterio de aceptación:}
+{\scriptsize $\Delta>0$,\quad $p_{\text{Bonf}}<0.05$,\quad win-rate $>50\%$.}
+\end{frame}

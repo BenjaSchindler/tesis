@@ -1,0 +1,41 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{uai-colors}[2026/04/25 UAI institutional color palette for Beamer]
+
+\RequirePackage{xcolor}
+
+% Paleta UAI institucional
+\definecolor{uaiblue}{HTML}{1F4788}        % Azul UAI principal
+\definecolor{uaibluedark}{HTML}{12305B}    % Azul oscuro (títulos)
+\definecolor{uaibluelight}{HTML}{4A7AB8}   % Azul claro (acentos)
+\definecolor{uaigray}{HTML}{4A4A4A}        % Gris texto
+\definecolor{uaigraylight}{HTML}{E8E8E8}   % Gris fondo bloques
+\definecolor{uaiorange}{HTML}{E74C3C}      % Naranja-rojo (cifras headline)
+\definecolor{uaigreen}{HTML}{27AE60}       % Verde (nuestro método)
+\definecolor{uaiamber}{HTML}{F39C12}       % Ámbar (advertencias / contra-intuitivo)
+
+% Convenciones cromáticas para charts/diagramas
+\definecolor{methodOurs}{HTML}{27AE60}     % Nuestro método (verde)
+\definecolor{methodSMOTE}{HTML}{2E86C1}    % SMOTE (azul)
+\definecolor{methodOther}{HTML}{95A5A6}    % Otros baselines (gris)
+\definecolor{methodWorse}{HTML}{C0392B}    % Métodos que pierden
+
+% Sobreescritura de colores Metropolis
+\setbeamercolor{normal text}{fg=uaigray, bg=white}
+\setbeamercolor{alerted text}{fg=uaiorange}
+\setbeamercolor{example text}{fg=uaigreen}
+\setbeamercolor{structure}{fg=uaiblue}
+\setbeamercolor{frametitle}{fg=white, bg=uaibluedark}
+\setbeamercolor{title separator}{fg=uaiorange}
+\setbeamercolor{progress bar}{fg=uaiorange, bg=uaigraylight}
+\setbeamercolor{progress bar in head/foot}{fg=uaiorange, bg=uaigraylight}
+\setbeamercolor{progress bar in section page}{fg=uaiorange, bg=uaigraylight}
+\setbeamercolor{section title}{fg=uaibluedark}
+\setbeamercolor{block title}{fg=white, bg=uaiblue}
+\setbeamercolor{block body}{bg=uaigraylight}
+\setbeamercolor{block title alerted}{fg=white, bg=uaiorange}
+\setbeamercolor{block title example}{fg=white, bg=uaigreen}
+\setbeamercolor{itemize item}{fg=uaiblue}
+\setbeamercolor{itemize subitem}{fg=uaibluelight}
+\setbeamercolor{enumerate item}{fg=uaiblue}
+
+\endinput
