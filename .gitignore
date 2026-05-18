@@ -47,6 +47,8 @@ experiments/quick_*.py
 
 # Backup files
 *_backup_*
+*.bak
+*.bak.*
 
 # Experiment results (regenerable)
 results/
