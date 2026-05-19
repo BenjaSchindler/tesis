@@ -42,7 +42,7 @@ Presentacion_Defensa/
 | # | Slide | Bloque | Tiempo |
 |---|---|---|---|
 | 1–2 | Portada + roadmap | Apertura | 1.5 min |
-| 3–5 | Hook, escasez, trade-off SMOTE/LLM | Motivación | 3 min |
+| 3–5 | Hook, escasez, trade-off SMOTE/LLM | Introducción | 3 min |
 | 6–7 | 3 deficiencias + pregunta | Problema | 2 min |
 | 8–10 | Timeline, insights teóricos, Venn | SOTA | 3 min |
 | 11 | H1 + H1a–d + objetivos | Hipótesis | 1 min |

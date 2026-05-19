@@ -1,10 +1,225 @@
 % =============================================================================
-% Bloque 4: Estado del Arte (slides 8–10)
+% Bloque 4: Estado del Arte
+% Intro SMOTE/ADASYN + Intro LLMs + Dilema + Timeline + Insights + Posicionamiento
 % =============================================================================
 
 \section{Estado del arte}
 
-% --- Slide 8: Timeline de 4 paradigmas ---
+% --- Slide: Intro SMOTE/ADASYN ---
+\begin{frame}{Familia 1 — SMOTE y ADASYN: interpolación geométrica}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\small
+\textbf{SMOTE} \cita{Chawla et al., 2002} y \textbf{ADASYN} \cita{He et al., 2008} son los métodos canónicos de oversampling.
+
+\vspace{0.4em}
+\textbf{Idea:}
+\begin{itemize}\setlength\itemsep{2pt}
+  \item Para cada muestra minoritaria $x_i$, encontrar sus $k$ vecinos más cercanos de la misma clase.
+  \item Generar muestras nuevas sobre los segmentos:
+\end{itemize}
+
+\vspace{0.2em}
+\centering
+$x_{\text{new}} = x_i + \lambda \,(x_j - x_i), \quad \lambda \in [0,1]$
+\raggedright
+
+\vspace{0.5em}
+\textbf{Diferencia clave:}
+\begin{itemize}\setlength\itemsep{2pt}
+  \item ADASYN \alert{pesa más} las muestras difíciles (rodeadas de otra clase).
+\end{itemize}
+
+\vspace{0.4em}
+\good\ Geometría controlada. \quad \good\ Garantías formales.\\
+\bad\ Genera \alert{vectores}, no texto. \quad \bad\ Solo rellena lo conocido.
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\centering
+\vspace{0.3em}
+\begin{tikzpicture}[scale=1.0]
+  % Casco convexo
+  \fill[methodSMOTE!10] (-1.3,-1.1) -- (1.3,-0.9) -- (1.5,0.7) -- (-0.5,1.3) -- (-1.3,-1.1);
+
+  % Puntos reales
+  \foreach \pt in {(-1.3,-1.1),(1.3,-0.9),(1.5,0.7),(-0.5,1.3),(0,0.2)}{\fill[methodSMOTE] \pt circle (3.5pt);}
+
+  % Segmentos de interpolación
+  \draw[methodSMOTE!60, dashed] (-1.3,-1.1) -- (1.3,-0.9);
+  \draw[methodSMOTE!60, dashed] (-1.3,-1.1) -- (0,0.2);
+  \draw[methodSMOTE!60, dashed] (0,0.2) -- (1.5,0.7);
+  \draw[methodSMOTE!60, dashed] (-0.5,1.3) -- (0,0.2);
+
+  % Sintéticos (en los segmentos)
+  \foreach \pt in {(0,-1),(-0.65,-0.45),(0.75,0.45),(-0.25,0.75)}{\draw[uaiorange, very thick] \pt circle (3pt);}
+
+  \node[font=\tiny, color=uaigray] at (0,-1.8) {{\color{methodSMOTE}\textbullet}\,reales \quad {\color{uaiorange}$\circ$}\,sintéticos};
+  \node[font=\tiny\itshape] at (0,-2.1) {Interpolación entre $k$-NN};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\mensaje{Geometría como control: pero la salida es un vector, no una oración.}
+\end{frame}
+
+% --- Slide: Familia 2 — Aumentación textual ligera (entre SMOTE y LLMs) ---
+\begin{frame}{Familia 2 — Aumentación textual ligera}
+\small
+Entre la \alert{interpolación geométrica} y la \alert{generación libre} hay un puente histórico: métodos que producen texto con modelos pequeños y operaciones controladas.
+
+\vspace{0.5em}
+\begin{columns}[T]
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{EDA}
+\scriptsize
+\cita{Wei \& Zou, 2019}\\[3pt]
+4 ops a nivel \textbf{palabra}:\\
+sinónimo, inserción, swap, deleción.\\[3pt]
+\good\ Muy barato.\\
+\bad\ Ruido en oraciones cortas.
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Traducción inversa}
+\scriptsize
+\cita{Sennrich 2016; Edunov 2018}\\[3pt]
+EN $\to$ otro idioma $\to$ EN.\\
+Paráfrasis a nivel \textbf{oración}.\\[3pt]
+\good\ Cambia sintaxis.\\
+\bad\ Pierde matices.
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{BERT contextual}
+\scriptsize
+\cita{Kobayashi 2018; Wu 2019}\\[3pt]
+Enmascarar tokens; BERT predice alternativas plausibles.\\[3pt]
+\good\ Contexto semántico.\\
+\bad\ Solo sustitución 1:1.
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.7em}
+\begin{insight}
+\scriptsize
+Todos producen \textbf{texto}, pero con un \textbf{techo de creatividad bajo}: paráfrasis cercanas al original. Los LLMs rompen ese techo --- y por eso necesitan otro tipo de control.
+\end{insight}
+\end{frame}
+
+% --- Slide: Familia 3 — LLMs ---
+\begin{frame}{Familia 3 — LLMs: generación de texto bajo demanda}
+\begin{columns}[T]
+
+\begin{column}{0.58\textwidth}
+\small
+Pedirle a un LLM (GPT, Gemini, Claude\dots) que genere ejemplos nuevos para cada clase.
+
+\vspace{0.3em}
+\textbf{Receta típica} \cita{Whitehouse et al., 2023}:
+\begin{enumerate}\setlength\itemsep{1pt}\scriptsize
+  \item Prompt con descripción de clase y ejemplos reales.
+  \item Pedir $N$ generaciones nuevas.
+  \item Añadirlas al entrenamiento.
+\end{enumerate}
+
+\vspace{0.3em}
+\textbf{Trabajos representativos:}
+\begin{itemize}\setlength\itemsep{1pt}\scriptsize
+  \item Suhaeni \& Yong (2024): $+12.7\%$ acc.\ en minoritarias.
+  \item ImbLLM (2024): control de desbalance vía prompting.
+  \item Cegin et al.\ (2025): diversidad guiada por LLM.
+\end{itemize}
+
+\vspace{0.4em}
+{\scriptsize
+\good\ Texto coherente. \quad \good\ Diversidad lingüística.\\
+\bad\ \alert{Sin garantías geométricas}. \quad \bad\ Ruido y solapamiento.}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\centering
+\vspace{0.2em}
+\begin{tikzpicture}[every node/.style={font=\scriptsize, align=center}]
+  \node[draw=uaibluedark, fill=uaibluelight!15, rounded corners, very thick,
+        text width=3.6cm, minimum height=1.0cm] (prompt) at (0, 2.7)
+        {\scriptsize\textbf{Prompt}\\[1pt]
+         \tiny\itshape ``Genera 50 mensajes de alegría\dots''};
+  \draw[->, very thick, uaibluedark] (0, 2.05) -- (0, 1.65);
+  \node[draw=methodOurs, fill=methodOurs!15, rounded corners, very thick,
+        text width=2.4cm, minimum height=0.7cm] (llm) at (0, 1.2)
+        {\textbf{LLM}};
+  \draw[->, very thick, methodOurs] (0, 0.8) -- (0, 0.4);
+  \node[draw=uaiorange, fill=uaiorange!10, rounded corners, very thick,
+        text width=3.6cm, minimum height=1.0cm] (out) at (0, -0.2)
+        {\scriptsize\textbf{$N$ oraciones nuevas}\\[1pt]
+         \tiny algunas buenas, otras ruido\dots};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\mensaje{Texto sin control: los vectores caen donde quieran.}
+\end{frame}
+
+% --- Slide: El dilema (movido desde Introducción) ---
+\begin{frame}{El dilema: SMOTE vs.\ LLMs lado a lado}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=methodSMOTE}
+\begin{block}{SMOTE / interpolación}
+\small
+\good\ Geometría controlada\\
+\good\ Garantías formales\\[2pt]
+\bad\ Vectores sin texto coherente\\
+\bad\ Solo rellena lo conocido
+\end{block}
+\vspace{0.4em}
+\begin{tikzpicture}[scale=0.85]
+  \fill[methodSMOTE!20] (0,0) circle (1.4);
+  \foreach \pt in {(0,0.4),(0.7,0.2),(-0.5,0.6),(0.3,-0.5),(-0.7,-0.3),(0.6,-0.7)} {\fill[methodSMOTE] \pt circle (2pt);}
+  \foreach \pt in {(0.4,0),(-0.2,0.1),(0.1,0.5),(-0.4,-0.5),(0.45,-0.2)} {\draw[uaiorange,thick] \pt circle (2pt);}
+  \node[font=\tiny] at (0,-1.7) {Interpolación lineal};
+\end{tikzpicture}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=methodOurs}
+\begin{block}{LLM (Gemini, GPT, Claude\dots)}
+\small
+\good\ Texto fluido y coherente\\
+\good\ Diversidad lingüística\\[2pt]
+\bad\ Geometría descontrolada\\
+\bad\ Ruido y solapamiento entre clases
+\end{block}
+\vspace{0.4em}
+\begin{tikzpicture}[scale=0.85]
+  \fill[methodOurs!15] (0,0) circle (1.6);
+  \foreach \pt in {(0,0.4),(0.7,0.2),(-0.5,0.6),(0.3,-0.5)} {\fill[methodOurs] \pt circle (2pt);}
+  \foreach \pt in {(0.4,0),(-0.2,0.1),(0.1,0.5),(1.4,0.3),(-1.2,-0.4),(0.9,-1.0),(-0.8,1.1)} {\draw[uaiorange,thick] \pt circle (2pt);}
+  \node[font=\tiny] at (0,-1.9) {Generación abierta};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\mensaje{¿Podemos quedarnos con lo mejor de ambos mundos?}
+\end{frame}
+
+% --- Slide: Timeline de 4 paradigmas ---
 \begin{frame}{Cuatro paradigmas, una década de evolución}
 \centering
 \begin{tikzpicture}[every node/.style={font=\scriptsize}]
@@ -50,49 +265,106 @@
 \mensaje{Cada paradigma resuelve un problema y crea otro nuevo.}
 \end{frame}
 
-% --- Slide 9: Insights teóricos ---
-\begin{frame}{¿Por qué la distancia euclidiana basta?}
+% --- Slide: Tres deficiencias (después del Timeline) ---
+\begin{frame}{Tres deficiencias en los métodos actuales}
 \small
 \begin{columns}[T]
 
 \begin{column}{0.33\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaiblue}
-\begin{block}{Hipótesis del manifold}
-Los datos viven cerca de una variedad de baja dimensión.
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{1. Sin validación}
+Las muestras del LLM se aceptan \textbf{todas}, sin verificar si caen en la región correcta del espacio.
 \vspace{0.3em}\\
-{\scriptsize Inliers $\approx$ buenas muestras.}
+{\scriptsize Texto gramatical $\neq$ texto en la zona correcta.}
+\end{block}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{2. Peso uniforme}
+Todas las muestras pesan igual en el clasificador, ignorando la \textbf{calidad geométrica} de cada una.
+\vspace{0.3em}\\
+{\scriptsize Una en zona densa = una en zona dispersa.}
 \end{block}
 \end{column}
 
 \begin{column}{0.33\textwidth}
 \setbeamercolor{block title}{fg=white,bg=uaiblue}
-\begin{block}{Concentración de la medida}
-En $\mathbb{R}^{768}$ la similitud coseno se concentra en un rango muy estrecho.
+\begin{block}{3. Un solo dataset}
+Casi todos los estudios validan en \textbf{un único} corpus o tarea.
 \vspace{0.3em}\\
-{\scriptsize \cita{Tessari et al.\ 2024}}
-\end{block}
-\end{column}
-
-\begin{column}{0.33\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaiblue}
-\begin{block}{Robinson 2025}
-Los embeddings de LLM violan la hipótesis del manifold; la \textbf{distancia euclidiana} es más robusta que LOF.
+{\scriptsize ¿Generaliza el filtrado entre dominios y tareas?}
 \end{block}
 \end{column}
 
 \end{columns}
 
-\vspace{0.5em}
-\begin{tikzpicture}[scale=0.9]
-  \node[font=\scriptsize] at (0,0) {Para vectores L2-normalizados:};
-  \node[font=\normalsize] at (4.5,0) {$\|u-v\|^2 = 2(1-\cos(u,v))$};
-  \node[font=\scriptsize, color=uaiorange] at (10.5,0) {$\Rightarrow$ rankings idénticos};
+\vfill
+\begin{tikzpicture}[overlay,remember picture]
 \end{tikzpicture}
 
-\mensaje{Lo simple gana porque las métricas complejas son redundantes.}
+\mensaje{La señal geométrica está disponible y nadie la está usando.}
 \end{frame}
 
-% --- Slide 10: Posicionamiento ---
+% --- Slide: Gap metodológico + idea conceptual ---
+\begin{frame}{El gap metodológico: filtrar la salida del LLM}
+\begin{columns}[T]
+
+\begin{column}{0.52\textwidth}
+\small
+Las deficiencias anteriores apuntan a una intervención conceptualmente simple, no estudiada sistemáticamente.
+
+\vspace{0.4em}
+\textbf{La idea:}
+\begin{enumerate}\setlength\itemsep{1pt}\scriptsize
+  \item Generar $N$ muestras con el LLM (como hoy).
+  \item Proyectarlas al espacio de embeddings.
+  \item Medir qué tan cerca caen del \textbf{cluster real} de su clase.
+  \item \alert{Rechazar las que se alejan demasiado}.
+\end{enumerate}
+
+\vspace{0.4em}
+\textbf{¿Por qué tiene sentido?}
+\begin{itemize}\setlength\itemsep{1pt}\scriptsize
+  \item La geometría \alert{ya está ahí}: usamos embeddings para el clasificador.
+  \item Cero costo extra de generación; el filtro opera \emph{a posteriori}.
+  \item Agnóstico al LLM concreto.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\centering
+\vspace{0.2em}
+\begin{tikzpicture}[scale=0.85]
+  % Cluster real (fondo)
+  \fill[methodSMOTE!18] (0,0) circle (1.5);
+
+  % Frontera del filtro (dashed)
+  \draw[uaibluedark, dashed, thick] (0,0) circle (1.9);
+
+  % Puntos reales (sólidos)
+  \foreach \pt in {(0,0.2),(0.4,0.4),(-0.5,0.3),(0.6,-0.4),(-0.3,-0.5),(0.2,0.7),(-0.6,-0.2),(0.7,0.1)} {\fill[methodSMOTE] \pt circle (3pt);}
+
+  % LLM aceptados (verdes, dentro del filtro)
+  \foreach \pt in {(0.9,0.5),(-0.8,-0.7),(0.3,1.0),(-0.4,1.1),(1.0,-0.5),(-1.1,0.4)} {\draw[methodOurs, very thick] \pt circle (3pt);}
+
+  % LLM rechazados (rojos, fuera del filtro)
+  \foreach \pt in {(2.4,0.7),(-2.3,0.9),(2.0,-1.4),(-1.7,-2.0),(0.1,2.3),(2.5,-0.3)} {\draw[uaiorange, very thick] \pt circle (3pt);}
+
+  % Leyenda compacta
+  \node[font=\tiny, color=methodSMOTE, anchor=west] at (-2.8,3.0) {{\fontsize{6}{6}\selectfont$\bullet$}\,reales};
+  \node[font=\tiny, color=methodOurs, anchor=west] at (-2.8,2.7) {$\circ$\,aceptado};
+  \node[font=\tiny, color=uaiorange, anchor=west] at (-2.8,2.4) {$\circ$\,rechazado};
+  \node[font=\tiny, color=uaibluedark, anchor=west] at (-2.8,2.1) {- -\,filtro};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\mensaje{La señal geométrica ya existe — falta usarla para decidir qué entra al entrenamiento.}
+\end{frame}
+
+% --- Slide: Posicionamiento ---
 \begin{frame}{Dónde encaja esta propuesta}
 \begin{center}
 \begin{tikzpicture}[scale=0.72, every node/.style={font=\scriptsize}, transform shape]

@@ -1,51 +1,89 @@
 % =============================================================================
-% Bloque 3: El Gap (Problema) (slides 6–7)
+% Bloque 3: Problema (Escasez + Re-muestreo + Deficiencias + Pregunta)
 % =============================================================================
 
-\section{El gap del estado del arte}
+\section{Problema}
 
-% --- Slide 6: Las 3 deficiencias ---
-\begin{frame}{Tres deficiencias en los métodos actuales}
-\small
+% --- Slide: Escasez de datos en la práctica (movida desde intro) ---
+\begin{frame}{Escasez de datos: un problema cotidiano}
 \begin{columns}[T]
 
-\begin{column}{0.33\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaiorange}
-\begin{block}{1. Sin validación}
-Las muestras del LLM se aceptan \textbf{todas}, sin verificar si caen en la región correcta del espacio.
-\vspace{0.3em}\\
-{\scriptsize Texto gramatical $\neq$ texto en la zona correcta.}
-\end{block}
+\begin{column}{0.5\textwidth}
+\small
+\textbf{Casos reales que sufren pocos ejemplos:}
+\begin{itemize}
+  \item Detección de \textbf{discurso de odio} en idiomas minorizados.
+  \item Triaje clínico, clasificación de notas médicas.
+  \item Categorización de \textbf{tickets de soporte} en empresas.
+  \item Spam emergente y nuevos esquemas de fraude.
+\end{itemize}
+\vspace{0.4em}
+\textbf{Por qué duele:}
+\begin{itemize}
+  \item Etiquetado humano = \alert{caro, lento y sesgado}.
+  \item Multiclase $+$ desbalance $\Rightarrow$ macro F1 colapsa.
+  \cita{Gopali 2024; Whitehouse 2023}
+\end{itemize}
 \end{column}
 
-\begin{column}{0.33\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaiamber}
-\begin{block}{2. Peso uniforme}
-Todas las muestras pesan igual en el clasificador, ignorando la \textbf{calidad geométrica} de cada una.
-\vspace{0.3em}\\
-{\scriptsize Una en zona densa = una en zona dispersa.}
-\end{block}
+\begin{column}{0.5\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  % Iconos representando dominios
+  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (a) at (-1.3,3) {\textbf{Hate speech}\\\tiny minoría: $<$30 ej.};
+  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (b) at (1.3,3) {\textbf{Clínico}\\\tiny rare disease};
+  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (c) at (-1.3,1.5) {\textbf{Soporte TI}\\\tiny producto nuevo};
+  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (d) at (1.3,1.5) {\textbf{Spam}\\\tiny esquema emergente};
+  \node[draw=uaiorange, very thick, rounded corners, fill=uaiorange!15, minimum width=4.8cm, minimum height=0.8cm, text width=4.6cm, align=center] at (0,0.2) {\textbf{Común:} 10--50 ejemplos por clase};
+\end{tikzpicture}
 \end{column}
 
-\begin{column}{0.33\textwidth}
+\end{columns}
+\end{frame}
+
+% --- Slide: Re-muestreo (movida desde Estado del Arte) ---
+\begin{frame}{Re-muestreo: el paraguas que une a SMOTE y a los LLMs}
+\small
+La estadística clásica enmarca la escasez desde hace décadas como un problema de \emph{re-muestreo}. Ambas familias caben aquí.
+
+\vspace{0.5em}
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
 \setbeamercolor{block title}{fg=white,bg=uaiblue}
-\begin{block}{3. Un solo dataset}
-Casi todos los estudios validan en \textbf{un único} corpus o tarea.
-\vspace{0.3em}\\
-{\scriptsize ¿Generaliza el filtrado entre dominios y tareas?}
+\begin{block}{Undersampling}
+\scriptsize
+\textbf{Reduce} la clase mayoritaria.\\[2pt]
+\textbf{Ejemplos:} muestreo aleatorio, NearMiss, Tomek Links.\\[2pt]
+\good\ Más rápido al entrenar.\\
+\bad\ Pierde información. \alert{Inviable en few-shot}.
+\end{block}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{Oversampling}
+\scriptsize
+\textbf{Aumenta} la clase minoritaria.\\[2pt]
+\textbf{Ejemplos:} duplicación, \textbf{SMOTE}, ADASYN, EDA, \textbf{LLMs}.\\[2pt]
+\good\ Conserva todos los datos.\\
+\bad\ Riesgo de overfitting, ruido o divergencia.
 \end{block}
 \end{column}
 
 \end{columns}
 
-\vfill
-\begin{tikzpicture}[overlay,remember picture]
-\end{tikzpicture}
+\vspace{0.7em}
+\begin{insight}
+\scriptsize
+SMOTE y los LLMs caen bajo el mismo paraguas conceptual de \textbf{oversampling}, pero operan en planos distintos: \alert{vectores} vs.\ \alert{texto}.\\[2pt]
+La pregunta abierta no es cuál elegir, sino \textbf{cómo combinarlos sin perder garantías geométricas}.
+\end{insight}
 
-\mensaje{La señal geométrica está disponible y nadie la está usando.}
+\mensaje{De ahí surge la pregunta central de esta tesis.}
 \end{frame}
 
-% --- Slide 7: Pregunta de investigación ---
+% --- Slide: Pregunta de investigación ---
 \begin{frame}{Pregunta de investigación}
 \vfill
 \begin{center}

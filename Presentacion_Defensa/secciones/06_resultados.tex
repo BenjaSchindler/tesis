@@ -36,10 +36,21 @@
 \mensaje{El método propuesto supera todas las líneas base, incluidas las modernas.}
 \end{frame}
 
-% --- Slide 18: t-SNE before/after ---
-\begin{frame}{¿Qué hace el filtro? Visualización t-SNE}
+% --- Slide 18a: Antes vs después del filtrado ---
+\begin{frame}{Visualización t-SNE: el filtro en acción --- antes vs después}
 \centering
-\includegraphics[width=0.85\linewidth, height=6.5cm, keepaspectratio]{fig_tsne_filtered_vs_smote_emotion.png}
+\includegraphics[width=0.96\linewidth, height=5.4cm, keepaspectratio]{fig_tsne_before_after_20newsgroups.png}
+
+\vspace{0.1em}
+{\scriptsize \dataset{20newsgroups} (4 clases, 10-shot). \textbf{Izq.:} candidatas del LLM (triángulos tenues). \textbf{Der.:} solo las que pasaron el filtro. Círculos = reales, estrellas = centroides.}
+
+\mensaje{El filtro elimina las candidatas en zonas de cruce o periféricas; conserva las que refuerzan el cluster.}
+\end{frame}
+
+% --- Slide 18b: t-SNE filtrado vs SMOTE ---
+\begin{frame}{Visualización t-SNE: SMOTE vs filtro}
+\centering
+\includegraphics[width=0.85\linewidth, height=5.8cm, keepaspectratio]{fig_tsne_filtered_vs_smote_emotion.png}
 
 \vspace{0.2em}
 {\scriptsize Dataset \dataset{emotion} (6 clases, 10-shot): triángulos = LLM filtrado, cuadrados = SMOTE.}
@@ -156,26 +167,33 @@ Random Forest       & $+1{.}42$         & n.s. \\
 
 \begin{column}{0.5\textwidth}
 \centering
-\begin{tikzpicture}[every node/.style={font=\scriptsize}]
-  \draw[->,thick,uaigray] (0,0) -- (5,0) node[right]{$\Delta$F1 vs.\ SMOTE};
-  \draw[uaigray] (0,0) -- (0,4.5);
-  \draw[uaigray, dashed] (1.5,0) -- (1.5,4.5);
-  \node[below, font=\tiny] at (1.5,-0.05) {0};
+\begin{tikzpicture}[every node/.style={font=\scriptsize}, scale=0.7]
+  % Línea vertical en 0 (referencia SMOTE)
+  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.8);
+  \node[below, font=\tiny] at (0,-0.35) {SMOTE = 0};
 
-  \fill[methodOurs] (1.5,4) rectangle (3.0,4.4);
-  \node[right, font=\tiny, text width=2cm, align=left] at (3.05,4.2) {Cascade L1 \textbf{+1.45}};
+  % Eje horizontal abajo
+  \draw[->,thick,uaigray] (-3.7,-0.3) -- (2.2,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \foreach \x in {-3,-2,-1,1,2}{
+    \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38);
+  }
 
-  \fill[methodOurs!70] (1.5,3.2) rectangle (2.85,3.6);
-  \node[right, font=\tiny] at (2.9,3.4) {LOF +0.88};
+  % Bars (positive)
+  \fill[methodOurs] (0,4.1) rectangle (1.45,4.5);
+  \node[right, font=\tiny] at (1.55,4.3) {\textbf{Cascade L1 +1.45}};
 
-  \fill[methodOther] (1.5,2.4) rectangle (2.78,2.8);
-  \node[right, font=\tiny] at (2.83,2.6) {None +0.72};
+  \fill[methodOurs!70] (0,3.4) rectangle (0.88,3.8);
+  \node[right, font=\tiny] at (0.98,3.6) {LOF +0.88};
 
-  \fill[methodWorse] (0.21,1.6) rectangle (1.5,2.0);
-  \node[left, font=\tiny, text width=2cm, align=right] at (0.16,1.8) {Embedding-Guided $-1.29$};
+  \fill[methodOther] (0,2.7) rectangle (0.72,3.1);
+  \node[right, font=\tiny] at (0.82,2.9) {None +0.72};
 
-  \fill[methodWorse] (-0.78,0.8) rectangle (1.5,1.2);
-  \node[left, font=\tiny, color=uaiorange] at (-0.83,1.0) {\textbf{Combined $-3.28$}};
+  % Bars (negative)
+  \fill[methodWorse] (-1.29,2.0) rectangle (0,2.4);
+  \node[left, font=\tiny] at (-1.39,2.2) {Emb.-Guided $-1.29$};
+
+  \fill[methodWorse] (-3.28,1.3) rectangle (0,1.7);
+  \node[left, font=\tiny, color=uaiorange] at (-3.38,1.5) {\textbf{Combined $-3.28$}};
 \end{tikzpicture}
 \end{column}
 
@@ -260,26 +278,31 @@ e5-large (1024d)         & $+0{.}97$ \\
 
 \begin{column}{0.55\textwidth}
 \centering
-\begin{tikzpicture}[every node/.style={font=\scriptsize}]
-  \draw[->,thick,uaigray] (0,0) -- (5.5,0) node[right]{$\Delta$F1 (pp)};
-  \draw[uaigray] (0,0) -- (0,3.6);
+\begin{tikzpicture}[every node/.style={font=\scriptsize}, x=0.32cm, y=0.5cm]
+  % Eje horizontal y vertical
+  \draw[->,thick,uaigray] (0,0) -- (16.5,0) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \draw[uaigray] (0,0) -- (0,7.5);
   \foreach \x in {0,3,6,9,12,15}{
-    \draw[uaigray!50] (\x*0.3,0.05) -- (\x*0.3,-0.05) node[below, font=\tiny]{\x};
+    \draw[uaigray!50] (\x,0.15) -- (\x,-0.15) node[below, font=\tiny]{\x};
   }
 
-  \fill[methodOurs] (0,3.0) rectangle (4.5,3.5);
-  \node[right, font=\scriptsize\bfseries] at (4.55,3.25) {Cascade L1 +9.61};
+  % Cascade L1
+  \fill[methodOurs] (0,6) rectangle (9.61,7);
+  \node[right, font=\scriptsize\bfseries] at (9.81,6.5) {Cascade L1 +9.61};
 
-  \fill[methodOurs!80] (0,2.3) rectangle (4.35,2.8);
-  \node[right, font=\scriptsize] at (4.4,2.55) {LOF +9.28};
+  % LOF
+  \fill[methodOurs!80] (0,4.5) rectangle (9.28,5.5);
+  \node[right, font=\scriptsize] at (9.48,5.0) {LOF +9.28};
 
-  \fill[methodSMOTE] (0,1.6) rectangle (1.0,2.1);
-  \node[right, font=\scriptsize] at (1.05,1.85) {None (ref)};
+  % None: solo línea de referencia (sin barra)
+  \draw[methodSMOTE, very thick] (-0.3,3) -- (0.3,4);
+  \node[right, font=\scriptsize, color=methodSMOTE] at (0.5,3.5) {None (referencia $= 0$)};
 
-  \fill[methodWorse] (-0.5,0.9) rectangle (0,1.4);
-  \node[right, font=\scriptsize] at (0.05,1.15) {Combined: 0\% aceptación};
+  % Combined: marca de rechazo (no medido)
+  \node[right, font=\scriptsize, color=uaiorange] at (0.2,2) {\textbf{$\times$} Combined: 0\% aceptación};
 
-  \node[font=\tiny, color=uaigreen!50!black] at (3.5,0.4) {10-shot: $+15.15$ pp};
+  % Anotación 10-shot
+  \node[font=\tiny, color=uaigreen!50!black] at (8,0.8) {(10-shot: $+15.15$ pp)};
 \end{tikzpicture}
 \end{column}
 

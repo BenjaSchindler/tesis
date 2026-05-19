@@ -44,7 +44,173 @@
 \mensaje{Filtrado y ponderación: dos contribuciones desacopladas del LLM.}
 \end{frame}
 
-% --- Slide 13: Los 5 filtros ---
+% --- Slide 13: Protocolo experimental (vuelve, antes de los datasets) ---
+\begin{frame}{Protocolo experimental: 8.000+ configuraciones}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{Datos y modelos:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \textbf{13 datasets} en 9 dominios.
+  \item \textbf{$n$-shot:} 10 / 25 / 50 ejemplos por clase.
+  \item \textbf{5 clasificadores:} LR, SVC, Ridge, RF, MLP.
+  \item \textbf{10 métodos} de aumentación.
+  \item \textbf{5 LLMs} (Gemini, GPT-5, Claude, Kimi, GLM).
+  \item \textbf{4 modelos} de embeddings.
+  \item \textbf{5 semillas:} 42, 123, 456, 789, 1011.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\textbf{Protocolo estadístico:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Métrica: \textbf{macro F1}.
+  \item $\Delta$F1 vs.\ SMOTE (puntos porcentuales).
+  \item \textbf{$t$-pareada} con corrección de Bonferroni.
+  \item Bootstrap CI 95\% (10\,000 remuestreos).
+  \item $d$ de Cohen como tamaño de efecto.
+  \item Win-rate como medida de consistencia.
+\end{itemize}
+
+\vspace{0.3em}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{Volumen}
+\centering\bfseries\large 8.000+ configuraciones
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- Slide 14: Conjuntos de datos (tabla) ---
+\begin{frame}{Conjuntos de datos: 13 corpus en 9 dominios}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.92}
+\begin{tabular}{@{}llccr@{}}
+\toprule
+\textbf{Conjunto} & \textbf{Dominio} & \textbf{Clases} & \textbf{$n$-shots} & \textbf{Test} \\
+\midrule
+\rowcolor{uaibluelight!12}\multicolumn{5}{l}{\textit{\color{uaibluedark}Clasificación de texto --- experimento principal}} \\
+\dataset{sms\_spam}              & Detección de spam        & 2  & 10, 25, 50 & 1.394 \\
+\dataset{hate\_speech\_davidson} & Discurso de odio         & 3  & 10, 25, 50 & 4.948 \\
+\dataset{20newsgroups}           & Noticias (4 cat.)        & 4  & 10, 25, 50 & 7.532 \\
+\dataset{ag\_news}               & Noticias (4 cat.)        & 4  & 10, 25, 50 & 7.600 \\
+\dataset{emotion}                & Emociones                & 6  & 10, 25, 50 & 2.000 \\
+\dataset{dbpedia14}              & Clasificación de temas   & 14 & 10, 25, 50 & 5.000 \\
+\dataset{20newsgroups\_20class}  & Noticias (20 cat.)       & 20 & 10, 25, 50 & 7.532 \\
+\midrule
+\rowcolor{uaiorange!12}\multicolumn{5}{l}{\textit{\color{uaibluedark}Adicionales --- escalabilidad por número de clases}} \\
+\dataset{trec6}                  & Preguntas                & 6   & 10, 25, 50 & 500 \\
+\dataset{banking77}              & Intenciones bancarias    & 77  & 10, 25, 50 & 3.080 \\
+\dataset{clinc150}               & Intenciones de diálogo   & 150 & 10, 25, 50 & 4.500 \\
+\midrule
+\rowcolor{uaigreen!12}\multicolumn{5}{l}{\textit{\color{uaibluedark}Reconocimiento de entidades nombradas (NER)}} \\
+\dataset{MultiNERD}              & Entidades generales      & 5 tipos & 10, 25, 50 & 10.000 \\
+\dataset{WikiANN}                & Entidades Wikipedia      & 3 tipos & 10, 25, 50 & 10.000 \\
+\dataset{Few-NERD}               & Entidades detalladas     & 8 tipos & 10, 25, 50 & 10.000 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\scriptsize\itshape $n$-shot estricto: 10 / 25 / 50 ejemplos por clase. Rango de complejidad: de binario (\dataset{sms\_spam}) a 150 clases (\dataset{clinc150}).}
+\end{frame}
+
+% --- Slide 15: Por qué estos datasets de clasificación ---
+\begin{frame}{¿Por qué estos datasets de clasificación?}
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{\small Experimento principal --- 7 datasets}
+\scriptsize
+Buscan \textbf{cobertura en tres ejes}:
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \textbf{Granularidad:} 2 $\to$ 20 clases.
+  \item \textbf{Dominio:} spam, odio, noticias, emoción, ontología.
+  \item \textbf{Estilo:} corto/largo, formal/informal, social/curado.
+\end{itemize}
+\vspace{0.4em}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \dataset{sms\_spam} (2): NLP canónico, frase corta.
+  \item \dataset{hate\_speech\_davidson} (3): dominio sensible.
+  \item \dataset{20newsgroups}, \dataset{ag\_news} (4): noticias.
+  \item \dataset{emotion} (6): el ejemplo recurrente.
+  \item \dataset{dbpedia14} (14): ontología Wikipedia.
+  \item \dataset{20newsgroups\_20class} (20): máxima granularidad.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{\small Escalabilidad --- 3 datasets adicionales}
+\scriptsize
+Responden la pregunta:\\[2pt]
+\alert{¿el filtrado sigue funcionando con muchas clases?}
+\vspace{0.4em}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \dataset{trec6} (6): preguntas TREC, mismo régimen de clases que el principal pero distinto dominio. Sirve de \textbf{control}.
+  \item \dataset{banking77} (77): intenciones bancarias, granularidad fina con clases semánticamente cercanas.
+  \item \dataset{clinc150} (150): intenciones de diálogo de asistentes virtuales. \textbf{Caso extremo}.
+\end{itemize}
+\vspace{0.4em}
+Permiten medir \textbf{degradación del filtrado} al aumentar el número de clases.
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Diez datasets, dos preguntas: ¿qué tan bueno es el filtrado? ¿hasta dónde escala?}
+\end{frame}
+
+% --- Slide 16: ¿Qué es NER y por qué la usamos? ---
+\begin{frame}{¿Qué es NER y por qué la usamos?}
+
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{\small NER (\textit{Named Entity Recognition})}
+\scriptsize
+Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasifica por tipo}: personas, lugares, organizaciones, fechas, etc.
+
+\vspace{0.3em}
+\textit{Ejemplo:} «Llamé a \colorbox{uaiblue!25}{\strut\,María\,} en \colorbox{uaiorange!25}{\strut\,Madrid\,} el \colorbox{uaigreen!25}{\strut\,2 de marzo\,}.»\hspace{0.5em}{\tiny \textcolor{uaiblue}{$\uparrow$PER}\hspace{1em}\textcolor{uaiorange}{$\uparrow$LOC}\hspace{1em}\textcolor{uaigreen}{$\uparrow$DATE}}
+\end{block}
+
+\vspace{0.4em}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\small
+\textbf{¿Por qué la usamos como prueba?}
+\begin{itemize}\setlength\itemsep{1pt}\scriptsize
+  \item Construimos el filtro para \textbf{clasificación}.
+  \item NER es una tarea NLP \textbf{distinta}: en vez de etiquetar la oración entera, se etiquetan palabras dentro.
+  \item Si el mismo filtro funciona en NER \textbf{sin cambiarlo} $\Rightarrow$ el filtro \alert{no depende de la tarea}.
+\end{itemize}
+
+\vspace{0.2em}
+{\scriptsize Es la prueba más fuerte de que el método \textbf{generaliza}.}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{\small 3 corpus, distinta complejidad}
+\scriptsize
+\begin{itemize}\setlength\itemsep{1pt}
+  \item \dataset{WikiANN} --- 3 tipos (PER, ORG, LOC). \textbf{Fácil}.
+  \item \dataset{MultiNERD} --- 5 tipos (+ DATE, MISC). Medio.
+  \item \dataset{Few-NERD} --- 8 tipos jerárquicos. \textbf{Difícil}.
+\end{itemize}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Mismo filtro, otra tarea: si funciona acá, sirve en general.}
+\end{frame}
+
+% --- Slide 17: Los 5 filtros ---
 \begin{frame}{Cinco estrategias de filtrado evaluadas}
 \small
 \begin{tabular}{@{}p{2.6cm}p{4.6cm}p{4.6cm}@{}}
@@ -163,42 +329,3 @@ w(x) = \max\!\left(w_{\min},\ \tilde{s}(x)^{\,1/T}\right)
 \mensaje{Las muestras se entregan al clasificador como \texttt{sample\_weight}.}
 \end{frame}
 
-% --- Slide 16: Protocolo experimental ---
-\begin{frame}{Protocolo experimental: 8.000+ configuraciones}
-\small
-\begin{columns}[T]
-
-\begin{column}{0.55\textwidth}
-\textbf{Datos y modelos:}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item \textbf{13 datasets} en 9 dominios:
-        \dataset{20news}, \dataset{emotion}, \dataset{ag\_news}, \dataset{hate-speech}, \dataset{sms-spam}, \dataset{trec6}, \dataset{banking77}, \dataset{clinc150}\dots
-  \item \textbf{$n$-shot:} 10 / 25 / 50 ejemplos por clase.
-  \item \textbf{5 clasificadores:} LR, SVC, Ridge, RF, MLP.
-  \item \textbf{10 métodos} de aumentación.
-  \item \textbf{5 LLMs} (Gemini, GPT-5, Claude, Kimi, GLM).
-  \item \textbf{4 modelos} de embeddings.
-  \item \textbf{5 semillas:} 42, 123, 456, 789, 1011.
-\end{itemize}
-\end{column}
-
-\begin{column}{0.45\textwidth}
-\textbf{Protocolo estadístico:}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item Métrica: \textbf{macro F1}.
-  \item $\Delta$F1 vs.\ SMOTE (puntos porcentuales).
-  \item \textbf{$t$-pareada} con corrección de Bonferroni.
-  \item Bootstrap CI 95\% (10\,000 remuestreos).
-  \item $d$ de Cohen como tamaño de efecto.
-  \item Win-rate como medida de consistencia.
-\end{itemize}
-
-\vspace{0.3em}
-\setbeamercolor{block title}{fg=white,bg=uaiorange}
-\begin{block}{Volumen}
-\centering\bfseries\large 8.000+ configuraciones
-\end{block}
-\end{column}
-
-\end{columns}
-\end{frame}
