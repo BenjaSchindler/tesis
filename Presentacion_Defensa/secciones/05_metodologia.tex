@@ -218,15 +218,17 @@ Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasific
 \textbf{Filtro} & \textbf{Criterio} & \textbf{Parámetros} \\
 \midrule
 \textit{None} (control)        & Sin filtrado, todas las muestras LLM. & --- \\[2pt]
-\textit{LOF}                   & Densidad local (Local Outlier Factor). & $k=20$, threshold $=0$ \\[2pt]
-\textit{Cascade L1} \alert{$\star$} & Distancia euclidiana al ancla. Top-$N$ por ranking. & $k=10$, niveles 1--4 \\[2pt]
+\textit{LOF}                   & Densidad local; conserva \emph{inliers} de \texttt{decision\_function} (sklearn). & $k=20$ vecinos$^{\dagger}$; umbral $>0$ \\[2pt]
+\textit{Cascade L1} \alert{$\star$} & Distancia euclidiana al centroide. Top-$N$ por ranking. & nivel $=1$ (diseño soporta 1--4)$^{\ddagger}$ \\[2pt]
 \textit{Combined}              & LOF \textbf{Y} similitud coseno. & $\tau_{\cos}=0.5$ \\[2pt]
 \textit{Embedding-Guided}      & Cobertura $0.6$ + calidad $0.4$, voraz. & multi-criterio \\
 \bottomrule
 \end{tabular}
 
 \vspace{0.6em}
-{\scriptsize\itshape\alert{$\star$} Cascade nivel 1 = mejor configuración encontrada.}
+{\scriptsize\itshape\alert{$\star$} Cascade nivel 1 = mejor configuración encontrada.\\
+$^{\dagger}$ \texttt{decision\_function} invierte el LOF clásico: $>0$ = inlier, $<0$ = outlier. Si la clase tiene $<21$ muestras (10-shot), $k$ se ajusta a $n-1$.\\
+$^{\ddagger}$ $k=10$ aplica solo al nivel 3 (pureza KNN); en L1 no se usa.}
 
 \vfill
 \mensaje{Cinco diseños, una pregunta: ¿filtros simples o complejos?}
@@ -242,10 +244,19 @@ Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasific
 \[
 s(x) = \left(\prod_{i=1}^{L} s_i(x)\right)^{1/L}
 \]
+
+\begin{center}
+{\scriptsize
+$s(x)$: calidad final \quad
+$s_i(x)$: score nivel $i$ \quad
+$L$: niveles activos}
+\end{center}
+
+\vspace{-0.2em}
 \begin{description}\scriptsize
-  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al ancla.
+  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al centroide.
   \item[Nivel 2] Similitud coseno.
-  \item[Nivel 3] Pureza KNN ($k$=10).
+  \item[Nivel 3] Pureza KNN ($k=10$).
   \item[Nivel 4] Distancia al centroide.
 \end{description}
 

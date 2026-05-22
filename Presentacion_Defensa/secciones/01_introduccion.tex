@@ -4,101 +4,116 @@
 
 \section{Introducción}
 
-% --- Slide 3: Hook + definición + caso real (sin spoiler) ---
-\begin{frame}{¿Cuántas muestras se necesitan para clasificar texto?}
+% --- Slide 3: Hook - "¿Estamos escuchando todas las voces?" ---
+\begin{frame}{¿Estamos escuchando todas las voces?}
 \begin{columns}[T]
 
 \begin{column}{0.55\textwidth}
 \small
-Imagina entrenar un clasificador de \textbf{6 emociones} con apenas\\
-\textbf{10 ejemplos por clase}.
-\begin{itemize}\setlength\itemsep{3pt}
-  \item Total: \alert{60 muestras} en un espacio de \alert{768 dimensiones}.
-  \item SMOTE: interpola vectores; no produce texto coherente.
-  \item Un LLM genera miles de oraciones plausibles\dots\\
-        \cita{pero, ¿son útiles todas?}
+Un clasificador aprende \textbf{de lo que ve}. Y la realidad rara vez se reparte por partes iguales:
+
+\vspace{0.3em}
+\begin{itemize}\setlength\itemsep{1pt}
+  \item \textbf{1} fraude entre \textbf{10.000} transacciones.
+  \item \textbf{30} cánceres raros entre \textbf{5.000} radiografías.
+  \item \textbf{Un} mensaje de auxilio entre miles de consultas rutinarias.
+  \item Discurso de odio en lenguas minorizadas: \textbf{decenas} de ejemplos.
 \end{itemize}
 
-\vspace{0.5em}
+\vspace{0.4em}
 \begin{insight}
 \scriptsize
-Aprender fronteras de decisión con $60$ puntos en $\mathbb{R}^{768}$ es estadísticamente débil. La aumentación de datos no es opcional: es \textbf{necesaria}.
+\textbf{Lo común se escucha. Lo raro se calla.}\\
+\alert{¿Cómo mejorar esas clases si apenas tenemos datos?}
 \end{insight}
 \end{column}
 
 \begin{column}{0.45\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaibluedark}
-\begin{block}{\small Few-shot text classification}
-\scriptsize
-Aprender a clasificar texto con un número reducido de ejemplos etiquetados por clase, típicamente $k \leq 50$.\\[3pt]
-\textbf{Esta tesis estudia $k \in \{10, 25, 50\}$.}
-\end{block}
+\centering
+\vspace{0.2em}
+{\scriptsize\bfseries\color{uaibluedark} Lo que el modelo escucha}
+
+\vspace{0.3em}
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  % Bars representing common classes (loud voices)
+  \draw[fill=uaibluelight!70, draw=uaiblue] (-2.1,0) rectangle (-1.65,2.9);
+  \draw[fill=uaibluelight!70, draw=uaiblue] (-1.40,0) rectangle (-0.95,2.6);
+  \draw[fill=uaibluelight!70, draw=uaiblue] (-0.70,0) rectangle (-0.25,2.3);
+  \draw[fill=uaibluelight!70, draw=uaiblue] ( 0.00,0) rectangle ( 0.45,2.0);
+  \draw[fill=uaibluelight!70, draw=uaiblue] ( 0.70,0) rectangle ( 1.15,1.7);
+
+  % Tiny minority bar
+  \draw[fill=uaiorange, draw=uaiorange, very thick] (1.75,0) rectangle (2.20,0.18);
+
+  % Axis line
+  \draw[uaigray, thick] (-2.3,0) -- (2.5,0);
+
+  % Arrow pointing to minority bar
+  \draw[->, very thick, uaiorange] (2.5,1.0) to[bend left=10] (2.05,0.32);
+  \node[uaiorange, font=\scriptsize\bfseries, anchor=west] at (2.0,1.25) {¿Y esta?};
+
+  % Labels under axis
+  \node[uaigray, font=\tiny, anchor=north] at (-0.5,-0.15) {clases comunes};
+  \node[uaiorange, font=\tiny, anchor=north] at (1.97,-0.15) {clase rara};
+\end{tikzpicture}
 
 \vspace{0.6em}
-\setbeamercolor{block title}{fg=white,bg=uaiorange}
-\begin{block}{\small Caso real: \dataset{emotion}}
-\scriptsize
-6 clases: alegría, tristeza, miedo, ira, amor, sorpresa.\\
-Entrenamiento: \alert{\textbf{60 mensajes}}. Evaluación: $\sim$1.000.\\[2pt]
-\textit{La situación del ejemplo es real y se mide en esta tesis.}
-\end{block}
-
-\vspace{0.5em}
-\centering
-{\scriptsize\itshape ¿Cómo aumentar sin etiquetar miles más?}
+{\scriptsize\itshape ¿Cómo aprende un modelo\\lo que apenas escucha?}
 \end{column}
 
 \end{columns}
 \end{frame}
 
-% --- Slide 4: Escena situacional (donde esta tesis es útil) ---
-\begin{frame}{Pocos datos, apuro y cero presupuesto: una escena habitual}
+% --- Slide 4: La asimetría — lo poco escuchado es lo que más importa ---
+\begin{frame}{Cuando lo poco escuchado es lo que más importa}
 \begin{columns}[T]
 
 \begin{column}{0.55\textwidth}
 \small
-\textbf{Lunes, 9:00.} Tu jefe te pide un clasificador en producción \textbf{el viernes}.
+Un modelo puede ser \textbf{correcto en el 95\% de los casos}\\
+y, aun así, \textbf{fallar en el 100\% de los que importan}.
 
 \vspace{0.5em}
-\textbf{Lo que tienes:}
+\textbf{La asimetría duele:}
 \begin{itemize}\setlength\itemsep{2pt}
-  \item 12 categorías de mensajes de pacientes (salud digital).
-  \item $\sim$15 mensajes etiquetados por categoría desde el CRM.
-  \item Cero presupuesto para etiquetado externo.
-  \item Un experto clínico ocupado hasta fin de mes.
+  \item Un cáncer no detectado \alert{$\rightarrow$ diagnóstico tardío}.
+  \item Un \emph{phishing} no marcado \alert{$\rightarrow$ una víctima nueva}.
+  \item Una crisis no atendida \alert{$\rightarrow$ una persona sola}.
+  \item Un fraude que pasa \alert{$\rightarrow$ dinero perdido}.
 \end{itemize}
 
 \vspace{0.4em}
-\textbf{Lo que el cliente exige:}
-\begin{itemize}\setlength\itemsep{2pt}
-  \item Macro-F1 $\geq 75\%$ sobre las 12 categorías.
-  \item Demo funcionando en \textbf{4 días}.
-\end{itemize}
-
-\vspace{0.4em}
-\cita{La escena se repite: spam emergente, soporte en idiomas nuevos, triaje clínico\dots}
+\begin{insight}
+\scriptsize
+La voz que el modelo \textbf{no escuchó}\\
+suele cargar con el mayor \textbf{costo humano}.
+\end{insight}
 \end{column}
 
 \begin{column}{0.45\textwidth}
 \centering
-\vspace{0.4em}
+\vspace{0.5em}
 \begin{tikzpicture}[every node/.style={font=\scriptsize, align=center}]
-  \node[draw=uaibluedark, fill=white, rounded corners, very thick,
-        text width=3.6cm, minimum height=1.1cm] at (0, 3.2)
-        {\textbf{Disponible}\\\scriptsize 12 clases $\times$ 15 ej.\\$= 180$ muestras};
+  % Box: Accuracy global - looks great
+  \node[draw=uaigreen, fill=uaigreen!12, rounded corners, very thick,
+        text width=3.8cm, minimum height=1.3cm] (acc) at (0,3.2)
+    {\textbf{Precisión global}\\[2pt]{\Large\bfseries\color{uaigreen} 95\%}};
 
-  \draw[->, very thick, uaigray] (0, 2.55) -- (0, 2.05);
+  % Vertical dotted bridge
+  \draw[uaigray, very thick, dotted] (0,2.5) -- (0,2.1);
 
-  \node[draw=uaiorange, fill=uaiorange!10, rounded corners, very thick,
-        text width=3.6cm, minimum height=1.1cm] at (0, 1.3)
-        {\textbf{Necesario}\\\scriptsize macro-F1 $\geq 75\%$\\en 4 días};
+  % Box: Recall on minority - failure
+  \node[draw=uaiorange, fill=uaiorange!12, rounded corners, very thick,
+        text width=3.8cm, minimum height=1.3cm] (rec) at (0,1.4)
+    {\textbf{Recall en clase rara}\\[2pt]{\Large\bfseries\color{uaiorange} 0\%}};
 
-  \node[font=\Large\bfseries, color=uaiorange!85!black] at (0, 0.0) {?};
-  \node[font=\small\bfseries, color=uaiorange!85!black] at (0, -0.5) {¿Cómo cerrar la brecha?};
+  % Bottom label
+  \node[font=\scriptsize\bfseries, color=uaibluedark, align=center] at (0,0.15)
+    {El mismo modelo.\\Dos verdades.};
 \end{tikzpicture}
 \end{column}
 
 \end{columns}
 
-\mensaje{Esta tesis ofrece una respuesta concreta para escenarios como este.}
+\mensaje{¿Cómo le enseñamos a un modelo a reconocer aquello que casi no ha visto?}
 \end{frame}

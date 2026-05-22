@@ -80,23 +80,37 @@ SMOTE y los LLMs caen bajo el mismo paraguas conceptual de \textbf{oversampling}
 La pregunta abierta no es cuál elegir, sino \textbf{cómo combinarlos sin perder garantías geométricas}.
 \end{insight}
 
-\mensaje{De ahí surge la pregunta central de esta tesis.}
+\mensaje{De ahí nace la idea que esta tesis pone a prueba.}
 \end{frame}
 
-% --- Slide: Pregunta de investigación ---
-\begin{frame}{Pregunta de investigación}
+% --- Slide: Una idea simple (propuesta de la tesis) ---
+\begin{frame}{Una idea simple}
 \vfill
 \begin{center}
-\setbeamercolor{block title}{fg=white,bg=uaibluedark}
-\begin{tcolorbox}[colback=white, colframe=uaibluedark, coltitle=white,
-                  title=\centering\textbf{Pregunta central},
-                  width=0.9\linewidth, halign=center, arc=4pt, boxrule=2pt]
-\Large\itshape ¿Puede un sistema de filtrado geométrico\\
-post-generación, desacoplado del LLM,\\[0.4em]
-\textbf{mejorar significativamente} la aumentación\\
-de datos para clasificación de texto\\
-con pocos ejemplos por clase?
-\end{tcolorbox}
+{\Large\itshape ¿Y si generamos muchos candidatos con un LLM\\[0.3em]
+y dejamos que la \textbf{geometría} elija los útiles?}
 \end{center}
+
+\vspace{1.4em}
+\begin{center}
+\begin{tikzpicture}[every node/.style={font=\small, align=center}, node distance=1.0cm]
+  \node[draw=uaiblue, fill=uaibluelight!20, rounded corners, very thick,
+        text width=2.8cm, minimum height=1.4cm] (gen)
+    {\textbf{Generar}\\\scriptsize candidatos\\con un LLM};
+
+  \node[draw=uaiorange, fill=uaiorange!10, rounded corners, very thick,
+        text width=2.8cm, minimum height=1.4cm, right=of gen] (filt)
+    {\textbf{Filtrar}\\\scriptsize por geometría\\en \emph{embeddings}};
+
+  \node[draw=uaigreen, fill=uaigreen!10, rounded corners, very thick,
+        text width=2.8cm, minimum height=1.4cm, right=of filt] (use)
+    {\textbf{Entrenar}\\\scriptsize con más datos\\útiles};
+
+  \draw[->, very thick, uaigray] (gen) -- (filt);
+  \draw[->, very thick, uaigray] (filt) -- (use);
+\end{tikzpicture}
+\end{center}
+
 \vfill
+\mensaje{Esta tesis evalúa cuándo esa idea funciona y cuándo no.}
 \end{frame}
