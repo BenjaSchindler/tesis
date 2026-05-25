@@ -172,6 +172,71 @@ Pedirle a un LLM (GPT, Gemini, Claude\dots) que genere ejemplos nuevos para cada
 \mensaje{Texto sin control: los vectores caen donde quieran.}
 \end{frame}
 
+% --- Slide: Familia 3.5 — Fine-tuning para generación sintética ---
+\begin{frame}{Familia 3.5 — \textit{Fine-tuning} para generación sintética}
+\begin{columns}[T]
+
+\begin{column}{0.58\textwidth}
+\small
+Una rama más reciente: \alert{ajustar el LLM} sobre la propia tarea antes de generar.
+
+\vspace{0.2em}
+\textbf{Idea:} fine-tunear un LLM preentrenado (GPT-2, LLaMA, T5\dots) con los pocos ejemplos disponibles, y luego generar muestras \emph{específicas} del dominio.
+
+\vspace{0.3em}
+\textbf{Trabajos representativos:}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Cloutier \& Japkowicz (2023): \alert{fine-tuning generativo} supera al re-muestreo tradicional en multiclase desbalanceada.
+  \item ImbLLM (Nguyen et al., 2024): fine-tuning \textbf{solo en muestras minoritarias}; F1\,$>$\,0.8.
+  \item SentiGEN (Sundararajan, 2023): T5 fine-tuned + validador XLNet.
+\end{itemize}
+
+\vspace{0.3em}
+{\scriptsize
+\good\ Distribución alineada con la tarea.\\
+\bad\ Requiere \alert{cómputo extra}; riesgo de \emph{overfitting} con $n$ pequeño.}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\centering
+\vspace{0.1em}
+\begin{tikzpicture}[every node/.style={font=\scriptsize, align=center}, scale=0.92, transform shape]
+  % LLM base
+  \node[draw=uaibluedark, fill=uaibluelight!15, rounded corners, very thick,
+        text width=3.0cm, minimum height=0.55cm] (base) at (0, 2.6)
+        {\textbf{LLM preentrenado}\\\tiny GPT-2, LLaMA, T5\dots};
+
+  % Few-shot data
+  \node[draw=methodSMOTE, fill=methodSMOTE!15, rounded corners, very thick,
+        text width=1.9cm, minimum height=0.45cm, font=\scriptsize] (data) at (-1.95, 1.55)
+        {Pocos ej.};
+
+  % Fine-tune arrow
+  \node[draw=uaiamber, fill=uaiamber!15, rounded corners, very thick,
+        text width=1.7cm, minimum height=0.45cm, font=\scriptsize\bfseries] (ft) at (0.6, 1.55)
+        {Fine-tuning};
+  \draw[->, very thick, uaiamber] (data) -- (ft);
+  \draw[->, very thick, uaiamber] (base) -- (ft);
+
+  % LLM ajustado
+  \node[draw=methodOurs, fill=methodOurs!15, rounded corners, very thick,
+        text width=3.0cm, minimum height=0.55cm] (llmft) at (0, 0.55)
+        {\textbf{LLM ajustado}\\\tiny especializado};
+  \draw[->, very thick, methodOurs] (ft) -- (llmft);
+
+  % Output
+  \node[draw=uaiorange, fill=uaiorange!10, rounded corners, very thick,
+        text width=3.0cm, minimum height=0.5cm] (out) at (0, -0.45)
+        {\scriptsize\textbf{Muestras sintéticas}\\\tiny alineadas al dominio};
+  \draw[->, very thick, uaiorange] (llmft) -- (out);
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\mensaje{Más alineamiento, más costo: distinto eje de control al filtrado posterior.}
+\end{frame}
+
 % --- Slide: El dilema (movido desde Introducción) ---
 \begin{frame}{El dilema: SMOTE vs.\ LLMs lado a lado}
 \begin{columns}[T]
@@ -225,7 +290,7 @@ Pedirle a un LLM (GPT, Gemini, Claude\dots) que genere ejemplos nuevos para cada
 \begin{tikzpicture}[every node/.style={font=\scriptsize}]
   % Línea de tiempo
   \draw[->, very thick, uaiblue!70] (0,0) -- (12,0) node[right, font=\scriptsize]{año};
-  \foreach \x/\year in {0.5/2002, 3.5/2019, 6.5/2023, 9.5/2025}{
+  \foreach \x/\year in {0.5/2002, 3.5/2019, 6.5/2023, 9.5/2026}{
     \draw[uaiblue] (\x,-0.1) -- (\x,0.1);
     \node[below, font=\tiny] at (\x,-0.15) {\year};
   }
@@ -256,9 +321,9 @@ Pedirle a un LLM (GPT, Gemini, Claude\dots) que genere ejemplos nuevos para cada
 
   % Notas debajo
   \node[font=\tiny, text width=2.6cm, align=center] at (1.5,-1) {Chawla 2002\\Wei \& Zou 2019};
-  \node[font=\tiny, text width=2.6cm, align=center] at (4.5,-1) {Zhang 2018\\Bayer 2023};
-  \node[font=\tiny, text width=2.6cm, align=center] at (7.5,-1) {Suhaeni \& Yong\\\textbf{+12.7\%} acc};
-  \node[font=\tiny, text width=2.6cm, align=center] at (10.5,-1) {Cegin 2025, ImbLLM\\Springer 2025};
+  \node[font=\tiny, text width=2.6cm, align=center] at (4.5,-1) {Zhang 2018\\Chen 2020};
+  \node[font=\tiny, text width=2.6cm, align=center] at (7.5,-1) {Suhaeni \& Yong 2023\\\textbf{+12.7\%} acc};
+  \node[font=\tiny, text width=2.6cm, align=center] at (10.5,-1) {Cegin 2025, Springer 2025\\ImbLLM 2024, \textbf{esta tesis}};
 \end{tikzpicture}
 
 \vfill
@@ -304,6 +369,38 @@ Casi todos los estudios validan en \textbf{un único} corpus o tarea.
 \end{tikzpicture}
 
 \mensaje{La señal geométrica está disponible y nadie la está usando.}
+\end{frame}
+
+% --- Slide: Una idea simple (propuesta de la tesis) ---
+\begin{frame}{Una idea simple}
+\vfill
+\begin{center}
+{\Large\itshape ¿Y si generamos muchos candidatos con un LLM\\[0.3em]
+y dejamos que la \textbf{geometría} elija los útiles?}
+\end{center}
+
+\vspace{1.4em}
+\begin{center}
+\begin{tikzpicture}[every node/.style={font=\small, align=center}, node distance=1.0cm]
+  \node[draw=uaiblue, fill=uaibluelight!20, rounded corners, very thick,
+        text width=2.8cm, minimum height=1.4cm] (gen)
+    {\textbf{Generar}\\\scriptsize candidatos\\con un LLM};
+
+  \node[draw=uaiorange, fill=uaiorange!10, rounded corners, very thick,
+        text width=2.8cm, minimum height=1.4cm, right=of gen] (filt)
+    {\textbf{Filtrar}\\\scriptsize por geometría\\en \emph{embeddings}};
+
+  \node[draw=uaigreen, fill=uaigreen!10, rounded corners, very thick,
+        text width=2.8cm, minimum height=1.4cm, right=of filt] (use)
+    {\textbf{Entrenar}\\\scriptsize con más datos\\útiles};
+
+  \draw[->, very thick, uaigray] (gen) -- (filt);
+  \draw[->, very thick, uaigray] (filt) -- (use);
+\end{tikzpicture}
+\end{center}
+
+\vfill
+\mensaje{Esta tesis evalúa cuándo esa idea funciona y cuándo no.}
 \end{frame}
 
 % --- Slide: Gap metodológico + idea conceptual ---

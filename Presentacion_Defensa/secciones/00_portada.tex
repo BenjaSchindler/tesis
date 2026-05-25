@@ -2,8 +2,60 @@
 % Bloque 1: Apertura (slides 1–2)
 % =============================================================================
 
-% --- Slide 1: Portada ---
-\maketitle
+% --- Slide 1: Portada custom (dos columnas, usa todo el ancho) ---
+\begin{frame}[plain,noframenumbering]
+\vspace*{0.2em}
+\begin{columns}[T,onlytextwidth]
+%
+\begin{column}{0.60\textwidth}
+\raggedright
+{\color{uaibluedark}\fontsize{17}{21}\selectfont\bfseries Aumentación de Datos con LLMs}\\[0.35em]
+{\color{uaigray}\small Filtrado Geométrico para Clasificación de Texto en Pocos Ejemplos}
+
+\vspace{0.6em}
+{\color{uaiorange}\rule{0.55\textwidth}{1pt}}
+\vspace{0.7em}
+
+{\large\bfseries\color{uaibluedark} Benjamín Schindler}\\[2pt]
+{\small\color{uaigray} 1 de junio de 2026}
+
+\vspace{1.1em}
+
+\footnotesize\color{uaigray}
+Facultad de Ingeniería y Ciencias\\
+Universidad Adolfo Ibáñez
+
+\vspace{1.0em}
+
+{\footnotesize\bfseries\color{uaibluedark} Profesor guía}\\[2pt]
+\footnotesize\color{uaigray} Dr. Gonzalo A. Ruz
+\end{column}
+%
+\begin{column}{0.38\textwidth}
+\centering
+\includegraphics[height=1.15cm]{logos/fic.png}
+
+\vspace{1.6em}
+
+{\footnotesize\bfseries\color{uaibluedark} Grados a optar}\\[3pt]
+{\scriptsize\color{uaigray}
+Master of Science in Data Science\\[2pt]
+Ingeniería Civil Informática\\[2pt]
+Ingeniería Civil Industrial\par}
+
+\vspace{0.8em}
+{\color{uaiorange}\rule{0.22\textwidth}{0.4pt}}
+\vspace{0.8em}
+
+{\footnotesize\bfseries\color{uaibluedark} Comité de defensa}\\[3pt]
+{\scriptsize\color{uaigray}
+Dr. Luis Aburto\\
+Dr. Rolando De La Cruz\\
+Dr. Pablo Henríquez\\
+Dr. Andrés Peters\par}
+\end{column}
+\end{columns}
+\end{frame}
 
 % --- Slide 2: Roadmap (lista con descripciones, sin tiempos) ---
 \begin{frame}{Hoja de ruta}

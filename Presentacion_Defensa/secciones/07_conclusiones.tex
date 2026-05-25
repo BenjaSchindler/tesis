@@ -145,3 +145,75 @@ A precios actuales: \textbf{centavos por dataset}.
 \end{tcolorbox}
 \end{center}
 \end{frame}
+
+% --- Slide: Referencias I ---
+\begin{frame}[allowframebreaks]{Referencias}
+\scriptsize
+\setlength{\parskip}{0.25em}
+
+\textbf{Sobremuestreo geométrico clásico}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Chawla, N.\,V., Bowyer, K.\,W., Hall, L.\,O. \& Kegelmeyer, W.\,P. (2002). \textit{SMOTE: Synthetic minority over-sampling technique}. J. Artif. Intell. Res., 16, 321--357.
+  \item He, H., Bai, Y., Garcia, E.\,A. \& Li, S. (2008). \textit{ADASYN: Adaptive synthetic sampling approach for imbalanced learning}. IEEE IJCNN, 1322--1328.
+\end{itemize}
+
+\textbf{Aumentación textual ligera}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Wei, J. \& Zou, K. (2019). \textit{EDA: Easy Data Augmentation Techniques for Boosting Performance on Text Classification Tasks}. EMNLP-IJCNLP, 6382--6388.
+  \item Sennrich, R., Haddow, B. \& Birch, A. (2016). \textit{Improving Neural Machine Translation Models with Monolingual Data}. ACL.
+  \item Edunov, S., Ott, M., Auli, M. \& Grangier, D. (2018). \textit{Understanding Back-Translation at Scale}. EMNLP, 489--500.
+  \item Kobayashi, S. (2018). \textit{Contextual Augmentation: Data Augmentation by Words with Paradigmatic Relations}. NAACL-HLT, 452--457.
+  \item Wu, X., Lv, S., Zang, L., Han, J. \& Hu, S. (2019). \textit{Conditional BERT Contextual Augmentation}. ICCS, 84--95.
+\end{itemize}
+
+\textbf{Aumentación en espacios de embeddings}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Zhang, H., Cisse, M., Dauphin, Y.\,N. \& Lopez-Paz, D. (2018). \textit{mixup: Beyond Empirical Risk Minimization}. ICLR.
+  \item Chen, J., Yang, Z. \& Yang, D. (2020). \textit{MixText: Linguistically-Informed Interpolation of Hidden Space for Semi-Supervised Text Classification}. ACL, 2147--2157.
+  \item Bayer, M., Kaufhold, M.\,A. \& Reuter, C. (2023). \textit{A Survey on Data Augmentation for Text Classification}. ACM Computing Surveys, 55(7), 1--39.
+\end{itemize}
+
+\framebreak
+
+\textbf{Generación con LLMs}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Brown, T. et al. (2020). \textit{Language Models Are Few-Shot Learners}. NeurIPS, 33, 1877--1901.
+  \item Whitehouse, C., Choudhury, M. \& Aji, A.\,F. (2023). \textit{LLM-powered Data Augmentation for Cross-lingual Commonsense Reasoning}. ACL, 1234--1245.
+  \item Suhaeni, C. \& Yong, H.-S. (2023). \textit{Mitigating Class Imbalance in Sentiment Analysis through GPT-3-Generated Synthetic Sentences}. Appl.\ Sci., 13, 9766. ($+12.7\%$ acc.\ en minoritarias.)
+  \item Gopali, S., Abri, F., Namin, A.\,S. \& Jones, K.\,S. (2024). \textit{The Applicability of LLMs in Generating Textual Samples for Analysis of Imbalanced Datasets}. IEEE Access, 12, 136451--136465.
+  \item Cegin, J., Simko, J. \& Brusilovsky, P. (2025). \textit{LLMs vs Established Text Augmentation Techniques for Classification: When do the Benefits Outweigh the Costs?} NAACL, 10543--10570.
+  \item Springer, J.\,M., Devoto, C., Tosheva, M.\,I. \& Ramesh, P. (2025). \textit{On the Influence of Synthetic Data for Few-Shot Text Classification}. Findings ACL, 8249--8268.
+\end{itemize}
+
+\textbf{Fine-tuning de LLMs para generación sintética}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Cloutier, N.\,A. \& Japkowicz, N. (2023). \textit{Fine-tuned generative LLM oversampling can improve performance over traditional techniques on multiclass imbalanced text classification}. IEEE Big Data, 5181--5186.
+  \item Nguyen, D. et al. (2024). \textit{Large Language Models for Imbalanced Classification: Diversity makes the difference} (ImbLLM). arXiv:2510.09783.
+  \item Sundararajan, N.\,T. \& Kumarapathirage, A. (2023). \textit{SentiGEN: A Sentiment-Aware Generative Model for Text Data Augmentation}. Findings EMNLP, 9138--9149.
+\end{itemize}
+
+\framebreak
+
+\textbf{Filtrado, anomalías y selección de datos}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Breunig, M.\,M., Kriegel, H.-P., Ng, R.\,T. \& Sander, J. (2000). \textit{LOF: Identifying Density-Based Local Outliers}. ACM SIGMOD, 93--104.
+  \item Robinson, M., Dey, S. \& Chiang, T. (2025). \textit{Token Embeddings Violate the Manifold Hypothesis}. NeurIPS.
+  \item Tessari, F. \& Hogan, N. (2024). \textit{Surpassing Cosine Similarity for Multidimensional Comparisons: Dimension Insensitive Euclidean Metric}. arXiv:2407.08623.
+  \item Du, Y. et al. (2025). \textit{Disentangling the Roles of Representation and Selection in Data Pruning}. ACL, 16791--16809.
+  \item Yu, T., Zhuang, Y., Zhang, Z., Socher, R. \& Xiong, C. (2025). \textit{R.I.P.: Better Models by Survival of the Fittest Data}. ICML.
+  \item Liu, Z., Tang, Y., Wang, H. \& Li, M. (2025). \textit{Residual Alignment Model: A Framework for Importance Sampling in Data Augmentation}. NeurIPS.
+  \item Tokdar, S.\,T. \& Kass, R.\,E. (2010). \textit{Importance Sampling: A Review}. WIREs Comput.\ Stat., 2(1), 54--60.
+\end{itemize}
+
+\textbf{NER y extensiones}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Zhou, R. et al. (2022). \textit{MELM: Data Augmentation with Masked Entity Language Modeling for Low-Resource NER}. ACL, 2251--2262.
+\end{itemize}
+
+\textbf{Manifold hypothesis y embeddings}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Bengio, Y., Courville, A. \& Vincent, P. (2013). \textit{Representation Learning: A Review and New Perspectives}. IEEE TPAMI, 35(8), 1798--1828.
+  \item Fefferman, C., Mitter, S. \& Narayanan, H. (2016). \textit{Testing the Manifold Hypothesis}. J. Amer.\ Math.\ Soc., 29(4), 983--1049.
+  \item Muennighoff, N., Tazi, N., Magne, L. \& Reimers, N. (2023). \textit{MTEB: Massive Text Embedding Benchmark}. EACL, 2014--2037.
+\end{itemize}
+\end{frame}

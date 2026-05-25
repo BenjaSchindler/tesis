@@ -39,12 +39,12 @@
 % --- Slide 18a: Antes vs después del filtrado ---
 \begin{frame}{Visualización t-SNE: el filtro en acción --- antes vs después}
 \centering
-\includegraphics[width=0.96\linewidth, height=5.4cm, keepaspectratio]{fig_tsne_before_after_20newsgroups.png}
+\includegraphics[width=0.92\linewidth, height=4.8cm, keepaspectratio]{fig_tsne_before_after_20newsgroups.png}
 
 \vspace{0.1em}
-{\scriptsize \dataset{20newsgroups} (4 clases, 10-shot). \textbf{Izq.:} candidatas del LLM (triángulos tenues). \textbf{Der.:} solo las que pasaron el filtro. Círculos = reales, estrellas = centroides.}
+{\scriptsize \dataset{20newsgroups} (4 clases, 10-shot). \textbf{Izq.:} candidatas del LLM (triángulos tenues). \textbf{Der.:} sólo las que pasaron el filtro. Círculos = reales, estrellas = centroides.}
 
-\mensaje{El filtro elimina las candidatas en zonas de cruce o periféricas; conserva las que refuerzan el cluster.}
+\mensaje{El filtro descarta candidatas en zonas de cruce o periféricas; conserva las que refuerzan el cluster.}
 \end{frame}
 
 % --- Slide 18b: t-SNE filtrado vs SMOTE ---
@@ -105,19 +105,20 @@ $n$-shot & $\Delta$F1 & $d$ \\
 
 \begin{column}{0.42\textwidth}
 \small
-\begin{tabular}{@{}lr@{\hspace{6pt}}r@{}}
+\begin{tabular}{@{}lr@{\hspace{4pt}}r@{\hspace{4pt}}c@{}}
 \toprule
-Clasificador & $\Delta$F1 & $d$ \\
+Clasificador & $\Delta$F1 & $d$ & $p$ \\
 \midrule
-SVC (lineal)        & \alert{$+2{.}99$} & 1.02 \\
-Ridge               & $+2{.}69$         & 1.04 \\
-MLP                 & $+2{.}16$         & 0.73 \\
-Logistic Regression & $+1{.}98$         & 0.82 \\
-Random Forest       & $+1{.}42$         & n.s. \\
+SVC (lineal)        & \alert{$+2{.}99$} & 1.02 & $<0.001$ \\
+Ridge               & $+2{.}69$         & 1.04 & $<0.001$ \\
+MLP                 & $+2{.}16$         & 0.73 & $<0.001$ \\
+Logistic Regression & $+1{.}98$         & 0.82 & $<0.001$ \\
+Random Forest       & $+1{.}42$         & 0.31 & n.s. \\
 \bottomrule
 \end{tabular}
 
-\vspace{0.5em}
+\vspace{0.4em}
+{\scriptsize $p$-valor con $t$-pareada y Bonferroni.}\\[2pt]
 {\scriptsize H1d confirmada: \textbf{ensambles de árboles}\\ no aprovechan los pesos suaves.}
 \end{column}
 
@@ -161,13 +162,123 @@ Random Forest       & $+1{.}42$         & n.s. \\
 \mensaje{Saturación con $\geq 77$ clases: el espacio se fragmenta.}
 \end{frame}
 
+% --- Slide 21b: Per-class — clases que partían con F1 bajo ---
+\begin{frame}{Las clases que más ganan: las que partían perdiendo}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+\textbf{Dataset} & \textbf{Clase} & \textbf{SMOTE} & \textbf{Ours} & \textbf{$\Delta$} \\
+\midrule
+\rowcolor{uaiorange!12}\multicolumn{5}{l}{\textit{Clases con F1 base bajo}} \\
+emotion       & \textbf{anger}         & 27.8 & 44.6 & \alert{\textbf{+16.9}} \\
+20news        & \textbf{alt.atheism}   & 50.9 & 65.9 & \alert{\textbf{+15.0}} \\
+emotion       & joy                    & 29.4 & 42.6 & \alert{+13.3} \\
+hate\_speech  & \textbf{offensive}     & 73.3 & 86.3 & \alert{+13.0} \\
+emotion       & fear                   & 48.8 & 59.0 & +10.2 \\
+\midrule
+\rowcolor{methodSMOTE!10}\multicolumn{5}{l}{\textit{Clases con F1 base alto}} \\
+20news        & comp.graphics          & 90.8 & 91.3 & +0.5 \\
+emotion       & sadness                & 41.3 & 42.3 & +1.0 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+{\scriptsize\itshape 10-shot; 3 clasificadores lineales.}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\small
+\textbf{Patrón:} las clases \alert{difíciles inicialmente} son las que más ganan con filtrado geométrico.
+
+\vspace{0.5em}
+\begin{itemize}\setlength\itemsep{1pt}\scriptsize
+  \item ``anger'' arranca en \textbf{27.8\%} (poco discriminable).
+  \item Termina en \textbf{44.6\%}: $+16.9$ pp.
+  \item ``comp.graphics'' parte ya en 90.8\%: poco margen, ganancia $+0.5$ pp.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{insight}
+\scriptsize
+Donde el clasificador \textbf{ya rinde bien}, el filtrado aporta poco.\\
+Donde \textbf{tropieza}, el filtrado densifica la región correcta y \alert{refuerza la frontera}.
+\end{insight}
+\end{column}
+
+\end{columns}
+
+\mensaje{El método actúa justo donde el modelo más lo necesita.}
+\end{frame}
+
+% --- Slide 21c: Agrupado por dificultad de la clase ---
+\begin{frame}{Resumen por dificultad: la mejora escala con el déficit}
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Dificultad (F1 base)} & \textbf{N clases} & \textbf{$\Delta$ medio} \\
+\midrule
+\rowcolor{uaiorange!18} Difícil ($<$30\%)        & 4 & \alert{\textbf{+10.44}} \\
+\rowcolor{uaiorange!8}  Media (30--60\%)         & 4 & +8.45 \\
+                        Fácil (60--80\%)         & 4 & +5.40 \\
+\rowcolor{methodSMOTE!10} Muy fácil ($>$80\%)   & 1 & +0.55 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.55]
+  \draw[->,uaigray] (0,0) -- (5.5,0) node[right]{F1 base};
+  \draw[->,uaigray] (0,0) -- (0,3.4) node[above]{$\Delta$F1};
+  \foreach \x/\lbl in {0.5/30,2/60,3.5/80}{
+    \draw[uaigray!50] (\x,-0.1) -- (\x,0.1);
+    \node[below, font=\tiny] at (\x,-0.1) {\lbl};
+  }
+  \fill[uaiorange] (0.25, 0) rectangle (0.75, 2.6);
+  \fill[uaiorange!70] (1.0, 0) rectangle (1.5, 2.1);
+  \fill[uaiorange!40] (2.25, 0) rectangle (2.75, 1.3);
+  \fill[methodSMOTE!60] (3.75, 0) rectangle (4.25, 0.15);
+  \node[font=\tiny, anchor=west] at (0.0, 3.2) {Spearman $\rho = -0.27$};
+\end{tikzpicture}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\small
+\textbf{Lectura geométrica:}
+\begin{itemize}\setlength\itemsep{1pt}\scriptsize
+  \item Las clases difíciles \alert{ocupan regiones de solapamiento} o frontera con otras clases.
+  \item Las muestras sintéticas filtradas \textbf{densifican la región correcta} de la clase.
+  \item Eso refuerza la frontera de decisión donde el clasificador tenía mayor incertidumbre.
+\end{itemize}
+
+\vspace{0.4em}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{\small Implicancia práctica}
+\scriptsize
+Cuanto peor parte una clase, mayor el espacio donde el filtrado geométrico puede empujar el F1 hacia arriba. El método es \textbf{auto-correctivo} en el caso más útil.
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Mayor déficit inicial $\Rightarrow$ mayor ganancia: el filtrado va a buscarlas.}
+\end{frame}
+
 % --- Slide 22: Hallazgo contra-intuitivo ---
 \begin{frame}{Hallazgo contra-intuitivo: simple $>$ complejo}
 \begin{columns}[T]
 
 \begin{column}{0.5\textwidth}
 \centering
-\begin{tikzpicture}[every node/.style={font=\scriptsize}, scale=0.7]
+\begin{tikzpicture}[every node/.style={font=\scriptsize}, scale=0.62]
   % Línea vertical en 0 (referencia SMOTE)
   \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.8);
   \node[below, font=\tiny] at (0,-0.35) {SMOTE = 0};
@@ -180,7 +291,7 @@ Random Forest       & $+1{.}42$         & n.s. \\
 
   % Bars (positive)
   \fill[methodOurs] (0,4.1) rectangle (1.45,4.5);
-  \node[right, font=\tiny] at (1.55,4.3) {\textbf{Cascade L1 +1.45}};
+  \node[right, font=\tiny] at (1.55,4.3) {\textbf{Cascade (familia) +1.45}};
 
   \fill[methodOurs!70] (0,3.4) rectangle (0.88,3.8);
   \node[right, font=\tiny] at (0.98,3.6) {LOF +0.88};
@@ -195,6 +306,18 @@ Random Forest       & $+1{.}42$         & n.s. \\
   \fill[methodWorse] (-3.28,1.3) rectangle (0,1.7);
   \node[left, font=\tiny, color=uaiorange] at (-3.38,1.5) {\textbf{Combined $-3.28$}};
 \end{tikzpicture}
+
+\vspace{0.2em}
+{\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{@{}l|ccccc@{}}
+\toprule
+\textbf{Cascada}        & L0      & L1               & L2      & L3      & L4      \\
+\textbf{\# criterios}   & 0       & 1                & 2       & 3       & 4       \\
+\textbf{$\Delta$F1 (pp)}& $-0.52$ & \alert{$+1.94$}  & $+1.94$ & $+1.95$ & $+1.92$ \\
+\bottomrule
+\end{tabular}}
 \end{column}
 
 \begin{column}{0.5\textwidth}

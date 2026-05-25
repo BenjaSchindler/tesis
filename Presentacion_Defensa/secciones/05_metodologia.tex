@@ -26,7 +26,7 @@
 
   % Fila inferior
   \node[box2] (weight) at (10.4,0)  {\textbf{Pesos}\\\tiny softw.\ $T=0.5$};
-  \node[box3] (clf)    at (5.2,0)   {\textbf{Clasificador}\\\tiny LR / SVC / Ridge};
+  \node[box3] (clf)    at (5.2,0)   {\textbf{Clasificador}\\\tiny LR · SVC · Ridge\\\tiny RF · MLP};
   \node[box]  (eval)   at (0,0)     {\textbf{Macro F1}\\\tiny test fijo};
 
   % Flechas
@@ -81,6 +81,65 @@
 \end{column}
 
 \end{columns}
+\end{frame}
+
+% --- Slide 13b: Métrica de evaluación — Macro F1 ---
+\begin{frame}{Métrica de evaluación: Macro F1}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\small
+\textbf{Por qué no \emph{accuracy}:}
+con clases desbalanceadas, predecir siempre la clase mayoritaria puede dar 95\% de \emph{accuracy} y \alert{0\%} en la clase rara.
+
+\vspace{0.3em}
+\textbf{Macro F1} promedia el F1 de cada clase con \alert{peso igual}, sin importar su tamaño:
+
+\vspace{0.1em}
+{\small\textbf{F1 por clase $c$:}}
+\vspace{-0.4em}
+\[
+\mathrm{F1}_c = 2 \cdot \frac{P_c \cdot R_c}{P_c + R_c}
+\]
+
+\vspace{-0.5em}
+{\small\textbf{Macro F1} sobre $C$ clases:}
+\vspace{-0.4em}
+\[
+\mathrm{macro\text{-}F1} = \frac{1}{C} \sum_{c=1}^{C} \mathrm{F1}_c
+\]
+
+\vspace{-0.3em}
+{\scriptsize donde
+$P_c = \dfrac{\mathrm{TP}_c}{\mathrm{TP}_c + \mathrm{FP}_c}$ \;y\;
+$R_c = \dfrac{\mathrm{TP}_c}{\mathrm{TP}_c + \mathrm{FN}_c}$.}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{\small Propiedades clave}
+\scriptsize
+\begin{itemize}\setlength\itemsep{1pt}
+  \item Penaliza errores en \textbf{clases raras} igual que en clases grandes.
+  \item Rango $[0,1]$; 1 $=$ perfecto.
+  \item Detecta cuando el modelo \emph{ignora} clases minoritarias.
+\end{itemize}
+\end{block}
+
+\vspace{0.4em}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{\small Reporte de resultados}
+\scriptsize
+\begin{itemize}\setlength\itemsep{1pt}
+  \item $\Delta\mathrm{F1}$: diferencia frente a SMOTE (puntos porcentuales).
+  \item Test fijo, mismo \emph{split} en todas las configuraciones.
+\end{itemize}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Macro F1: la métrica honesta cuando hay clases raras.}
 \end{frame}
 
 % --- Slide 14: Conjuntos de datos (tabla) ---

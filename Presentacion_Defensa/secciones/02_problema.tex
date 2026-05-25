@@ -10,20 +10,18 @@
 
 \begin{column}{0.5\textwidth}
 \small
-\textbf{Casos reales que sufren pocos ejemplos:}
-\begin{itemize}
-  \item Detección de \textbf{discurso de odio} en idiomas minorizados.
-  \item Triaje clínico, clasificación de notas médicas.
-  \item Categorización de \textbf{tickets de soporte} en empresas.
-  \item Spam emergente y nuevos esquemas de fraude.
-\end{itemize}
-\vspace{0.4em}
+\textbf{Dominios cotidianos en clasificación de texto:}\\
+Triaje clínico $\cdot$ tickets de soporte $\cdot$ spam $\cdot$ discurso de odio.
+
+\vspace{0.6em}
 \textbf{Por qué duele:}
-\begin{itemize}
+\begin{itemize}\setlength\itemsep{3pt}
   \item Etiquetado humano = \alert{caro, lento y sesgado}.
-  \item Multiclase $+$ desbalance $\Rightarrow$ macro F1 colapsa.
-  \cita{Gopali 2024; Whitehouse 2023}
+  \item Las clases raras suelen ser \textbf{las que más importan}: urgencias, fraudes, diagnósticos.
+  \item Pocos ejemplos $\Rightarrow$ el modelo \textbf{sobreajusta} y no generaliza a casos nuevos.
+  \item Multiclase $+$ desbalance $\Rightarrow$ el rendimiento en clases raras colapsa.
 \end{itemize}
+\cita{Gopali 2024; Whitehouse 2023}
 \end{column}
 
 \begin{column}{0.5\textwidth}
@@ -74,43 +72,8 @@ La estadística clásica enmarca la escasez desde hace décadas como un problema
 \end{columns}
 
 \vspace{0.7em}
-\begin{insight}
-\scriptsize
-SMOTE y los LLMs caen bajo el mismo paraguas conceptual de \textbf{oversampling}, pero operan en planos distintos: \alert{vectores} vs.\ \alert{texto}.\\[2pt]
-La pregunta abierta no es cuál elegir, sino \textbf{cómo combinarlos sin perder garantías geométricas}.
-\end{insight}
+\centering
+{\small Dentro de \textbf{oversampling} se concentra todo el aumento sintético: desde \textbf{SMOTE (2002)} hasta los \textbf{LLMs (2023+)}.}
 
-\mensaje{De ahí nace la idea que esta tesis pone a prueba.}
-\end{frame}
-
-% --- Slide: Una idea simple (propuesta de la tesis) ---
-\begin{frame}{Una idea simple}
-\vfill
-\begin{center}
-{\Large\itshape ¿Y si generamos muchos candidatos con un LLM\\[0.3em]
-y dejamos que la \textbf{geometría} elija los útiles?}
-\end{center}
-
-\vspace{1.4em}
-\begin{center}
-\begin{tikzpicture}[every node/.style={font=\small, align=center}, node distance=1.0cm]
-  \node[draw=uaiblue, fill=uaibluelight!20, rounded corners, very thick,
-        text width=2.8cm, minimum height=1.4cm] (gen)
-    {\textbf{Generar}\\\scriptsize candidatos\\con un LLM};
-
-  \node[draw=uaiorange, fill=uaiorange!10, rounded corners, very thick,
-        text width=2.8cm, minimum height=1.4cm, right=of gen] (filt)
-    {\textbf{Filtrar}\\\scriptsize por geometría\\en \emph{embeddings}};
-
-  \node[draw=uaigreen, fill=uaigreen!10, rounded corners, very thick,
-        text width=2.8cm, minimum height=1.4cm, right=of filt] (use)
-    {\textbf{Entrenar}\\\scriptsize con más datos\\útiles};
-
-  \draw[->, very thick, uaigray] (gen) -- (filt);
-  \draw[->, very thick, uaigray] (filt) -- (use);
-\end{tikzpicture}
-\end{center}
-
-\vfill
-\mensaje{Esta tesis evalúa cuándo esa idea funciona y cuándo no.}
+\mensaje{¿Qué métodos existen, cómo funcionan y funcionan \emph{siempre}?}
 \end{frame}
