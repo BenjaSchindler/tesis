@@ -140,6 +140,14 @@ Sí. Validado en `validate_smote_implementation.py`: la implementación dummy-bi
 
 ---
 
+## Dos hallazgos importantes (B0g)
+
+1. **La ablation de temperatura LLM no es monótona.** Si el tribunal pregunta "¿por qué $T{=}0.8$ y no $T{=}1.0$?", la respuesta honesta es: en 20news $T{=}1.0$ daba $+7.44$, pero en sms\_spam $T{=}0.8$ daba $-1.06$. Como las ablations son ruidosas, se eligió $T{=}0.8$ por **convención general en el campo**, no por optimización per-dataset.
+
+2. **Los hiperparámetros del filtro son robustos; los del clasificador/embedding dominan la varianza.** Esto refuerza la narrativa: el filtro funciona en general, no es resultado de overfitting a hiperparámetros.
+
+---
+
 ## TODO / pendientes
 
 - [ ] Corregir descripción de LOF en `Escrito_Tesis/Chapters/Metodologia.tex:63` para que coincida con la implementación (`decision_function`, no LOF clásico).

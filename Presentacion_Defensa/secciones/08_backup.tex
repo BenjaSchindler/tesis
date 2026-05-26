@@ -275,38 +275,38 @@ $0.7$ & $-1.10$ & 71.7\% \\
 \centering
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lrrrrl@{}}
+\begin{tabular}{@{}lrrlrl@{}}
 \toprule
-Filtro                & $\Delta$F1 & Win & Acept. & LLM & Notas \\
+Filtro                & $\Delta$F1 & Win & Selección & LLM & Notas \\
 \midrule
 \rowcolor{uaigreen!12}
-\textbf{cascade L1 + top-N} & \alert{$+3{.}66$} & 84.5\% & 100\%  & 3$\times$   & \textbf{Ganador} \\
-cascade L2 (top-N)        & $+3{.}60$         & 83.9\% & 97\%  & 6.3$\times$  & Similar a L1 \\
-cascade L4 (top-N)        & $+3{.}60$         & 83.3\% & 96\%  & 6.5$\times$  & Redundante \\
-cascade L1 (binary)       & $+1{.}94$         & 91.7\% & 100\% & 3$\times$    & Sin pesos suaves \\
-cascade L3 (binary)       & $+1{.}95$         & 91.7\% & 97\%  & 6.5$\times$  & + KNN, no ayuda \\
+\textbf{cascade L1 + top-N} & \alert{$+3{.}66$} & 84.5\% & ranking top-$N$ & 3$\times$   & \textbf{Ganador} \\
+cascade L2 (top-N)         & $+3{.}60$ & 83.9\% & ranking top-$N$ & 3$\times$  & Similar a L1 \\
+cascade L4 (top-N)         & $+3{.}60$ & 83.3\% & ranking top-$N$ & 3$\times$  & Redundante \\
+cascade L1 (binary)        & $+1{.}94$ & 91.7\% & ranking top-$N$ & 3$\times$  & Sin pesos suaves \\
+cascade L3 (binary)        & $+1{.}95$ & 91.7\% & ranking top-$N$ & 3$\times$  & + KNN, no ayuda \\
 \addlinespace[2pt]
-LOF ($k{=}5$, $\theta{=}{-}0{.}5$) & $+2{.}43$ & 90.0\% & --   & 6.2$\times$  & Segundo mejor \\
-LOF ($k{=}20$, $\theta{=}0$)       & $+0{.}05$ & 67.5\% & --   & 8$\times$    & Default sklearn falla \\
+LOF ($k{=}5$, $\theta{=}{-}0{.}5$) & $+2{.}43$ & 90.0\% & umbral (relajado)   & 6.2$\times$  & Segundo mejor \\
+LOF ($k{=}20$, $\theta{=}0$)       & $+0{.}05$ & 67.5\% & umbral (estricto)   & 8$\times$    & Default sklearn falla \\
 \addlinespace[2pt]
-none (control)            & $+0{.}72$         & 62.9\% & 100\% & 3$\times$    & LLM sin filtrar \\
+none (control)            & $+0{.}72$ & 62.9\% & sin filtrar          & 3$\times$    & LLM directo \\
 \addlinespace[2pt]
 \rowcolor{uaiorange!10}
-embedding\_guided         & $-1{.}29$         & 55.0\% & --    & --           & Coverage-only no funciona \\
+embedding\_guided         & $-1{.}29$ & 55.0\% & cobertura greedy     & --           & Coverage-only falla \\
 \rowcolor{uaiorange!10}
-combined (LOF $\land$ sim) & $-3{.}28$        & 52.5\% & 23\%  & 32$\times$   & Demasiado restrictivo \\
+combined (LOF $\land$ sim) & $-3{.}28$ & 52.5\% & AND, $\sim\!23\%$ pasa & 32$\times$ & Demasiado restrictivo \\
 \bottomrule
 \end{tabular}
 
-\vspace{0.3em}
-{\scriptsize\itshape ``LLM'' = candidatos generados por muestra requerida.}
+\vspace{0.2em}
+{\scriptsize\itshape \textbf{Selección}: \emph{ranking top-$N$} toma los $N$ mejores del pool 3$\times$ generado (filtrado por ranking, no por umbral). \emph{Umbral}: rechaza candidatos bajo el score; el \% indica cuántos pasan. ``LLM'' = candidatos por muestra requerida.}
 
-\vspace{0.3em}
+\vspace{0.2em}
 \begin{insight}
-\scriptsize \textbf{Tres principios de diseño confirmados:}
-(1) \textit{Ranking} (top-N) $>$ umbral duro (binary).\hspace{0.5em}
+\scriptsize \textbf{Tres principios confirmados:}
+(1) \textit{Ranking} top-$N$ $>$ umbral duro.\hspace{0.5em}
 (2) Distancia simple $\geq$ múltiples criterios.\hspace{0.5em}
-(3) Operador \textbf{AND} (combined) destruye la señal.
+(3) Operador \textbf{AND} destruye la señal.
 \end{insight}
 \end{frame}
 
