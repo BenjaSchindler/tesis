@@ -4,7 +4,7 @@
 
 \section{Hipótesis y objetivos}
 
-% --- Slide 11: H1 + sub-hipótesis + objetivos ---
+% --- Slide 11: H1 + objetivo general + sub-hipótesis + específicos ---
 \begin{frame}{Hipótesis y objetivos}
 \setbeamercolor{block title}{fg=white,bg=uaiorange}
 \begin{block}{H1 — Hipótesis principal}
@@ -14,14 +14,22 @@ mejoras \textbf{estadísticamente significativas} en macro F1 respecto a SMOTE,
 en clasificación con pocos ejemplos por clase.
 \end{block}
 
-\vspace{0.4em}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{Objetivo general}
+\small
+Desarrollar y validar un sistema de filtrado geométrico que opere
+\textbf{exclusivamente en el espacio de embeddings}, \textbf{desacoplado del LLM generativo},
+y mejore clasificadores de texto en escenarios de pocos ejemplos por clase.
+\end{block}
+
+\vspace{0.2em}
 \begin{columns}[T]
 
 \begin{column}{0.5\textwidth}
 \setbeamercolor{block title}{fg=white,bg=uaiblue}
 \begin{block}{Sub-hipótesis verificables}
 \scriptsize
-\begin{description}
+\begin{description}\setlength\itemsep{0pt}
   \item[H1a] Filtrado por distancia $>$ sin filtrar.
   \item[H1b] Ponderación suave $\geq$ filtrado binario.
   \item[H1c] Generaliza a NER sin modificación.
@@ -30,12 +38,12 @@ en clasificación con pocos ejemplos por clase.
 \end{column}
 
 \begin{column}{0.5\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
 \begin{block}{Objetivos específicos}
 \scriptsize
-\begin{enumerate}
-  \item Diseñar e implementar un sistema de filtros con ponderación suave.
-  \item Comparar contra \textbf{9 métodos} (clásicos + modernos) sobre múltiples datasets.
+\begin{enumerate}\setlength\itemsep{0pt}
+  \item Diseñar el sistema de filtros con ponderación suave.
+  \item Comparar contra \textbf{9 métodos} (clásicos + modernos).
   \item Demostrar generalización a \textbf{NER}.
 \end{enumerate}
 \end{block}
@@ -43,7 +51,7 @@ en clasificación con pocos ejemplos por clase.
 
 \end{columns}
 
-\vspace{0.4em}
+\vspace{0.2em}
 {\scriptsize\itshape Criterio de aceptación:}
 {\scriptsize $\Delta>0$,\quad $p_{\text{Bonf}}<0.05$,\quad win-rate $>50\%$.}
 \end{frame}
