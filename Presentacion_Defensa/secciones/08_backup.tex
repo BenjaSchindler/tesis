@@ -1,6 +1,314 @@
 % =============================================================================
-% Bloque 9: Backup (slides B1–B5) — para Q&A
+% Bloque 9: Backup (slides B1–B9) — para Q&A
 % =============================================================================
+
+% --- B0a: Protocolo estadístico — justificación detallada ---
+\begin{frame}{Backup B0a: ¿Por qué este protocolo estadístico?}
+\scriptsize
+Cada herramienta responde una pregunta \textbf{distinta} sobre el efecto:
+
+\vspace{0.3em}
+\begin{tabular}{@{}p{2.6cm}p{3.6cm}p{6.2cm}@{}}
+\toprule
+\textbf{Herramienta} & \textbf{Pregunta} & \textbf{Justificación} \\
+\midrule
+$t$-pareada       & ¿La diferencia es real?       & Configs emparejadas por \textit{dataset $\times$ clasificador $\times$ semilla}: elimina varianza entre configs. \\
+\addlinespace[1pt]
+Bonferroni        & ¿Y con muchos tests?          & 7 métodos vs.\ SMOTE $\Rightarrow$ $\alpha=0{.}05/7$. Conservador, blindado contra falsos positivos. \\
+\addlinespace[1pt]
+Bootstrap CI 95\% & ¿Qué rango es plausible?      & No asume normalidad. 10\,000 remuestreos: percentiles 2.5 y 97.5 estables al 3er decimal. \\
+\addlinespace[1pt]
+$d$ de Cohen      & ¿Qué tan grande es?           & Separa significancia \textbf{estadística} de \textbf{práctica}: con $n{=}525$, $p$ puede ser bajo aunque $\Delta$ sea trivial. \\
+\addlinespace[1pt]
+Win-rate          & ¿Qué tan consistente?         & Media $+2{.}25$pp con 50\% win = volátil. Con 82\% win = robusto. \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Los \textbf{4 apuntan} en la misma dirección $\Rightarrow$ conclusión difícil de atacar.
+\end{insight}
+\end{frame}
+
+% --- B0b: Interpretación de d de Cohen ---
+\begin{frame}{Backup B0b: $d$ de Cohen — interpretación}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.45\textwidth}
+\textbf{Fórmula (pareada):}
+\[
+d = \frac{\overline{\Delta\text{F1}}}{\text{SD}(\Delta\text{F1})}
+\]
+
+\vspace{0.4em}
+\textbf{Convenciones (Cohen 1988):}\\[2pt]
+\scriptsize
+\begin{tabular}{@{}lll@{}}
+\toprule
+$d$ & Magnitud & Interpretación \\
+\midrule
+0.2 & pequeño  & apenas distinguible \\
+0.5 & medio    & visible a ojo \\
+0.8 & grande   & claramente diferente \\
+1.0+ & muy grande & casi sin solapamiento \\
+\bottomrule
+\end{tabular}
+\end{column}
+
+\begin{column}{0.55\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{Nuestros valores}
+\scriptsize
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Configuración           & $d$    & Magnitud      \\
+\midrule
+Global (soft-weighted)  & 0.74   & medio-grande  \\
+SVC (lineal)            & 1.00   & muy grande    \\
+Ridge                   & 1.03   & muy grande    \\
+MLP                     & 0.73   & medio-grande  \\
+LogReg                  & 0.82   & grande        \\
+\midrule
+emotion 6-clases        & 1.24   & muy grande    \\
+20news 10-shot          & 0.95   & muy grande    \\
+\bottomrule
+\end{tabular}
+\end{block}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Con $d{=}0.74$ y $p{<}0.0001$: la diferencia es \textbf{real} \emph{y} \textbf{práctica}.
+\end{insight}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+
+% --- B0c: Filtros geométricos — diseño completo ---
+\begin{frame}{Backup B0c: Filtros geométricos --- arquitectura y diseño}
+\scriptsize
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\textbf{1. LOF (Local Outlier Factor)}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Score: densidad local relativa a $k$ vecinos.
+  \item \textbf{Decisión binaria}: score $> \theta_{\text{LOF}}$.
+  \item \texttt{novelty=True}: entrenado en reales, evaluado en sintéticos.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{2. Cascade (4 niveles)}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item L1: distancia euclidiana al centroide.
+  \item L2: + similitud coseno al centroide.
+  \item L3: + pureza KNN ($k{=}10$).
+  \item L4: + confianza (dist.\ a centroide).
+  \item Score combinado: \textbf{media geométrica}.
+  \item Selección: \textbf{top-N por ranking} (sin umbral).
+\end{itemize}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\textbf{3. Combined (LOF $\land$ similarity)}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Debe pasar \textbf{ambos}: LOF $> 0$ \emph{y} sim $> 0.5$.
+  \item Operador \textbf{AND} $\Rightarrow$ muy restrictivo.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{4. EmbeddingGuided (coverage)}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Maximiza cobertura: distancia a vecinos.
+  \item Penaliza si está demasiado cerca.
+  \item Coverage 0.6 + Quality 0.4 (centroide).
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{5. None (control)}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Sin filtrado (selección aleatoria).
+\end{itemize}
+\end{column}
+
+\end{columns}
+
+\vspace{0.4em}
+\begin{insight}
+\scriptsize Cascade L1 + ponderación suave \textbf{top-N} es el ganador: distancia simple + ranking.
+\end{insight}
+\end{frame}
+
+% --- B0d: Cascada L0-L4 — ablación de niveles ---
+\begin{frame}{Backup B0d: Ablación de niveles --- ¿más filtros, mejor?}
+\small
+\textbf{Cascada con selección top-N (sin ponderación suave, binary mask):}
+
+\vspace{0.4em}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\centering
+\scriptsize
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+Nivel & $\Delta$F1 vs.\ SMOTE & Win-rate & Filtros activos \\
+\midrule
+L0 (control)               & $-0.52$            & 50.0\%   & ninguno (random) \\
+\rowcolor{uaigreen!12}
+\textbf{L1}                & \alert{$+1.94$}    & 91.7\%   & distancia \\
+L2                         & $+1.94$            & 91.7\%   & + similitud \\
+L3                         & $+1.95$            & 91.7\%   & + KNN purity \\
+L4 (full)                  & $+1.92$            & 91.7\%   & + confianza \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.4em}
+\textbf{Con ponderación suave (\textit{top-N}, $n{=}168$):}\\[2pt]
+\scriptsize
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Nivel & $\Delta$F1 vs.\ SMOTE & Win-rate \\
+\midrule
+\rowcolor{uaigreen!12}
+\textbf{L1}        & \alert{$+3.66$}  & 84.5\% \\
+L2                 & $+3.60$          & 83.9\% \\
+L4 (full)          & $+3.60$          & 83.3\% \\
+\bottomrule
+\end{tabular}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Por qué L1 gana}
+\scriptsize
+\begin{itemize}\setlength\itemsep{1pt}
+  \item Las 4 métricas están \textbf{altamente correlacionadas} (distancia + coseno + KNN + centroide $\to$ todas miden ``cercanía al cluster'').
+  \item La media geométrica de señales redundantes \textbf{no aporta} información.
+  \item L1 es \textbf{robusto en 10-shot}: KNN/LOF degeneran con $<20$ vecinos.
+\end{itemize}
+\end{block}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize \textbf{Simple gana a complejo}: añadir filtros NO mejora, levemente perjudica.
+\end{insight}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- B0e: Cómo se eligieron los umbrales ---
+\begin{frame}{Backup B0e: Elección de hiperparámetros}
+\scriptsize
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{LOF: \texttt{n\_neighbors} y \texttt{threshold}}\\[2pt]
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Param & $k=5$ & $k=10$ & $k=20$ \\
+\midrule
+$\Delta$F1 vs.\ SMOTE & \alert{$+2.43$} & $+0.16$ & $+0.05$ \\
+Win-rate              & 90.0\%         & 70.0\% & 67.5\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\itshape Default sklearn $k{=}20$ falla en 10-shot (no hay 20 vecinos por clase). $k{=}5$ es el sweet spot.}
+
+\vspace{0.5em}
+\textbf{LOF: \texttt{threshold}}\\[2pt]
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Threshold & $\Delta$F1 & Win-rate \\
+\midrule
+$-0.50$       & $+1.29$ & 80.0\% \\
+$-0.30$       & $+0.06$ & 68.3\% \\
+$\phantom{-}0.00$ (default sklearn) & $+0.88$ & 75.6\% \\
+\bottomrule
+\end{tabular}
+{\itshape $\theta{=}0$ es la frontera matemática inlier/outlier (\texttt{decision\_function}).}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\textbf{Cascade: \texttt{k\_neighbors} para KNN purity}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Fijado $k{=}10$ (compromiso 10/25/50-shot).
+  \item L1 (sin KNN) no es sensible a este parámetro.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Combined: \texttt{sim\_threshold}}\\[2pt]
+\begin{tabular}{@{}lrr@{}}
+\toprule
+$\theta_{\text{sim}}$ & $\Delta$F1 & Win-rate \\
+\midrule
+$0.3$ & $-0.68$ & 55.0\% \\
+$0.5$ & $-5.71$ & 41.7\% \\
+$0.7$ & $-1.10$ & 71.7\% \\
+\bottomrule
+\end{tabular}
+{\itshape Cualquier $\theta_{\text{sim}}{>}0$ combinado con AND $\Rightarrow$ catastrófico.}
+
+\vspace{0.4em}
+\textbf{Top-N: peso mínimo y temperatura}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Normalización: \texttt{minmax} (vs.\ rank, z-score).
+  \item Temperatura $\tau{=}0.5$ (peaked, $w \propto s^{1/\tau}$).
+  \item Peso mínimo $w_{\min}$: \textbf{poco impacto} ($\pm 0.05$pp).
+\end{itemize}
+\end{column}
+
+\end{columns}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Hiperparámetros del cascade son \textbf{poco sensibles}; los de LOF y combined son \textbf{críticos}.
+\end{insight}
+\end{frame}
+
+% --- B0f: Tabla completa de filtros con costo ---
+\begin{frame}{Backup B0f: Comparación completa de filtros geométricos}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrrrl@{}}
+\toprule
+Filtro                & $\Delta$F1 & Win & Acept. & LLM & Notas \\
+\midrule
+\rowcolor{uaigreen!12}
+\textbf{cascade L1 + top-N} & \alert{$+3{.}66$} & 84.5\% & 100\%  & 3$\times$   & \textbf{Ganador} \\
+cascade L2 (top-N)        & $+3{.}60$         & 83.9\% & 97\%  & 6.3$\times$  & Similar a L1 \\
+cascade L4 (top-N)        & $+3{.}60$         & 83.3\% & 96\%  & 6.5$\times$  & Redundante \\
+cascade L1 (binary)       & $+1{.}94$         & 91.7\% & 100\% & 3$\times$    & Sin pesos suaves \\
+cascade L3 (binary)       & $+1{.}95$         & 91.7\% & 97\%  & 6.5$\times$  & + KNN, no ayuda \\
+\addlinespace[2pt]
+LOF ($k{=}5$, $\theta{=}{-}0{.}5$) & $+2{.}43$ & 90.0\% & --   & 6.2$\times$  & Segundo mejor \\
+LOF ($k{=}20$, $\theta{=}0$)       & $+0{.}05$ & 67.5\% & --   & 8$\times$    & Default sklearn falla \\
+\addlinespace[2pt]
+none (control)            & $+0{.}72$         & 62.9\% & 100\% & 3$\times$    & LLM sin filtrar \\
+\addlinespace[2pt]
+\rowcolor{uaiorange!10}
+embedding\_guided         & $-1{.}29$         & 55.0\% & --    & --           & Coverage-only no funciona \\
+\rowcolor{uaiorange!10}
+combined (LOF $\land$ sim) & $-3{.}28$        & 52.5\% & 23\%  & 32$\times$   & Demasiado restrictivo \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+{\scriptsize\itshape ``LLM'' = candidatos generados por muestra requerida.}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize \textbf{Tres principios de diseño confirmados:}
+(1) \textit{Ranking} (top-N) $>$ umbral duro (binary).\hspace{0.5em}
+(2) Distancia simple $\geq$ múltiples criterios.\hspace{0.5em}
+(3) Operador \textbf{AND} (combined) destruye la señal.
+\end{insight}
+\end{frame}
 
 % --- B1: Validación de SMOTE ---
 \begin{frame}{Backup B1: SMOTE — validación de implementación}
