@@ -310,6 +310,143 @@ combined (LOF $\land$ sim) & $-3{.}28$        & 52.5\% & 23\%  & 32$\times$   & 
 \end{insight}
 \end{frame}
 
+% --- B0g: Hiperparámetros del LLM y ponderación suave ---
+\begin{frame}{Backup B0g: Hiperparámetros LLM y ponderación suave}
+\scriptsize
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{LLM (Gemini 3 Flash)}
+\scriptsize
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Param         & Valor & Justificación \\
+\midrule
+\texttt{temperature}      & $0.8$  & Diversidad / coherencia \\
+\texttt{top\_p}, \texttt{top\_k} & default & SDK Gemini \\
+\texttt{max\_tokens}      & $4000$ & $\sim 50$ muestras/llamada \\
+back-trans.\ $T$          & $0.3$  & EN $\leftrightarrow$ ES conservador \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+\textbf{Ablation \texttt{temperature} (cascade L1):}\\[2pt]
+\begin{tabular}{@{}lrr@{}}
+\toprule
+$T$ & sms\_spam & 20news \\
+\midrule
+$0.5$ & $-0.07$ & $+5.04$ \\
+$0.7$ & $+1.44$ & $+4.16$ \\
+$0.8$ & $-1.06$ & $+6.04$ \\
+$0.9$ & $-0.18$ & $+6.25$ \\
+$1.0$ & $+4.95$ & $+7.44$ \\
+\bottomrule
+\end{tabular}\\
+{\itshape No monótono. $T{=}0.8$ por convención.}
+\end{block}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{Ponderación suave (top-N)}
+\scriptsize
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Param            & Valor    & Comentario \\
+\midrule
+$\tau$ ponder.   & $0.5$    & $w \propto s^{1/\tau}$, peaked \\
+normalización    & minmax   & frente a rank, sigmoid \\
+$w_{\min}$       & $0.0$    & sensibilidad $<\!0.2$pp \\
+candidatos       & $3\times$ target & margen top-N \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.1em}
+\textbf{Sweep Phase 2 (468 configs):}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Param          & $\Delta$F1 & Win \\
+\midrule
+$\tau=0.5$     & \alert{$+4.10$} & 88.3\% \\
+$\tau=1.0$     & $+3.67$         & 84.0\% \\
+$\tau=2.0$     & $+3.41$         & 83.3\% \\
+norm.\ minmax  & \alert{$+3.98$} & 89.6\% \\
+norm.\ rank    & $+3.56$         & 83.3\% \\
+\bottomrule
+\end{tabular}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\begin{insight}
+\scriptsize $\tau{=}0.5$ \textbf{peaked} amplifica diferencias entre muestras buenas y mediocres $\Rightarrow$ máxima ganancia.
+\end{insight}
+\end{frame}
+
+% --- B0h: Embeddings, clasificadores y validación ---
+\begin{frame}{Backup B0h: Embeddings, clasificadores y protocolo}
+\scriptsize
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Clasificadores (sklearn defaults)}
+\scriptsize
+\begin{tabular}{@{}ll@{}}
+\toprule
+Modelo & Hiperparámetros \\
+\midrule
+LogReg        & \texttt{max\_iter=1000} \\
+SVC           & \texttt{kernel="linear"} \\
+RandomForest  & \texttt{n\_estimators=100} \\
+Ridge         & $\alpha = 1.0$ \\
+MLP (custom)  & 128 hidden, 300 ep., lr $10^{-3}$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\itshape Sin tuning por dataset $\Rightarrow$ las diferencias son del \textbf{método de aumentación}.}
+\end{block}
+
+\vspace{0.3em}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Protocolo}
+\scriptsize
+Seeds $\{42, 123, 456, 789, 1011\}$ \textperiodcentered\ $N$-shot $\{10, 25, 50\}$ \textperiodcentered\ LLM \% $\{5, 25, 50, 100\}$ \textperiodcentered\ macro F1 \textperiodcentered\ 50 sintét./clase \textperiodcentered\ cache MD5.
+\end{block}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{Embedding model (504 runs)}
+\scriptsize
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Modelo & Dim & $\Delta$F1 & Win \\
+\midrule
+\rowcolor{uaigreen!12}
+\textbf{mpnet-base} & 768  & \alert{$+2.74$} & 92.1\% \\
+bge-large           & 1024 & $+2.04$         & 69.8\% \\
+bge-small           & 384  & $+2.00$         & 76.2\% \\
+e5-large            & 1024 & $+0.97$         & 68.3\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\itshape \textbf{Más grande $\neq$ mejor}: bge-small (384d) supera a e5-large (1024d).}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.2em}
+\begin{insight}
+\scriptsize Hiperparámetros del \textbf{filtro} son robustos ($\pm 0.5$pp). Los del \textbf{embedding} y \textbf{clasificador} dominan la varianza.
+\end{insight}
+\end{frame}
+
 % --- B1: Validación de SMOTE ---
 \begin{frame}{Backup B1: SMOTE — validación de implementación}
 \small
