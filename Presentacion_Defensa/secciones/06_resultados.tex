@@ -227,16 +227,16 @@ Cuanto peor parte una clase, mayor el espacio donde el filtrado geométrico pued
 \centering
 \begin{tikzpicture}[every node/.style={font=\scriptsize}, scale=0.62]
   % Línea vertical en 0 (referencia SMOTE)
-  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.8);
-  \node[below, font=\tiny] at (0,-0.35) {SMOTE = 0};
+  \draw[uaigray, dashed, thick] (0,0.0) -- (0,4.8);
+  \node[below, font=\tiny] at (0,-0.05) {SMOTE = 0};
 
   % Eje horizontal abajo
-  \draw[->,thick,uaigray] (-3.7,-0.3) -- (3.0,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \draw[->,thick,uaigray] (-3.7,0.0) -- (3.0,0.0) node[right, font=\tiny]{$\Delta$F1 (pp)};
   \foreach \x in {-3,-2,-1,1,2}{
-    \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38);
+    \draw[uaigray!50] (\x,0.08) -- (\x,-0.08);
   }
 
-  % Bars (positive)
+  % Bars vs SMOTE (positive)
   \fill[methodOurs] (0,4.1) rectangle (2.25,4.5);
   \node[right, font=\tiny] at (2.35,4.3) {\textbf{Cascade L1 soft\,$\dagger$ +2.25}};
 
@@ -246,19 +246,26 @@ Cuanto peor parte una clase, mayor el espacio donde el filtrado geométrico pued
   \fill[methodOther] (0,2.7) rectangle (0.72,3.1);
   \node[right, font=\tiny] at (0.82,2.9) {None +0.72};
 
-  % Callout: cascade L1 binary vs LLM sin filtrar (pareado)
-  \node[draw=uaibluedark!60, fill=uaibluelight!18, rounded corners, font=\tiny,
-        align=center, inner sep=3pt, line width=0.4pt] (callout) at (-1.85, 4.45)
-       {\textbf{Cascade L1 vs sin filtrar}\\(pareado, $n{=}60$):\\\alert{$\mathbf{+1.10}$ pp} ($p\!=\!0.017$)};
-  \draw[->, dashed, uaibluedark!50, line width=0.4pt]
-       (callout.east) -- (-0.05,4.3);
-
-  % Bars (negative)
+  % Bars vs SMOTE (negative)
   \fill[methodWorse] (-1.29,2.0) rectangle (0,2.4);
   \node[left, font=\tiny] at (-1.39,2.2) {Emb.-Guided $-1.29$};
 
   \fill[methodWorse] (-3.28,1.3) rectangle (0,1.7);
   \node[left, font=\tiny, color=uaiorange] at (-3.38,1.5) {\textbf{Combined $-3.28$}};
+
+  % Segundo bloque: vs LLM sin filtrar (pareado)
+  \draw[uaigray!40, dashed] (-3.7,-0.55) -- (3.0,-0.55);
+  \node[below=2pt, font=\tiny\itshape, color=uaibluedark, align=left] at (-1.8,-0.55)
+       {\textit{Pareado vs LLM sin filtrar} ($n{=}60$):};
+
+  \fill[methodOurs, pattern=north east lines, pattern color=methodOurs!80]
+       (0,-1.15) rectangle (1.10,-0.75);
+  \draw[methodOurs, line width=0.7pt] (0,-1.15) rectangle (1.10,-0.75);
+  \node[right, font=\tiny] at (1.20,-0.95)
+       {\textbf{Cascade L1 \alert{+1.10}} ($p\!=\!0.017$)};
+
+  % Línea de referencia "sin filtrar = 0"
+  \node[below, font=\tiny] at (0,-1.20) {sin filtrar = 0};
 \end{tikzpicture}
 
 \vspace{0.2em}
