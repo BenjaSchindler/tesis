@@ -235,7 +235,7 @@ Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasific
 \midrule
 \textit{None} (control)        & Sin filtrado, todas las muestras LLM. & --- \\[2pt]
 \textit{LOF}                   & Densidad local; conserva \emph{inliers} de \texttt{decision\_function} (sklearn). & $k=20$ vecinos$^{\dagger}$; umbral $>0$ \\[2pt]
-\textit{Cascade L1} \alert{$\star$} & Distancia euclidiana al centroide. Top-$N$ por ranking. & nivel $=1$ (diseño soporta 1--3)$^{\ddagger}$ \\[2pt]
+\textit{Cascade L1} \alert{$\star$} & Distancia euclidiana a la ancla más cercana. Top-$N$ por ranking. & nivel $=1$ (diseño soporta 1--4)$^{\ddagger}$ \\[2pt]
 \textit{Combined}              & LOF \textbf{Y} similitud coseno. & $\tau_{\cos}=0.5$ \\[2pt]
 \textit{Embedding-Guided}      & Cobertura $0.6$ + calidad $0.4$, voraz. & multi-criterio \\
 \bottomrule
@@ -251,7 +251,7 @@ $^{\ddagger}$ $k=10$ aplica solo al nivel 3 (pureza KNN); en L1 no se usa.}
 \end{frame}
 
 % --- Slide 14: Cascade — pieza central ---
-\begin{frame}{Cascada de filtros: niveles 1--3}
+\begin{frame}{Cascada de filtros: niveles 1--4}
 \begin{columns}[T]
 
 \begin{column}{0.55\textwidth}
@@ -259,19 +259,20 @@ $^{\ddagger}$ $k=10$ aplica solo al nivel 3 (pureza KNN); en L1 no se usa.}
 \textbf{Score compuesto} (media geométrica de $L$ niveles activos):\\[2pt]
 \centerline{$\displaystyle s(x) = \left(\prod_{i=1}^{L} s_i(x)\right)^{1/L}$}
 
-\vspace{0.4em}
+\vspace{0.2em}
 \begin{description}\scriptsize
-  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al centroide:\\[1pt]
-    $d(x, c) = \sqrt{\textstyle\sum_i (x_i - c_i)^2}$
-  \item[Nivel 2] Similitud coseno al centroide:\\[1pt]
-    $\cos(x, c) = \dfrac{x \cdot c}{\|x\|\,\|c\|}$\\[1pt]
-    {\tiny\itshape Equivale a L1 si $\|x\|=\|c\|=1$ (depende del modelo y normalización).}
-  \item[Nivel 3] Pureza KNN ($k=10$).
+  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al \textbf{ancla más cercana} (real más próximo):\;
+    $d(x, a^{*}) = \min_{a\in\mathcal{A}} \|x - a\|_2$
+  \item[Nivel 2] Similitud coseno al ancla:\;
+    $\cos(x, a) = \dfrac{x \cdot a}{\|x\|\,\|a\|}$
+  \item[Nivel 3] Pureza KNN ($k=10$ vecinos misma clase).
+  \item[Nivel 4] Distancia al \textbf{centroide} $c$:\;
+    $d(x, c) = \|x - c\|_2$.
 \end{description}
 
-\vspace{0.2em}
+\vspace{0.1em}
 \begin{insight}
-\scriptsize Con embeddings L2-normalizados (mpnet, bge, e5), niveles 1 y 2 son redundantes.
+\scriptsize Con embeddings L2-normalizados, L1 y L2 quedan monotónicamente relacionados (mismo ranking).
 \end{insight}
 \end{column}
 
@@ -279,18 +280,21 @@ $^{\ddagger}$ $k=10$ aplica solo al nivel 3 (pureza KNN); en L1 no se usa.}
 \centering
 \begin{tikzpicture}[every node/.style={font=\tiny}]
   % Pirámide de niveles
-  \fill[uaiorange!40] (-2.5,2) rectangle (2.5,2.7);
-  \node[font=\scriptsize\bfseries] at (0,2.35) {Nivel 1: Distancia $\star$};
+  \fill[uaiorange!40] (-2.5,2.4) rectangle (2.5,3.0);
+  \node[font=\scriptsize\bfseries] at (0,2.7) {Nivel 1: Distancia (ancla) $\star$};
 
-  \fill[uaibluelight!30] (-2.2,1.2) rectangle (2.2,1.9);
-  \node[font=\scriptsize] at (0,1.55) {Nivel 2: Similitud};
+  \fill[uaibluelight!30] (-2.2,1.7) rectangle (2.2,2.3);
+  \node[font=\scriptsize] at (0,2.0) {Nivel 2: Similitud (ancla)};
 
-  \fill[uaibluelight!20] (-1.9,0.4) rectangle (1.9,1.1);
-  \node[font=\scriptsize] at (0,0.75) {Nivel 3: KNN-purity};
+  \fill[uaibluelight!20] (-1.9,1.0) rectangle (1.9,1.6);
+  \node[font=\scriptsize] at (0,1.3) {Nivel 3: KNN-purity};
+
+  \fill[uaibluelight!15] (-1.6,0.3) rectangle (1.6,0.9);
+  \node[font=\scriptsize] at (0,0.6) {Nivel 4: Centroide};
 
   % Flecha de score
-  \draw[->, very thick, uaiorange] (-3.2,0.4) -- (-3.2,2.7);
-  \node[font=\tiny, rotate=90] at (-3.6,1.55) {score $\uparrow$};
+  \draw[->, very thick, uaiorange] (-3.2,0.3) -- (-3.2,3.0);
+  \node[font=\tiny, rotate=90] at (-3.6,1.65) {score $\uparrow$};
 \end{tikzpicture}\\[4pt]
 {\scriptsize Selecciona top-$N$ por ranking,\\ \textbf{sin umbral binario}.}
 \end{column}

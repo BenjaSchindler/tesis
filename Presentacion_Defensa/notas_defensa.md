@@ -15,12 +15,13 @@ Apuntes rápidos para repasar antes de la presentación. Organizado por tema.
 
 ### Cascade L1 — la mejor configuración
 
-- L1 = solo nivel 1 = distancia euclidiana al **centroide** de la clase (no al "ancla" genérico).
+- L1 = solo nivel 1 = distancia euclidiana al **ancla más cercana** (ejemplo real más próximo de la clase). L4, en cambio, mide distancia al **centroide**.
 - Selecciona top-N por ranking, **sin umbral binario**.
 - `k=10` que aparece en el código es del nivel 3 (pureza KNN) — **no se usa en L1**.
 - Por qué gana siendo el más simple:
-  - Niveles 1 y 2 son redundantes con vectores L2-normalizados (distancia euclidiana ≡ coseno en la esfera unitaria).
-  - Niveles 3 y 4 estiman densidad/centroide con pocos puntos → ruidosos en low-resource.
+  - Niveles 1 y 2 quedan monotónicamente relacionados con vectores L2-normalizados (distancia euclidiana ≡ coseno en la esfera unitaria), así que L2 no aporta info nueva.
+  - Nivel 3 estima densidad local con pocos puntos → ruidoso en low-resource.
+  - Nivel 4 (centroide) no aporta sobre L1: anclas son los reales mismos → cualquier centroide se computa a partir de ellos.
   - La media geométrica multiplica todos los scores: un score ruidoso bajo arrastra a todo el producto.
 
 ### Score compuesto `s(x) = (Π sᵢ(x))^(1/L)`
