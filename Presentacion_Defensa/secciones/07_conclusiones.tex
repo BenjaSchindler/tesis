@@ -15,7 +15,7 @@
 \scriptsize
 \begin{itemize}\setlength\itemsep{0pt}
   \item Sistema de filtros geométricos multi-nivel.
-  \item Ponderación suave por temperatura.
+  \item Ponderación suave por score normalizado.
   \item Desacoplado del LLM.
 \end{itemize}
 \end{block}
@@ -27,6 +27,7 @@
 \scriptsize
 \begin{itemize}\setlength\itemsep{0pt}
   \item +2.25 pp vs.\ SMOTE\\(\textit{p}\,$<$\,0.0001).
+  \item +2.21 pp vs.\ sin filtrar.
   \item Supera a 9 baselines\\incluidos T5 y BERT.
   \item Robusto a 5 LLMs y 4 embeddings.
 \end{itemize}
@@ -38,9 +39,9 @@
 \begin{block}{Generalización}
 \scriptsize
 \begin{itemize}\setlength\itemsep{0pt}
+  \item Beneficio en clases difíciles: +10.44 pp.
   \item NER: +9.61 pp sin modificar nada.
   \item Hallazgo: simple $>$ complejo.
-  \item Beneficio en clases difíciles: +10.44 pp.
 \end{itemize}
 \end{block}
 \end{column}
@@ -80,16 +81,18 @@ A precios actuales: \textbf{centavos por dataset}.
 \end{column}
 
 \begin{column}{0.45\textwidth}
-\textbf{Casos de aplicación inmediata:}
+\textbf{Posibles casos de aplicación:}
+\scriptsize
 \begin{itemize}\setlength\itemsep{1pt}
-  \item Detectar contenido tóxico nuevo.
-  \item Triaje clínico con notas escasas.
-  \item Categorización de tickets de soporte.
-  \item Monitoreo de marca / tópicos emergentes.
-  \item Clasificación de eventos en logs.
+  \item Detección de discurso de odio\\\cita{hate\_speech: +13 pp en clase rara}.
+  \item Clasificación de emociones en texto\\\cita{emotion: +4.55 pp; +16.9 pp en \textit{anger}}.
+  \item Categorización de noticias por tema\\\cita{20newsgroups, ag\_news: +5 a +15 pp}.
+  \item Clasificación de tipo de preguntas\\\cita{trec6: +10.12 pp}.
+  \item Detección de spam SMS\\\cita{sms\_spam: $\sim +3$ pp}.
 \end{itemize}
 
 \vspace{0.4em}
+\small
 \textbf{Quién no debería usarlo:}
 \begin{itemize}\setlength\itemsep{1pt}
   \item Más de 50 ejemplos por clase: SMOTE basta.
@@ -124,10 +127,9 @@ A precios actuales: \textbf{centavos por dataset}.
 \begin{block}{Trabajo futuro}
 \scriptsize
 \begin{itemize}\setlength\itemsep{0pt}
-  \item Embeddings y LLMs \textbf{multilingües}.
+  \item Datasets \textbf{multilingües}.
   \item LLMs locales (Llama, Mistral) sin filtros de contenido.
-  \item Temperatura $T$ \textbf{adaptativa por clase}.
-  \item Presupuesto generativo adaptativo.
+  \item Parámetro de ponderación suave $T$ \textbf{adaptativo por clase}.
   \item Otras tareas: QA, resumen, generación de preguntas.
 \end{itemize}
 \end{block}
