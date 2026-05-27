@@ -246,6 +246,13 @@ Cuanto peor parte una clase, mayor el espacio donde el filtrado geométrico pued
   \fill[methodOther] (0,2.7) rectangle (0.72,3.1);
   \node[right, font=\tiny] at (0.82,2.9) {None +0.72};
 
+  % Callout: cascade L1 binary vs LLM sin filtrar (pareado)
+  \node[draw=uaibluedark!60, fill=uaibluelight!18, rounded corners, font=\tiny,
+        align=center, inner sep=3pt, line width=0.4pt] (callout) at (-1.85, 4.45)
+       {\textbf{Cascade L1 vs sin filtrar}\\(pareado, $n{=}60$):\\\alert{$\mathbf{+1.10}$ pp} ($p\!=\!0.017$)};
+  \draw[->, dashed, uaibluedark!50, line width=0.4pt]
+       (callout.east) -- (-0.05,4.3);
+
   % Bars (negative)
   \fill[methodWorse] (-1.29,2.0) rectangle (0,2.4);
   \node[left, font=\tiny] at (-1.39,2.2) {Emb.-Guided $-1.29$};
