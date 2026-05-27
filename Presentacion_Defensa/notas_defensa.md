@@ -29,6 +29,32 @@ Apuntes rápidos para repasar antes de la presentación. Organizado por tema.
 - Más estricta que la aritmética: un nivel malo hunde al candidato (no se "compensa" con otros buenos).
 - Analogía: aprobar todas las materias (geométrica) vs buen promedio (aritmética).
 
+### Embedding-Guided — el filtro que falló
+
+**Qué hace:** en vez de premiar muestras cerca del centroide (como cascade), premia las que **llenan huecos** en el espacio de embeddings — zonas donde la clase está poco representada.
+
+**Dos criterios opuestos:**
+- **Cobertura (60%)**: distancia a los reales — *más lejos = mejor* (llena huecos vacíos).
+- **Calidad (40%)**: distancia al centroide — *más cerca = mejor* (sigue siendo plausible para la clase).
+- Score combinado: `0.6 × cobertura + 0.4 × calidad`.
+
+**Selección voraz (greedy):** ordena candidatos por score, va eligiendo top-K uno por uno, salteándose los que ya están demasiado cerca de algo seleccionado (umbral de diversidad `0.1`).
+
+**Por qué "multi-criterio":** combina dos objetivos distintos en un único score, a diferencia del cascade que es mono-criterio (solo proximidad).
+
+**Por qué falló (−1.29 pp vs SMOTE, 55% win):**
+- Cobertura y calidad **tiran en direcciones opuestas**: para llenar huecos hay que alejarse del centroide.
+- En few-shot, las zonas alejadas están mal definidas → mete ruido.
+- Confirma el hallazgo central: en pocos datos, **simple > complejo**, **proximidad > diversidad**.
+
+**Defensa — para 30 segundos:**
+
+> *"Filtro multi-criterio que combina cobertura del espacio (60%) y calidad (40%) con selección voraz. Busca muestras que llenen huecos en vez de quedarse cerca del centroide. Falló porque diversidad y proximidad tiran en direcciones opuestas: en few-shot llenar huecos saca las muestras fuera de la región segura de la clase."*
+
+**Si te preguntan "¿por qué lo incluiste si falló?":**
+
+> *"Lo incluí precisamente para mostrar que el principio opuesto — diversificar — no funciona. Confirma empíricamente el hallazgo central: en pocos datos, proximidad gana a diversidad."*
+
 ---
 
 ## Ponderación suave (Soft weighting)

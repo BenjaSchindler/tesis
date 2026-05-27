@@ -38,6 +38,11 @@
   \draw[arrow] (weight) -- (clf);
   \draw[arrow] (real.south)  .. controls +(0,-0.6) and +(-0.5,0) .. (clf.west);
   \draw[arrow] (clf)   -- (eval);
+  % Atajo punteado: filtro binario (sin ponderación suave)
+  \draw[->, >=Stealth, thick, uaibluedark!60, dashed]
+       (filt.south west) .. controls +(-1.2,-0.7) and +(1.0,0.7) ..
+       node[midway, above, font=\tiny\itshape, color=uaibluedark!70] {sin pesos}
+       (clf.north east);
 \end{tikzpicture}
 
 \vspace{0.5em}
@@ -176,54 +181,6 @@ $R_c = \dfrac{\mathrm{TP}_c}{\mathrm{TP}_c + \mathrm{FN}_c}$.}
 {\scriptsize\itshape $n$-shot estricto: 10 / 25 / 50 ejemplos por clase. Rango de complejidad: de binario (\dataset{sms\_spam}) a 150 clases (\dataset{clinc150}).}
 \end{frame}
 
-% --- Slide 15: Por qué estos datasets de clasificación ---
-\begin{frame}{¿Por qué estos datasets de clasificación?}
-\begin{columns}[T]
-
-\begin{column}{0.50\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaibluedark}
-\begin{block}{\small Experimento principal --- 7 datasets}
-\scriptsize
-Buscan \textbf{cobertura en tres ejes}:
-\begin{itemize}\setlength\itemsep{0pt}
-  \item \textbf{Granularidad:} 2 $\to$ 20 clases.
-  \item \textbf{Dominio:} spam, odio, noticias, emoción, ontología.
-  \item \textbf{Estilo:} corto/largo, formal/informal, social/curado.
-\end{itemize}
-\vspace{0.4em}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item \dataset{sms\_spam} (2): NLP canónico, frase corta.
-  \item \dataset{hate\_speech\_davidson} (3): dominio sensible.
-  \item \dataset{20newsgroups}, \dataset{ag\_news} (4): noticias.
-  \item \dataset{emotion} (6): el ejemplo recurrente.
-  \item \dataset{dbpedia14} (14): ontología Wikipedia.
-  \item \dataset{20newsgroups\_20class} (20): máxima granularidad.
-\end{itemize}
-\end{block}
-\end{column}
-
-\begin{column}{0.50\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaiorange}
-\begin{block}{\small Escalabilidad --- 3 datasets adicionales}
-\scriptsize
-Responden la pregunta:\\[2pt]
-\alert{¿el filtrado sigue funcionando con muchas clases?}
-\vspace{0.4em}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item \dataset{trec6} (6): preguntas TREC, mismo régimen de clases que el principal pero distinto dominio. Sirve de \textbf{control}.
-  \item \dataset{banking77} (77): intenciones bancarias, granularidad fina con clases semánticamente cercanas.
-  \item \dataset{clinc150} (150): intenciones de diálogo de asistentes virtuales. \textbf{Caso extremo}.
-\end{itemize}
-\vspace{0.4em}
-Permiten medir \textbf{degradación del filtrado} al aumentar el número de clases.
-\end{block}
-\end{column}
-
-\end{columns}
-
-\mensaje{Diez datasets, dos preguntas: ¿qué tan bueno es el filtrado? ¿hasta dónde escala?}
-\end{frame}
-
 % --- Slide 16: ¿Qué es NER y por qué la usamos? ---
 \begin{frame}{¿Qué es NER y por qué la usamos?}
 
@@ -278,7 +235,7 @@ Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasific
 \midrule
 \textit{None} (control)        & Sin filtrado, todas las muestras LLM. & --- \\[2pt]
 \textit{LOF}                   & Densidad local; conserva \emph{inliers} de \texttt{decision\_function} (sklearn). & $k=20$ vecinos$^{\dagger}$; umbral $>0$ \\[2pt]
-\textit{Cascade L1} \alert{$\star$} & Distancia euclidiana al centroide. Top-$N$ por ranking. & nivel $=1$ (diseño soporta 1--4)$^{\ddagger}$ \\[2pt]
+\textit{Cascade L1} \alert{$\star$} & Distancia euclidiana al centroide. Top-$N$ por ranking. & nivel $=1$ (diseño soporta 1--3)$^{\ddagger}$ \\[2pt]
 \textit{Combined}              & LOF \textbf{Y} similitud coseno. & $\tau_{\cos}=0.5$ \\[2pt]
 \textit{Embedding-Guided}      & Cobertura $0.6$ + calidad $0.4$, voraz. & multi-criterio \\
 \bottomrule
@@ -294,34 +251,27 @@ $^{\ddagger}$ $k=10$ aplica solo al nivel 3 (pureza KNN); en L1 no se usa.}
 \end{frame}
 
 % --- Slide 14: Cascade — pieza central ---
-\begin{frame}{Cascada de filtros: niveles 1--4}
+\begin{frame}{Cascada de filtros: niveles 1--3}
 \begin{columns}[T]
 
 \begin{column}{0.55\textwidth}
 \small
-\textbf{Score compuesto} (media geométrica):
-\[
-s(x) = \left(\prod_{i=1}^{L} s_i(x)\right)^{1/L}
-\]
+\textbf{Score compuesto} (media geométrica de $L$ niveles activos):\\[2pt]
+\centerline{$\displaystyle s(x) = \left(\prod_{i=1}^{L} s_i(x)\right)^{1/L}$}
 
-\begin{center}
-{\scriptsize
-$s(x)$: calidad final \quad
-$s_i(x)$: score nivel $i$ \quad
-$L$: niveles activos}
-\end{center}
-
-\vspace{-0.2em}
+\vspace{0.4em}
 \begin{description}\scriptsize
-  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al centroide.
-  \item[Nivel 2] Similitud coseno.
+  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al centroide:\\[1pt]
+    $d(x, c) = \sqrt{\textstyle\sum_i (x_i - c_i)^2}$
+  \item[Nivel 2] Similitud coseno al centroide:\\[1pt]
+    $\cos(x, c) = \dfrac{x \cdot c}{\|x\|\,\|c\|}$\\[1pt]
+    {\tiny\itshape Equivale a L1 si $\|x\|=\|c\|=1$ (depende del modelo y normalización).}
   \item[Nivel 3] Pureza KNN ($k=10$).
-  \item[Nivel 4] Distancia al centroide.
 \end{description}
 
-\vspace{0.3em}
+\vspace{0.2em}
 \begin{insight}
-\scriptsize Con vectores L2-normalizados, niveles 1 y 2 son redundantes; los niveles 3--4 introducen ruido en pocos ejemplos.
+\scriptsize Con embeddings L2-normalizados (mpnet, bge, e5), niveles 1 y 2 son redundantes.
 \end{insight}
 \end{column}
 
@@ -338,12 +288,9 @@ $L$: niveles activos}
   \fill[uaibluelight!20] (-1.9,0.4) rectangle (1.9,1.1);
   \node[font=\scriptsize] at (0,0.75) {Nivel 3: KNN-purity};
 
-  \fill[uaibluelight!10] (-1.6,-0.4) rectangle (1.6,0.3);
-  \node[font=\scriptsize] at (0,-0.05) {Nivel 4: Centroide};
-
   % Flecha de score
-  \draw[->, very thick, uaiorange] (-3.2,-0.4) -- (-3.2,2.7);
-  \node[font=\tiny, rotate=90] at (-3.6,1.15) {score $\uparrow$};
+  \draw[->, very thick, uaiorange] (-3.2,0.4) -- (-3.2,2.7);
+  \node[font=\tiny, rotate=90] at (-3.6,1.55) {score $\uparrow$};
 \end{tikzpicture}\\[4pt]
 {\scriptsize Selecciona top-$N$ por ranking,\\ \textbf{sin umbral binario}.}
 \end{column}

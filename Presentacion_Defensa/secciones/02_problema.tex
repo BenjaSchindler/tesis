@@ -4,39 +4,75 @@
 
 \section{Problema}
 
-% --- Slide: Escasez de datos en la práctica (movida desde intro) ---
-\begin{frame}{Escasez de datos: un problema cotidiano}
+% --- Slide: Por qué los clasificadores se inclinan hacia las clases mayoritarias (movida desde intro) ---
+\begin{frame}{Por qué los clasificadores se inclinan hacia las clases mayoritarias}
 \begin{columns}[T]
 
-\begin{column}{0.5\textwidth}
+\begin{column}{0.55\textwidth}
 \small
-\textbf{Dominios cotidianos en clasificación de texto:}\\
-Triaje clínico $\cdot$ tickets de soporte $\cdot$ spam $\cdot$ discurso de odio.
+Un modelo puede ser \textbf{correcto en el 95\% de los casos}\\
+y, aun así, \textbf{fallar en el 100\% de los que importan}.
 
-\vspace{0.6em}
-\textbf{Por qué duele:}
-\begin{itemize}\setlength\itemsep{3pt}
-  \item Etiquetado humano = \alert{caro, lento y sesgado}.
-  \item Las clases raras suelen ser \textbf{las que más importan}: urgencias, fraudes, diagnósticos.
-  \item Pocos ejemplos $\Rightarrow$ el modelo \textbf{sobreajusta} y no generaliza a casos nuevos.
-  \item Multiclase $+$ desbalance $\Rightarrow$ el rendimiento en clases raras colapsa.
-\end{itemize}
-\cita{Gopali 2024; Whitehouse 2023}
+\vspace{0.7em}
+\centering
+{\scriptsize\bfseries\color{uaibluedark} Recall por clase en un dataset desbalanceado}\\[4pt]
+\begin{tikzpicture}[every node/.style={font=\tiny}]
+  % Bar chart: recall per class
+  % Class 1 — Común
+  \node[anchor=east] at (1.6, 2.55) {Común};
+  \fill[methodSMOTE!60, draw=methodSMOTE] (1.7, 2.40) rectangle (4.60, 2.70);
+  \node[anchor=west, font=\tiny\bfseries, color=methodSMOTE] at (4.65, 2.55) {96\% (720 datos)};
+
+  % Class 2 — Frecuente
+  \node[anchor=east] at (1.6, 1.85) {Frecuente};
+  \fill[methodSMOTE!60, draw=methodSMOTE] (1.7, 1.70) rectangle (3.56, 2.00);
+  \node[anchor=west] at (3.61, 1.85) {62\% (40 datos)};
+
+  % Class 3 — Rara
+  \node[anchor=east] at (1.6, 1.15) {Rara};
+  \fill[methodSMOTE!60, draw=methodSMOTE] (1.7, 1.00) rectangle (2.42, 1.30);
+  \node[anchor=west] at (2.47, 1.15) {24\% (24 datos)};
+
+  % Class 4 — Crítica — orange highlight
+  \node[anchor=east, color=uaiorange, font=\tiny\bfseries] at (1.6, 0.45) {Crítica};
+  \fill[uaiorange, draw=uaiorange, very thick] (1.7, 0.30) rectangle (1.79, 0.60);
+  \node[anchor=west, font=\tiny\bfseries, color=uaiorange] at (1.84, 0.45) {3\% (16 datos)};
+\end{tikzpicture}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize
+La voz que el modelo \textbf{no escuchó}\\
+suele cargar con el mayor \textbf{costo humano}.
+\end{insight}
 \end{column}
 
-\begin{column}{0.5\textwidth}
+\begin{column}{0.45\textwidth}
 \centering
-\begin{tikzpicture}[every node/.style={font=\scriptsize}]
-  % Iconos representando dominios
-  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (a) at (-1.3,3) {\textbf{Hate speech}\\\tiny minoría: $<$30 ej.};
-  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (b) at (1.3,3) {\textbf{Clínico}\\\tiny rare disease};
-  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (c) at (-1.3,1.5) {\textbf{Soporte TI}\\\tiny producto nuevo};
-  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (d) at (1.3,1.5) {\textbf{Spam}\\\tiny esquema emergente};
-  \node[draw=uaiorange, very thick, rounded corners, fill=uaiorange!15, minimum width=4.8cm, minimum height=0.8cm, text width=4.6cm, align=center] at (0,0.2) {\textbf{Común:} 10--50 ejemplos por clase};
+\vspace{0.5em}
+\begin{tikzpicture}[every node/.style={font=\scriptsize, align=center}]
+  % Box: Accuracy global - looks great
+  \node[draw=uaigreen, fill=uaigreen!12, rounded corners, very thick,
+        text width=3.8cm, minimum height=1.3cm] (acc) at (0,3.2)
+    {\textbf{Precisión global}\\[2pt]{\Large\bfseries\color{uaigreen} 95\%}};
+
+  % Vertical dotted bridge
+  \draw[uaigray, very thick, dotted] (0,2.5) -- (0,2.1);
+
+  % Box: Recall on minority - failure
+  \node[draw=uaiorange, fill=uaiorange!12, rounded corners, very thick,
+        text width=3.8cm, minimum height=1.3cm] (rec) at (0,1.4)
+    {\textbf{Recall en clase crítica}\\[2pt]{\Large\bfseries\color{uaiorange} 0\%}};
+
+  % Bottom label
+  \node[font=\scriptsize\bfseries, color=uaibluedark, align=center] at (0,0.15)
+    {El mismo modelo.\\Dos verdades.};
 \end{tikzpicture}
 \end{column}
 
 \end{columns}
+
+\mensaje{¿Cómo le enseñamos a un modelo a reconocer aquello que casi no ha visto?}
 \end{frame}
 
 % --- Slide: Re-muestreo (movida desde Estado del Arte) ---

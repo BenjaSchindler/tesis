@@ -10,7 +10,7 @@
 
 \begin{column}{0.55\textwidth}
 \small
-Un clasificador aprende \textbf{de lo que ve}. Y la realidad rara vez se reparte por partes iguales:
+En la práctica, los datos \textbf{más importantes} suelen ser los \textbf{menos frecuentes}. La realidad rara vez se reparte por partes iguales:
 
 \vspace{0.3em}
 \begin{itemize}\setlength\itemsep{1pt}
@@ -64,73 +64,3 @@ Un clasificador aprende \textbf{de lo que ve}. Y la realidad rara vez se reparte
 \end{columns}
 \end{frame}
 
-% --- Slide 4: La asimetría — lo poco escuchado es lo que más importa ---
-\begin{frame}{Cuando lo poco escuchado es lo que más importa}
-\begin{columns}[T]
-
-\begin{column}{0.55\textwidth}
-\small
-Un modelo puede ser \textbf{correcto en el 95\% de los casos}\\
-y, aun así, \textbf{fallar en el 100\% de los que importan}.
-
-\vspace{0.7em}
-\centering
-{\scriptsize\bfseries\color{uaibluedark} Recall por clase en un dataset desbalanceado}\\[4pt]
-\begin{tikzpicture}[every node/.style={font=\tiny}]
-  % Bar chart: recall per class
-  % Class 1 — Común
-  \node[anchor=east] at (1.6, 2.55) {Común};
-  \fill[methodSMOTE!60, draw=methodSMOTE] (1.7, 2.40) rectangle (4.60, 2.70);
-  \node[anchor=west, font=\tiny\bfseries, color=methodSMOTE] at (4.65, 2.55) {96\% (720 datos)};
-
-  % Class 2 — Frecuente
-  \node[anchor=east] at (1.6, 1.85) {Frecuente};
-  \fill[methodSMOTE!60, draw=methodSMOTE] (1.7, 1.70) rectangle (3.56, 2.00);
-  \node[anchor=west] at (3.61, 1.85) {62\% (40 datos)};
-
-  % Class 3 — Rara
-  \node[anchor=east] at (1.6, 1.15) {Rara};
-  \fill[methodSMOTE!60, draw=methodSMOTE] (1.7, 1.00) rectangle (2.42, 1.30);
-  \node[anchor=west] at (2.47, 1.15) {24\% (24 datos)};
-
-  % Class 4 — Crítica — orange highlight
-  \node[anchor=east, color=uaiorange, font=\tiny\bfseries] at (1.6, 0.45) {Crítica};
-  \fill[uaiorange, draw=uaiorange, very thick] (1.7, 0.30) rectangle (1.79, 0.60);
-  \node[anchor=west, font=\tiny\bfseries, color=uaiorange] at (1.84, 0.45) {3\% (16 datos)};
-\end{tikzpicture}
-
-\vspace{0.3em}
-\begin{insight}
-\scriptsize
-La voz que el modelo \textbf{no escuchó}\\
-suele cargar con el mayor \textbf{costo humano}.
-\end{insight}
-\end{column}
-
-\begin{column}{0.45\textwidth}
-\centering
-\vspace{0.5em}
-\begin{tikzpicture}[every node/.style={font=\scriptsize, align=center}]
-  % Box: Accuracy global - looks great
-  \node[draw=uaigreen, fill=uaigreen!12, rounded corners, very thick,
-        text width=3.8cm, minimum height=1.3cm] (acc) at (0,3.2)
-    {\textbf{Precisión global}\\[2pt]{\Large\bfseries\color{uaigreen} 95\%}};
-
-  % Vertical dotted bridge
-  \draw[uaigray, very thick, dotted] (0,2.5) -- (0,2.1);
-
-  % Box: Recall on minority - failure
-  \node[draw=uaiorange, fill=uaiorange!12, rounded corners, very thick,
-        text width=3.8cm, minimum height=1.3cm] (rec) at (0,1.4)
-    {\textbf{Recall en clase crítica}\\[2pt]{\Large\bfseries\color{uaiorange} 3\%}};
-
-  % Bottom label
-  \node[font=\scriptsize\bfseries, color=uaibluedark, align=center] at (0,0.15)
-    {El mismo modelo.\\Dos verdades.};
-\end{tikzpicture}
-\end{column}
-
-\end{columns}
-
-\mensaje{¿Cómo le enseñamos a un modelo a reconocer aquello que casi no ha visto?}
-\end{frame}

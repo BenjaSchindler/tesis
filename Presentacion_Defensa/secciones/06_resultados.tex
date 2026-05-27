@@ -162,59 +162,6 @@ Random Forest       & $+1{.}42$         & 0.31 & n.s. \\
 \mensaje{Saturación con $\geq 77$ clases: el espacio se fragmenta.}
 \end{frame}
 
-% --- Slide 21b: Per-class — clases que partían con F1 bajo ---
-\begin{frame}{Las clases que más ganan: las que partían perdiendo}
-\begin{columns}[T]
-
-\begin{column}{0.55\textwidth}
-\centering
-\scriptsize
-\renewcommand{\arraystretch}{0.95}
-\begin{tabular}{@{}llrrr@{}}
-\toprule
-\textbf{Dataset} & \textbf{Clase} & \textbf{SMOTE} & \textbf{Ours} & \textbf{$\Delta$} \\
-\midrule
-\rowcolor{uaiorange!12}\multicolumn{5}{l}{\textit{Clases con F1 base bajo}} \\
-emotion       & \textbf{anger}         & 27.8 & 44.6 & \alert{\textbf{+16.9}} \\
-20news        & \textbf{alt.atheism}   & 50.9 & 65.9 & \alert{\textbf{+15.0}} \\
-emotion       & joy                    & 29.4 & 42.6 & \alert{+13.3} \\
-hate\_speech  & \textbf{offensive}     & 73.3 & 86.3 & \alert{+13.0} \\
-emotion       & fear                   & 48.8 & 59.0 & +10.2 \\
-\midrule
-\rowcolor{methodSMOTE!10}\multicolumn{5}{l}{\textit{Clases con F1 base alto}} \\
-20news        & comp.graphics          & 90.8 & 91.3 & +0.5 \\
-emotion       & sadness                & 41.3 & 42.3 & +1.0 \\
-\bottomrule
-\end{tabular}
-
-\vspace{0.3em}
-{\scriptsize\itshape 10-shot; 3 clasificadores lineales.}
-\end{column}
-
-\begin{column}{0.45\textwidth}
-\small
-\textbf{Patrón:} las clases \alert{difíciles inicialmente} son las que más ganan con filtrado geométrico.
-
-\vspace{0.5em}
-\begin{itemize}\setlength\itemsep{1pt}\scriptsize
-  \item ``anger'' arranca en \textbf{27.8\%} (poco discriminable).
-  \item Termina en \textbf{44.6\%}: $+16.9$ pp.
-  \item ``comp.graphics'' parte ya en 90.8\%: poco margen, ganancia $+0.5$ pp.
-\end{itemize}
-
-\vspace{0.4em}
-\begin{insight}
-\scriptsize
-Donde el clasificador \textbf{ya rinde bien}, el filtrado aporta poco.\\
-Donde \textbf{tropieza}, el filtrado densifica la región correcta y \alert{refuerza la frontera}.
-\end{insight}
-\end{column}
-
-\end{columns}
-
-\mensaje{El método actúa justo donde el modelo más lo necesita.}
-\end{frame}
-
 % --- Slide 21c: Agrupado por dificultad de la clase ---
 \begin{frame}{Resumen por dificultad: la mejora escala con el déficit}
 \begin{columns}[T]
@@ -311,11 +258,11 @@ Cuanto peor parte una clase, mayor el espacio donde el filtrado geométrico pued
 {\scriptsize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.0}
-\begin{tabular}{@{}l|ccccc@{}}
+\begin{tabular}{@{}l|cccc@{}}
 \toprule
-\textbf{Cascada}        & L0      & L1               & L2      & L3      & L4      \\
-\textbf{\# criterios}   & 0       & 1                & 2       & 3       & 4       \\
-\textbf{$\Delta$F1 (pp)}& $-0.52$ & \alert{$+1.94$}  & $+1.94$ & $+1.95$ & $+1.92$ \\
+\textbf{Cascada}        & L0      & L1               & L2      & L3      \\
+\textbf{\# criterios}   & 0       & 1                & 2       & 3       \\
+\textbf{$\Delta$F1 (pp)}& $-0.52$ & \alert{$+1.94$}  & $+1.94$ & $+1.95$ \\
 \bottomrule
 \end{tabular}}
 \end{column}
