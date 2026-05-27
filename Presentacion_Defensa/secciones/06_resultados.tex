@@ -253,19 +253,22 @@ Cuanto peor parte una clase, mayor el espacio donde el filtrado geométrico pued
   \fill[methodWorse] (-3.28,1.3) rectangle (0,1.7);
   \node[left, font=\tiny, color=uaiorange] at (-3.38,1.5) {\textbf{Combined $-3.28$}};
 
-  % Segundo bloque: vs LLM sin filtrar (pareado)
-  \draw[uaigray!40, dashed] (-3.7,-0.55) -- (3.0,-0.55);
-  \node[below=2pt, font=\tiny\itshape, color=uaibluedark, align=left] at (-1.8,-0.55)
-       {\textit{Pareado vs LLM sin filtrar} ($n{=}60$):};
+  % Segundo bloque: vs LLM sin filtrar (pareado) -----------
+  % Encabezado del bloque
+  \node[font=\tiny\itshape, color=uaibluedark, anchor=west] at (-3.7,-0.9)
+       {Comparación pareada cascade L1 (binary) vs LLM sin filtrar ($n{=}60$):};
 
-  \fill[methodOurs, pattern=north east lines, pattern color=methodOurs!80]
-       (0,-1.15) rectangle (1.10,-0.75);
-  \draw[methodOurs, line width=0.7pt] (0,-1.15) rectangle (1.10,-0.75);
-  \node[right, font=\tiny] at (1.20,-0.95)
-       {\textbf{Cascade L1 \alert{+1.10}} ($p\!=\!0.017$)};
+  % Línea vertical de referencia para "sin filtrar = 0"
+  \draw[uaigray, dashed, thick] (0,-1.25) -- (0,-2.0);
+  \node[below, font=\tiny] at (0,-2.05) {sin filtrar $= 0$};
 
-  % Línea de referencia "sin filtrar = 0"
-  \node[below, font=\tiny] at (0,-1.20) {sin filtrar = 0};
+  % Barra +1.10 (cascade L1 binary vs sin filtrar)
+  \fill[methodOurs!85] (0,-1.75) rectangle (1.10,-1.40);
+  \draw[methodOurs!50!black, line width=0.5pt] (0,-1.75) rectangle (1.10,-1.40);
+
+  % Etiqueta de la barra a la derecha
+  \node[right, font=\tiny] at (1.20,-1.575)
+       {\textbf{Cascade L1\quad \alert{+1.10 pp}} \;($p\!=\!0.017$)};
 \end{tikzpicture}
 
 \vspace{0.2em}
