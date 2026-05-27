@@ -221,101 +221,100 @@ Cuanto peor parte una clase, mayor el espacio donde el filtrado geométrico pued
 
 % --- Slide 22: Hallazgo contra-intuitivo ---
 \begin{frame}{Hallazgo contra-intuitivo: simple $>$ complejo}
+
+% =========================
+% FILA 1: dos charts arriba
+% =========================
 \begin{columns}[T]
 
+% --- Chart 1: vs SMOTE ---
 \begin{column}{0.5\textwidth}
 \centering
-\begin{tikzpicture}[every node/.style={font=\scriptsize}, scale=0.62]
-  % Línea vertical en 0 (referencia SMOTE)
+{\scriptsize\textbf{$\Delta$F1 vs.\ SMOTE} \cita{exp.\ principal, 3.675 configs}}\\[1pt]
+\begin{tikzpicture}[every node/.style={font=\scriptsize}, scale=0.55]
   \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.8);
   \node[below, font=\tiny] at (0,-0.35) {SMOTE = 0};
-
-  % Eje horizontal abajo
   \draw[->,thick,uaigray] (-3.7,-0.3) -- (2.5,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
   \foreach \x in {-3,-2,-1,1,2}{
     \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38);
   }
-
-  % Bars vs SMOTE (positive)
+  % Positivas
   \fill[methodOurs] (0,4.1) rectangle (2.25,4.5);
   \node[right, font=\tiny] at (2.35,4.3) {\textbf{Cascade L1 soft\,$\dagger$ +2.25}};
-
   \fill[methodOurs!70] (0,3.4) rectangle (0.88,3.8);
   \node[right, font=\tiny] at (0.98,3.6) {LOF +0.88};
-
   \fill[methodOther] (0,2.7) rectangle (0.72,3.1);
   \node[right, font=\tiny] at (0.82,2.9) {None +0.72};
-
-  % Bars vs SMOTE (negative)
+  % Negativas
   \fill[methodWorse] (-1.29,2.0) rectangle (0,2.4);
   \node[left, font=\tiny] at (-1.39,2.2) {Emb.-Guided $-1.29$};
-
   \fill[methodWorse] (-3.28,1.3) rectangle (0,1.7);
   \node[left, font=\tiny, color=uaiorange] at (-3.38,1.5) {\textbf{Combined $-3.28$}};
 \end{tikzpicture}
-
-\vspace{0.2em}
-{\scriptsize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.0}
-\begin{tabular}{@{}l|ccccc@{}}
-\toprule
-\textbf{Cascada (binary)}& L0     & L1               & L2      & L3      & L4      \\
-\textbf{\# criterios}   & 0       & 1                & 2       & 3       & 4       \\
-\textbf{$\Delta$F1 (pp)}& $-0.52$ & \alert{$+1.94$}  & $+1.94$ & $+1.95$ & $+1.92$ \\
-\bottomrule
-\end{tabular}}
-
-\vspace{0.2em}
-{\tiny\itshape $\dagger$ Cascade L1 con ponderación suave, experimento principal (3.675 configs).}
 \end{column}
 
+% --- Chart 2: vs LLM sin filtrar ---
 \begin{column}{0.5\textwidth}
+\centering
+{\scriptsize\textbf{$\Delta$F1 vs.\ LLM sin filtrar} \cita{pareado, $n{=}60$}}\\[1pt]
+\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.42]
+  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.0);
+  \node[below, font=\tiny] at (0,-0.35) {sin filtrar = 0};
+  \draw[->,thick,uaigray] (-7.5,-0.3) -- (2.5,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \foreach \x in {-6,-4,-2,1}{
+    \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38);
+  }
+  \fill[methodOurs] (0,3.1) rectangle (1.10,3.5);
+  \node[right, font=\tiny] at (1.20,3.3) {\textbf{Cascade L1 \alert{+1.10}}};
+  \fill[methodWorse] (-0.79,2.3) rectangle (0,2.7);
+  \node[left, font=\tiny] at (-0.89,2.5) {LOF $-0.79$};
+  \fill[methodWorse] (-2.11,1.5) rectangle (0,1.9);
+  \node[left, font=\tiny] at (-2.21,1.7) {Emb.-Guided $-2.11$};
+  \fill[methodWorse] (-6.49,0.7) rectangle (0,1.1);
+  \node[left, font=\tiny, color=uaiorange] at (-6.59,0.9) {\textbf{Combined $-6.49$}};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\vspace{-0.2em}
+{\centering\scriptsize\itshape
+Solo cascade L1 \alert{supera} al LLM sin filtrar; los multi-criterio lo \textbf{empeoran}.\par}
+
+\vspace{0.3em}
+
+% =========================
+% FILA 2: insight + tabla
+% =========================
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
 \setbeamercolor{block title}{fg=white,bg=uaiamber}
 \begin{block}{Insight clave}
 \scriptsize
 Filtros multi-criterio \textbf{degradan} el rendimiento.
-\vspace{0.2em}
+\vspace{0.1em}
 \begin{itemize}\setlength\itemsep{0pt}\scriptsize
   \item Distancia y similitud son redundantes en L2-norm.
   \item LOF inestable con $n=10$.
   \item Restricciones conjuntivas matan la diversidad.
 \end{itemize}
 \end{block}
+\end{column}
 
-\vspace{0.3em}
+\begin{column}{0.45\textwidth}
 \centering
-\scriptsize\textbf{Pareado vs LLM sin filtrar} ($n{=}60$ c/u)\\[2pt]
-\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.42]
-  % Línea vertical en 0 (sin filtrar = 0)
-  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.0);
-  \node[below, font=\tiny] at (0,-0.35) {sin filtrar = 0};
-
-  % Eje horizontal
-  \draw[->,thick,uaigray] (-7.5,-0.3) -- (2.5,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
-  \foreach \x in {-6,-4,-2,1}{
-    \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38);
-  }
-
-  % Cascade L1 +1.10 (positivo)
-  \fill[methodOurs] (0,3.1) rectangle (1.10,3.5);
-  \node[right, font=\tiny] at (1.20,3.3) {\textbf{Cascade L1 \alert{+1.10}}};
-
-  % LOF -0.79
-  \fill[methodWorse] (-0.79,2.3) rectangle (0,2.7);
-  \node[left, font=\tiny] at (-0.89,2.5) {LOF $-0.79$};
-
-  % Emb-Guided -2.11
-  \fill[methodWorse] (-2.11,1.5) rectangle (0,1.9);
-  \node[left, font=\tiny] at (-2.21,1.7) {Emb.-Guided $-2.11$};
-
-  % Combined -6.49 (catastrófico)
-  \fill[methodWorse] (-6.49,0.7) rectangle (0,1.1);
-  \node[left, font=\tiny, color=uaiorange] at (-6.59,0.9) {\textbf{Combined $-6.49$}};
-\end{tikzpicture}
-
-\vspace{0.1em}
-{\scriptsize\itshape Solo cascade L1 \alert{supera} al LLM sin filtrar; los demás lo empeoran.}
+{\scriptsize\textbf{Ablación de niveles}}\\[2pt]
+{\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{@{}l|ccccc@{}}
+\toprule
+\textbf{Cascada (binary)}& L0     & L1               & L2      & L3      & L4      \\
+\textbf{$\Delta$F1 (pp)}& $-0.52$ & \alert{$+1.94$}  & $+1.94$ & $+1.95$ & $+1.92$ \\
+\bottomrule
+\end{tabular}}\\[2pt]
+{\tiny\itshape $\dagger$ Cascade L1 con ponderación suave, experimento principal.}
 \end{column}
 
 \end{columns}
