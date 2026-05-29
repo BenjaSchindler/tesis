@@ -25,9 +25,9 @@
   \node[box2] (filt)  at (10.4,2) {\textbf{Filtros}\\\tiny geométricos};
 
   % Fila inferior
-  \node[box2] (weight) at (10.4,0)  {\textbf{Pesos}\\\tiny softw.\ $T=0.5$};
+  \node[box2] (weight) at (10.4,0)  {\textbf{Pesos}\\\tiny softw.\ $\tau=0.5$};
   \node[box3] (clf)    at (5.2,0)   {\textbf{Clasificador}\\\tiny LR · SVC · Ridge\\\tiny RF · MLP};
-  \node[box]  (eval)   at (0,0)     {\textbf{Macro F1}\\\tiny test fijo};
+  \node[box]  (eval)   at (0,0)     {\textbf{Test fijo}\\\tiny macro-F1};
 
   % Flechas
   \draw[arrow] (real)  -- (enc);
@@ -226,8 +226,8 @@ Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasific
 \mensaje{Mismo filtro, otra tarea: si funciona acá, sirve en general.}
 \end{frame}
 
-% --- Slide 17: Los 5 filtros ---
-\begin{frame}{Cinco estrategias de filtrado evaluadas}
+% --- Slide 17: Los 4 filtros ---
+\begin{frame}{Cuatro estrategias de filtrado evaluadas}
 \small
 \begin{tabular}{@{}p{2.6cm}p{4.6cm}p{4.6cm}@{}}
 \toprule
@@ -235,19 +235,10 @@ Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasific
 \midrule
 \textit{None} (control)        & Sin filtrado, todas las muestras LLM. & --- \\[2pt]
 \textit{LOF}                   & Densidad local; conserva \emph{inliers} de \texttt{decision\_function} (sklearn). & $k=20$ vecinos$^{\dagger}$; umbral $>0$ \\[2pt]
-\textit{Cascade L1} \alert{$\star$} & Distancia euclidiana a la ancla más cercana. Top-$N$ por ranking. & nivel $=1$ (diseño soporta 1--4)$^{\ddagger}$ \\[2pt]
-\textit{Combined}              & LOF \textbf{Y} similitud coseno. & $\tau_{\cos}=0.5$ \\[2pt]
-\textit{Embedding-Guided}      & Cobertura $0.6$ + calidad $0.4$, voraz. & multi-criterio \\
+\textit{Cascade L1--4} & Serie de filtros geométricos acumulados. Top-$N$ por media geométrica. & niveles $L\in\{1,2,3,4\}$ \\[2pt]
+\textit{Combined}              & LOF \textbf{Y} similitud coseno. & $\tau_{\cos}=0.5$ \\
 \bottomrule
 \end{tabular}
-
-\vspace{0.6em}
-{\scriptsize\itshape\alert{$\star$} Cascade nivel 1 = mejor configuración encontrada.\\
-$^{\dagger}$ \texttt{decision\_function} invierte el LOF clásico: $>0$ = inlier, $<0$ = outlier. Si la clase tiene $<21$ muestras (10-shot), $k$ se ajusta a $n-1$.\\
-$^{\ddagger}$ $k=10$ aplica solo al nivel 3 (pureza KNN); en L1 no se usa.}
-
-\vfill
-\mensaje{Cinco diseños, una pregunta: ¿filtros simples o complejos?}
 \end{frame}
 
 % --- Slide 14: Cascade — pieza central ---
@@ -315,12 +306,12 @@ En vez de \textbf{aceptar / rechazar}, asignamos un \textit{peso} a cada muestra
 \[
 \tilde{s}(x) = \frac{s(x) - s_{\min}}{s_{\max} - s_{\min}}
 \]
-\textbf{Eq. 2 — Escalado por temperatura:}
+\textbf{Eq. 2 — Escalado por selectividad:}
 \[
-w(x) = \max\!\left(w_{\min},\ \tilde{s}(x)^{\,1/T}\right)
+w(x) = \max\!\left(w_{\min},\ \tilde{s}(x)^{\,1/\tau}\right)
 \]
 
-{\scriptsize $T=0.5$, $w_{\min}=0$, datos reales $\Rightarrow$ peso 1.}
+{\scriptsize $\tau=0.5$, $w_{\min}=0$, datos reales $\Rightarrow$ peso 1.}
 \end{column}
 
 \begin{column}{0.5\textwidth}
@@ -332,17 +323,17 @@ w(x) = \max\!\left(w_{\min},\ \tilde{s}(x)^{\,1/T}\right)
   \node[font=\tiny] at (4,-0.25) {1};
   \node[font=\tiny] at (-0.2,3) {1};
 
-  % Curva T=0.5 (peaked) — w = s^2
+  % Curva tau=0.5 (peaked) — w = s^2
   \draw[very thick, uaiorange, domain=0:4, samples=40, smooth] plot (\x, {3*(\x/4)^2});
-  \node[uaiorange, font=\scriptsize] at (3.6,2.6) {$T=0.5$};
+  \node[uaiorange, font=\scriptsize] at (3.6,2.6) {$\tau=0.5$};
 
-  % Curva T=1 (linear)
+  % Curva tau=1 (linear)
   \draw[thick, uaiblue, dashed, domain=0:4, samples=40] plot (\x, {3*(\x/4)});
-  \node[uaiblue, font=\scriptsize] at (3.6,1.5) {$T=1$};
+  \node[uaiblue, font=\scriptsize] at (3.6,1.5) {$\tau=1$};
 
   \node[align=center, font=\tiny] at (2.2,-0.7) {Score normalizado};
 \end{tikzpicture}\\[4pt]
-{\scriptsize $T<1$ amplifica diferencias entre buenas y malas.}
+{\scriptsize $\tau<1$ amplifica diferencias entre buenas y malas.}
 \end{column}
 
 \end{columns}

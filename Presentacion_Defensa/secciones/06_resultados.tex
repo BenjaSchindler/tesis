@@ -113,12 +113,13 @@ SVC (lineal)        & \alert{$+2{.}99$} & 1.02 & $<0.001$ \\
 Ridge               & $+2{.}69$         & 1.04 & $<0.001$ \\
 MLP                 & $+2{.}16$         & 0.73 & $<0.001$ \\
 Logistic Regression & $+1{.}98$         & 0.82 & $<0.001$ \\
-Random Forest       & $+1{.}42$         & 0.31 & n.s. \\
+Random Forest$^{\dagger}$ & $+1{.}42$ & 0.31 & n.s. \\
 \bottomrule
 \end{tabular}
 
 \vspace{0.4em}
-{\scriptsize $p$-valor con $t$-pareada y Bonferroni.}
+{\scriptsize $p$-valor con $t$-pareada y Bonferroni.\\
+$^{\dagger}$ RF con otra configuración (\emph{boosting}/XGBoost) sí aprovecha el peso suave --- ver backup B0d.}
 \end{column}
 
 \end{columns}
@@ -303,17 +304,24 @@ Filtros multi-criterio \textbf{degradan} el rendimiento.
 
 \begin{column}{0.45\textwidth}
 \centering
-{\scriptsize\textbf{Ablación de niveles}}\\[2pt]
+{\scriptsize\textbf{Ablación cascada} \cita{$n{=}60$ configs}}\\[6pt]
 {\scriptsize
-\setlength{\tabcolsep}{3.5pt}
-\renewcommand{\arraystretch}{1.0}
-\begin{tabular}{@{}l|ccccc@{}}
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lrr@{}}
 \toprule
-\textbf{Cascada (binary)}& L0     & L1               & L2      & L3      & L4      \\
-\textbf{$\Delta$F1 (pp)}& $-0.52$ & \alert{$+1.94$}  & $+1.94$ & $+1.95$ & $+1.92$ \\
+\textbf{Nivel} & \textbf{$\Delta$F1 vs SMOTE} & \textbf{Win-rate} \\
+\midrule
+L0 \textit{\textcolor{uaigray!85}{(sin filtro)}}      & $-0{.}518$ & $50{.}0\%$ \\
+\rowcolor{uaigreen!12}
+L1\,\alert{$\star$} \textit{\textcolor{uaigray!85}{(distancia)}}   & \alert{$\boldsymbol{+1{.}942}$} & \alert{$\boldsymbol{91{.}7\%}$} \\
+L2 \textit{\textcolor{uaigray!85}{(+\,similitud)}}     & $+1{.}942$ & $91{.}7\%$ \\
+L3 \textit{\textcolor{uaigray!85}{(+\,KNN)}}           & $+1{.}950$ & $91{.}7\%$ \\
+L4 \textit{\textcolor{uaigray!85}{(+\,centroide)}}     & $+1{.}923$ & $91{.}7\%$ \\
 \bottomrule
-\end{tabular}}\\[2pt]
-{\tiny\itshape $\dagger$ Cascade L1 con ponderación suave, experimento principal.}
+\end{tabular}}\\[4pt]
+{\tiny\itshape Misma robustez (91.7\%) en L1--L4 $\Rightarrow$ los $+0{.}008$ pp\\
+de L3 son ruido, no señal. Por parsimonia: \textbf{L1}.}
 \end{column}
 
 \end{columns}
@@ -372,38 +380,32 @@ e5-large (1024d)         & $+0{.}97$ \\
 
 \vspace{0.4em}
 \begin{headline}
-\cifra{$+9{.}61$ pp}{Cascade L1\\ ($p=0.0003$, $d=2.05$)}
+{\color{uaiorange}\bfseries\LARGE $+9{.}61$ pp}\\[3pt]
+{\color{uaigray}\scriptsize \textbf{vs.\ sin aumentar} \textperiodcentered\ Cascade L1\\($p=0.0003$, $d=2.05$; 10-shot $+15.15$)}
 \end{headline}
 \end{column}
 
 \begin{column}{0.55\textwidth}
 \centering
-\begin{tikzpicture}[every node/.style={font=\scriptsize}, x=0.32cm, y=0.5cm]
-  % Eje horizontal y vertical
-  \draw[->,thick,uaigray] (0,0) -- (16.5,0) node[right, font=\tiny]{$\Delta$F1 (pp)};
-  \draw[uaigray] (0,0) -- (0,7.5);
-  \foreach \x in {0,3,6,9,12,15}{
-    \draw[uaigray!50] (\x,0.15) -- (\x,-0.15) node[below, font=\tiny]{\x};
-  }
-
-  % Cascade L1
-  \fill[methodOurs] (0,6) rectangle (9.61,7);
-  \node[right, font=\scriptsize\bfseries] at (9.81,6.5) {Cascade L1 +9.61};
-
-  % LOF
-  \fill[methodOurs!80] (0,4.5) rectangle (9.28,5.5);
-  \node[right, font=\scriptsize] at (9.48,5.0) {LOF +9.28};
-
-  % None: solo línea de referencia (sin barra)
-  \draw[methodSMOTE, very thick] (-0.3,3) -- (0.3,4);
-  \node[right, font=\scriptsize, color=methodSMOTE] at (0.5,3.5) {None (referencia $= 0$)};
-
-  % Combined: marca de rechazo (no medido)
-  \node[right, font=\scriptsize, color=uaiorange] at (0.2,2) {\textbf{$\times$} Combined: 0\% aceptación};
-
-  % Anotación 10-shot
-  \node[font=\tiny, color=uaigreen!50!black] at (8,0.8) {(10-shot: $+15.15$ pp)};
-\end{tikzpicture}
+{\scriptsize\textbf{$\Delta$F1 vs.\ LLM sin filtrar} \cita{pareado, 9 datasets}}\\[4pt]
+\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.44]
+  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.4);
+  \node[below, font=\tiny] at (0,-0.35) {sin filtrar $=0$};
+  \draw[->,thick,uaigray] (-7.0,-0.3) -- (2.0,-0.3);
+  \node[font=\tiny] at (-3.3,-0.85) {$\Delta$F1 (pp)};
+  \foreach \x in {-6,-4,-2}{ \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38) node[below, font=\tiny]{\x}; }
+  % positivos (labels cortos, anclados a la derecha)
+  \fill[methodOurs] (0,3.6) rectangle (1.98,4.0);
+  \node[right, font=\tiny] at (2.1,3.8) {\textbf{Mejor/dataset $+1.98$} (8/9)};
+  \fill[methodOurs!80] (0,2.9) rectangle (0.89,3.3);
+  \node[right, font=\tiny] at (2.1,3.1) {LOF $+0.89$};
+  \fill[methodOurs!70] (0,2.2) rectangle (0.86,2.6);
+  \node[right, font=\tiny] at (2.1,2.4) {Cascade L1 $+0.86$ (n.s.)};
+  % negativo
+  \fill[methodWorse] (-6.58,1.2) rectangle (0,1.6);
+  \node[right, font=\tiny, color=uaiorange] at (2.1,1.4) {\textbf{Combined $-6.58$}};
+\end{tikzpicture}\\[3pt]
+{\scriptsize\itshape El dato LLM hace el grueso; el filtro lo \textbf{refina} (y el AND \textbf{sobre-filtra}).}
 \end{column}
 
 \end{columns}

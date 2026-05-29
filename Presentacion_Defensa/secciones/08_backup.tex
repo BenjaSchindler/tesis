@@ -86,118 +86,59 @@ emotion 6-clases        & 1.24   & muy grande    \\
 \end{frame}
 
 
-% --- B0c: Filtros geométricos — diseño completo ---
-\begin{frame}{Backup B0c: Filtros geométricos --- arquitectura y diseño}
-\scriptsize
-\begin{columns}[T]
+% --- B0d3: Binario vs peso continuo (tabla sola) --- Random Forest ---
+\begin{frame}{Backup B0d$_3$: ¿Filtro binario o peso continuo? (Random Forest)}
+\centering
+\vspace{0.6em}
+{\small Las formas de usar las muestras del LLM, en Random Forest ($\Delta$F1 macro vs SMOTE):}
 
-\begin{column}{0.50\textwidth}
-\textbf{1. LOF (Local Outlier Factor)}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item Score: densidad local relativa a $k$ vecinos.
-  \item \textbf{Decisión binaria}: score $> \theta_{\text{LOF}}$.
-  \item \texttt{novelty=True}: entrenado en reales, evaluado en sintéticos.
-\end{itemize}
+\vspace{1.1em}
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}lcl@{}}
+\toprule
+\textbf{Modo}                              & \textbf{$\Delta$ vs SMOTE}        & \\
+\midrule
+\texttt{no\_augmentation} (sin aumentar)   & $+0.62$pp                         & \\
+\texttt{llm\_unfiltered} (sin filtro)      & $+0.87$pp                         & \\
+\texttt{binary\_filter} (keep/reject)      & $+1.22$pp                         & \\
+\rowcolor{uaigreen!15}
+\texttt{soft\_weighted} (peso continuo)    & \alert{$\boldsymbol{+1.47}$\,pp}  & \textcolor{uaigreen!55!black}{$\uparrow$ el mejor} \\
+\bottomrule
+\end{tabular}
 
-\vspace{0.4em}
-\textbf{2. Cascade (4 niveles)}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item L1: distancia euclidiana al centroide.
-  \item L2: + similitud coseno al centroide.
-  \item L3: + pureza KNN ($k{=}10$).
-  \item L4: + confianza (dist.\ a centroide).
-  \item Score combinado: \textbf{media geométrica}.
-  \item Selección: \textbf{top-N por ranking} (sin umbral).
-\end{itemize}
-\end{column}
-
-\begin{column}{0.50\textwidth}
-\textbf{3. Combined (LOF $\land$ similarity)}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item Debe pasar \textbf{ambos}: LOF $> 0$ \emph{y} sim $> 0.5$.
-  \item Operador \textbf{AND} $\Rightarrow$ muy restrictivo.
-\end{itemize}
-
-\vspace{0.4em}
-\textbf{4. EmbeddingGuided (coverage)}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item Maximiza cobertura: distancia a vecinos.
-  \item Penaliza si está demasiado cerca.
-  \item Coverage 0.6 + Quality 0.4 (centroide).
-\end{itemize}
-
-\vspace{0.4em}
-\textbf{5. None (control)}
-\begin{itemize}\setlength\itemsep{0pt}
-  \item Sin filtrado (selección aleatoria).
-\end{itemize}
-\end{column}
-
-\end{columns}
-
-\vspace{0.4em}
+\vspace{1.3em}
 \begin{insight}
-\scriptsize Cascade L1 + ponderación suave \textbf{top-N} es el ganador: distancia simple + ranking.
+\small En Random Forest las ganancias son \textbf{modestas} ($\sim\!+1$pp) y crecen poco entre modos: a diferencia de XGBoost, el ensamble con \emph{bagging} aprovecha menos la señal del filtro.
 \end{insight}
 \end{frame}
 
-% --- B0d: Cascada L0-L4 — ablación de niveles ---
-\begin{frame}{Backup B0d: Ablación de niveles --- ¿más filtros, mejor?}
-\small
-\textbf{Cascada con selección top-N (sin ponderación suave, binary mask):}
-
-\vspace{0.4em}
-\begin{columns}[T]
-
-\begin{column}{0.55\textwidth}
+% --- B0d4: Binario vs peso continuo (tabla sola) ---
+\begin{frame}{Backup B0d$_4$: ¿Filtro binario o peso continuo? (XGBoost)}
 \centering
-\scriptsize
-\begin{tabular}{@{}lrrl@{}}
+\vspace{0.6em}
+{\small Las formas de usar las muestras del LLM, en XGBoost ($\Delta$F1 macro vs SMOTE):}
+
+\vspace{1.1em}
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}lcl@{}}
 \toprule
-Nivel & $\Delta$F1 vs.\ SMOTE & Win-rate & Filtros activos \\
+\textbf{Modo}                            & \textbf{$\Delta$ vs SMOTE}        & \\
 \midrule
-L0 (control)               & $-0.52$            & 50.0\%   & ninguno (random) \\
-\rowcolor{uaigreen!12}
-\textbf{L1}                & \alert{$+1.94$}    & 91.7\%   & distancia \\
-L2                         & $+1.94$            & 91.7\%   & + similitud \\
-L3                         & $+1.95$            & 91.7\%   & + KNN purity \\
-L4 (full)                  & $+1.92$            & 91.7\%   & + confianza \\
+\texttt{no\_augmentation} (sin aumentar) & $-0.98$pp                         & \textcolor{red!70!black}{$\downarrow$ peor que SMOTE} \\
+\texttt{llm\_unfiltered} (sin filtro)    & $+7.96$pp                         & \\
+\rowcolor{gray!15}
+\texttt{binary\_filter} (keep/reject)    & $+7.52$pp                         & \textcolor{red!70!black}{$\downarrow$ peor que sin filtro} \\
+\rowcolor{uaigreen!15}
+\texttt{soft\_weighted} (peso continuo)  & \alert{$\boldsymbol{+9.10}$\,pp}  & \textcolor{uaigreen!55!black}{$\uparrow$ el mejor} \\
 \bottomrule
 \end{tabular}
 
-\vspace{0.4em}
-\textbf{Con ponderación suave (\textit{top-N}, $n{=}168$):}\\[2pt]
-\scriptsize
-\begin{tabular}{@{}lrr@{}}
-\toprule
-Nivel & $\Delta$F1 vs.\ SMOTE & Win-rate \\
-\midrule
-\rowcolor{uaigreen!12}
-\textbf{L1}        & \alert{$+3.66$}  & 84.5\% \\
-L2                 & $+3.60$          & 83.9\% \\
-L4 (full)          & $+3.60$          & 83.3\% \\
-\bottomrule
-\end{tabular}
-\end{column}
-
-\begin{column}{0.42\textwidth}
-\setbeamercolor{block title}{fg=white,bg=uaiblue}
-\begin{block}{Por qué L1 gana}
-\scriptsize
-\begin{itemize}\setlength\itemsep{1pt}
-  \item Las 4 métricas están \textbf{altamente correlacionadas} (distancia + coseno + KNN + centroide $\to$ todas miden ``cercanía al cluster'').
-  \item La media geométrica de señales redundantes \textbf{no aporta} información.
-  \item L1 es \textbf{robusto en 10-shot}: KNN/LOF degeneran con $<20$ vecinos.
-\end{itemize}
-\end{block}
-
-\vspace{0.3em}
+\vspace{1.3em}
 \begin{insight}
-\scriptsize \textbf{Simple gana a complejo}: añadir filtros NO mejora, levemente perjudica.
+\small Seleccionar/descartar (binario) \textbf{no aporta}; \textbf{ponderar por el score sí}. Usá el filtro geométrico como \textbf{peso continuo}, no como \emph{keep/reject}.
 \end{insight}
-\end{column}
-
-\end{columns}
 \end{frame}
 
 % --- B0e: Cómo se eligieron los umbrales ---
@@ -254,10 +195,10 @@ $0.7$ & $-1.10$ & 71.7\% \\
 {\itshape Cualquier $\theta_{\text{sim}}{>}0$ combinado con AND $\Rightarrow$ catastrófico.}
 
 \vspace{0.4em}
-\textbf{Top-N: peso mínimo y temperatura}
+\textbf{Top-N: peso mínimo y selectividad}
 \begin{itemize}\setlength\itemsep{0pt}
   \item Normalización: \texttt{minmax} (vs.\ rank, z-score).
-  \item Temperatura $\tau{=}0.5$ (peaked, $w \propto s^{1/\tau}$).
+  \item Selectividad $\tau{=}0.5$ (peaked, $w \propto s^{1/\tau}$).
   \item Peso mínimo $w_{\min}$: \textbf{poco impacto} ($\pm 0.05$pp).
 \end{itemize}
 \end{column}
@@ -600,112 +541,6 @@ Back-translation               & $-0{.}50$             & $<0{.}05$   & 40.0\% \\
 \end{insight}
 \end{frame}
 
-% --- B6: Escasez de datos (movida desde Problema) ---
-\begin{frame}{Backup B6: Escasez de datos --- un problema cotidiano}
-\begin{columns}[T]
-
-\begin{column}{0.5\textwidth}
-\small
-\textbf{Dominios cotidianos en clasificación de texto:}\\
-Triaje clínico $\cdot$ tickets de soporte $\cdot$ spam $\cdot$ discurso de odio.
-
-\vspace{0.6em}
-\textbf{Por qué duele:}
-\begin{itemize}\setlength\itemsep{3pt}
-  \item Etiquetado humano = \alert{caro, lento y sesgado}.
-  \item Las clases raras suelen ser \textbf{las que más importan}: urgencias, fraudes, diagnósticos.
-  \item Pocos ejemplos $\Rightarrow$ el modelo \textbf{sobreajusta} y no generaliza a casos nuevos.
-  \item Multiclase $+$ desbalance $\Rightarrow$ el rendimiento en clases raras colapsa.
-\end{itemize}
-\cita{Gopali 2024; Whitehouse 2023}
-\end{column}
-
-\begin{column}{0.5\textwidth}
-\centering
-\begin{tikzpicture}[every node/.style={font=\scriptsize}]
-  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (a) at (-1.3,3) {\textbf{Hate speech}\\\tiny minoría: $<$30 ej.};
-  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (b) at (1.3,3) {\textbf{Clínico}\\\tiny rare disease};
-  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (c) at (-1.3,1.5) {\textbf{Soporte TI}\\\tiny producto nuevo};
-  \node[draw=uaiblue, rounded corners, fill=uaibluelight!15, minimum width=2.3cm, minimum height=1cm, text width=2.1cm, align=center] (d) at (1.3,1.5) {\textbf{Spam}\\\tiny esquema emergente};
-  \node[draw=uaiorange, very thick, rounded corners, fill=uaiorange!15, minimum width=4.8cm, minimum height=0.8cm, text width=4.6cm, align=center] at (0,0.2) {\textbf{Común:} 10--50 ejemplos por clase};
-\end{tikzpicture}
-\end{column}
-
-\end{columns}
-\end{frame}
-
-% --- B7: Cuatro paradigmas (movida desde Estado del Arte) ---
-\begin{frame}{Backup B7: Cuatro paradigmas, una década de evolución}
-\centering
-\begin{tikzpicture}[every node/.style={font=\scriptsize}]
-  \draw[->, very thick, uaiblue!70] (0,0) -- (12,0) node[right, font=\scriptsize]{año};
-  \foreach \x/\year in {0.5/2002, 3.5/2019, 6.5/2023, 9.5/2026}{
-    \draw[uaiblue] (\x,-0.1) -- (\x,0.1);
-    \node[below, font=\tiny] at (\x,-0.15) {\year};
-  }
-
-  \node[draw=uaiblue, fill=uaibluelight!15, rounded corners, text width=2.4cm, align=center,
-        minimum height=1.2cm, font=\tiny] at (1.5, 1.5) (p1)
-        {\textbf{Geométrico clásico}\\SMOTE, ADASYN, EDA};
-  \draw[->, uaiblue!50] (0.5,0) -- (p1);
-
-  \node[draw=uaiblue, fill=uaibluelight!15, rounded corners, text width=2.4cm, align=center,
-        minimum height=1.2cm, font=\tiny] at (4.5, 1.5) (p2)
-        {\textbf{Embeddings profundos}\\mixup, MixText, SMOTExT};
-  \draw[->, uaiblue!50] (3.5,0) -- (p2);
-
-  \node[draw=uaiblue, fill=uaibluelight!15, rounded corners, text width=2.4cm, align=center,
-        minimum height=1.2cm, font=\tiny] at (7.5, 1.5) (p3)
-        {\textbf{Generación LLM}\\GPT-3/4, Gemini, Claude};
-  \draw[->, uaiblue!50] (6.5,0) -- (p3);
-
-  \node[draw=uaiorange, very thick, fill=uaiorange!15, rounded corners, text width=2.4cm, align=center,
-        minimum height=1.2cm, font=\tiny] at (10.5, 1.5) (p4)
-        {\textbf{Híbridos + filtros}\\\textit{esta tesis}};
-  \draw[->, uaiorange] (9.5,0) -- (p4);
-
-  \node[font=\tiny, text width=2.6cm, align=center] at (1.5,-1) {Chawla 2002\\Wei \& Zou 2019};
-  \node[font=\tiny, text width=2.6cm, align=center] at (4.5,-1) {Zhang 2018\\Chen 2020};
-  \node[font=\tiny, text width=2.6cm, align=center] at (7.5,-1) {Suhaeni \& Yong 2023\\\textbf{+12.7\%} acc};
-  \node[font=\tiny, text width=2.6cm, align=center] at (10.5,-1) {Cegin 2025, Springer 2025\\ImbLLM 2024, \textbf{esta tesis}};
-\end{tikzpicture}
-
-\vfill
-\mensaje{Cada paradigma resuelve un problema y crea otro nuevo.}
-\end{frame}
-
-% --- B8: Una idea simple (movida desde Estado del Arte) ---
-\begin{frame}{Backup B8: Una idea simple}
-\vfill
-\begin{center}
-{\Large\itshape ¿Y si generamos muchos candidatos con un LLM\\[0.3em]
-y dejamos que la \textbf{geometría} elija los útiles?}
-\end{center}
-
-\vspace{1.4em}
-\begin{center}
-\begin{tikzpicture}[every node/.style={font=\small, align=center}, node distance=1.0cm]
-  \node[draw=uaiblue, fill=uaibluelight!20, rounded corners, very thick,
-        text width=2.8cm, minimum height=1.4cm] (gen)
-    {\textbf{Generar}\\\scriptsize candidatos\\con un LLM};
-
-  \node[draw=uaiorange, fill=uaiorange!10, rounded corners, very thick,
-        text width=2.8cm, minimum height=1.4cm, right=of gen] (filt)
-    {\textbf{Filtrar}\\\scriptsize por geometría\\en \emph{embeddings}};
-
-  \node[draw=uaigreen, fill=uaigreen!10, rounded corners, very thick,
-        text width=2.8cm, minimum height=1.4cm, right=of filt] (use)
-    {\textbf{Entrenar}\\\scriptsize con más datos\\útiles};
-
-  \draw[->, very thick, uaigray] (gen) -- (filt);
-  \draw[->, very thick, uaigray] (filt) -- (use);
-\end{tikzpicture}
-\end{center}
-
-\vfill
-\mensaje{Esta tesis evalúa cuándo esa idea funciona y cuándo no.}
-\end{frame}
-
 % --- B11: Las clases que más ganan (movida desde Resultados) ---
 \begin{frame}{Backup B11: Las clases que más ganan --- las que partían perdiendo}
 \begin{columns}[T]
@@ -807,27 +642,211 @@ Permiten medir \textbf{degradación del filtrado} al aumentar el número de clas
 \mensaje{Diez datasets, dos preguntas: ¿qué tan bueno es el filtrado? ¿hasta dónde escala?}
 \end{frame}
 
-% --- B9: Dónde encaja esta propuesta (movida desde Estado del Arte) ---
-\begin{frame}{Backup B9: Dónde encaja esta propuesta}
-\begin{center}
-\begin{tikzpicture}[scale=0.72, every node/.style={font=\scriptsize}, transform shape]
-  \fill[uaiblue!25, opacity=0.7] (-1.4,0) circle (1.9);
-  \fill[uaigreen!25, opacity=0.7] (1.4,0) circle (1.9);
-  \fill[uaiamber!25, opacity=0.7] (0,-1.9) circle (1.9);
+% =============================================================================
+% Backups adicionales (B6–B9, B12) — evidencia extra para Q&A
+% =============================================================================
 
-  \node[font=\bfseries\small, color=uaiblue, text width=2.4cm, align=center] at (-3.2,1.4) {Validación post-generación};
-  \node[font=\bfseries\small, color=uaigreen!70!black, text width=2.4cm, align=center] at (3.2,1.4) {Ponderación adaptativa};
-  \node[font=\bfseries\small, color=uaiamber!70!black, text width=2.6cm, align=center] at (0,-3.4) {Validación multi-tarea (NER)};
+% --- B6: Validación geométrica intrínseca ---
+\begin{frame}{Backup B6: ¿El filtro mejora la geometría? (validación intrínseca)}
+\centering
+\includegraphics[width=0.93\linewidth, height=3.6cm, keepaspectratio]{fig_geometric_validation.png}
 
-  \node[font=\tiny, color=uaiblue!70!black] at (-2.2,0) {LOF};
-  \node[font=\tiny, color=uaigreen!60!black, text width=1.9cm, align=center] at (2.2,0) {Importance Sampling};
-  \node[font=\tiny, color=uaiamber!70!black] at (0,-1.3) {MELM 2022};
+\vspace{0.35em}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{\small Filtrado mejora vs.\ sin filtrar}
+\scriptsize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Dist.\ intra-clase $0{.}850 \!\to\! 0{.}822$ \cita{$p<0.001$}: clústeres más compactos.
+  \item Sep.\ inter-clase $0{.}571 \!\to\! 0{.}616$ \cita{$p<0.001$}: clases más separadas.
+  \item Silhouette $0{.}075 \!\to\! 0{.}085$ \cita{$p=0.029$}; Davies-B.\ $3{.}822 \!\to\! 3{.}370$.
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.45\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{\small El matiz de SMOTE}
+\scriptsize
+SMOTE es \textbf{más compacto} (intra $0{.}762$, silhouette $0{.}090$) porque \textbf{interpola} dentro del convex hull. Pero tiene la \textbf{peor separación} inter-clase ($0{.}540$) y peor Davies-Bouldin ($3{.}474$) que el filtrado.
+\end{block}
+\end{column}
+\end{columns}
 
-  \node[draw=uaiorange, very thick, fill=white, rounded corners,
-        font=\bfseries\scriptsize, text width=1.9cm, align=center,
-        minimum height=0.8cm] at (0,-0.3) {Esta propuesta};
-\end{tikzpicture}
-\end{center}
-
-\mensaje{Contribución: integrar las tres dimensiones por primera vez.}
+\vspace{0.15em}
+\begin{insight}
+\scriptsize El filtro \textbf{cierra el lazo causal}: mejora la geometría \emph{intrínseca}, no solo el F1. La compacidad artificial de SMOTE \textbf{no se traduce} en mejor clasificación; la \textbf{diversidad + separación} del LLM filtrado sí.
+\end{insight}
 \end{frame}
+
+% --- B8: Circularidad del embedding ---
+\begin{frame}{Backup B8: Circularidad del embedding --- tres defensas independientes}
+\small
+\textbf{Crítica anticipada:} \textit{``Usás \texttt{all-mpnet} para filtrar Y como \textit{features} del clasificador: el filtro favorece artificialmente su propio espacio.''}
+
+\vspace{0.5em}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{2.9cm}p{5.0cm}r@{}}
+\toprule
+\textbf{Defensa} & \textbf{Por qué rompe el círculo} & \textbf{Resultado} \\
+\midrule
+\rowcolor{uaigreen!8}
+(1) 4 embeddings distintos & filtrar+clasificar con mpnet, bge-large, bge-small, e5 & $+2{.}74$ a $+0{.}97$pp; \textbf{90.5\% acuerdo} \\
+(2) \textit{Teacher} independiente & filtrar con un clasificador aparte, no el espacio geométrico & geom.\ $+2{.}78 \geq$ teacher $+2{.}43$ \\
+\rowcolor{uaigreen!8}
+(3) NER, pipeline externo & evaluación con SpaCy + seqeval (independiente del embedding) & cascade L1 $+9{.}61$pp \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{insight}
+\scriptsize Tres caminos \textbf{independientes} (distinto espacio, distinto filtro, distinta tarea+evaluación) dan la misma conclusión: la mejora \textbf{no} es un artefacto del embedding compartido.
+\end{insight}
+\end{column}
+\begin{column}{0.38\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{\small Límite honesto}
+\scriptsize 9.5\% de desacuerdo entre embeddings en 50-shot: posible efecto residual marginal.
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+% --- B9: Escalabilidad ---
+\begin{frame}{Backup B9: Escalabilidad --- ¿por qué decae con muchas clases?}
+\begin{columns}[T]
+\begin{column}{0.58\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=5.3cm, keepaspectratio]{fig_scaling_nclasses.png}
+\end{column}
+\begin{column}{0.42\textwidth}
+\small
+\textbf{La ganancia cae con más clases.}
+\scriptsize
+\vspace{0.2em}
+\begin{itemize}\setlength\itemsep{1pt}
+  \item Sweet spot \textbf{2--6 clases}: $+3$ a $+7$pp.
+  \item dbpedia14 (14): $+0{.}40$; banking77 (77): \alert{$-0{.}99$}; clinc150 (150): $+0{.}01$.
+  \item Spearman $\rho=-0{.}260$ \cita{$p=0.003$, $n=132$}.
+\end{itemize}
+\vspace{0.25em}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{\small Mecanismo}
+\scriptsize Con muchas clases el espacio se \textbf{fragmenta}: todo cae ``lejos'' del ancla y la distancia pierde poder discriminativo. Además, clases semánticamente cercanas (banking77) se solapan.
+\end{block}
+\end{column}
+\end{columns}
+\begin{insight}
+\scriptsize Límite por diseño: el método es para \textbf{bajo-recurso con pocas clases} (2--6), no para taxonomías de 77+ clases (ahí convienen enfoques jerárquicos).
+\end{insight}
+\end{frame}
+
+% --- B12: Estrategias complejas no superan al filtro simple ---
+\begin{frame}{Backup B12: ¿Estrategias más ``inteligentes'' ganan? No.}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\centering
+{\small\textbf{Curriculum} \cita{incluir candidatas por etapas}}\\[4pt]
+\scriptsize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Estrategia & $\Delta$F1 vs SMOTE \\
+\midrule
+\rowcolor{uaigreen!12}
+Sin curriculum (todas) & $+2{.}61$ \\
+Curriculum (mejor, 50\%) & $+2{.}74$ \\
+\bottomrule
+\end{tabular}\\[4pt]
+{\tiny\itshape Ventaja del curriculum: solo $+0{.}13$pp a costa de más complejidad.}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+{\small\textbf{Híbrido adaptativo por clase}}\\[4pt]
+\scriptsize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Método & $\Delta$ vs SMOTE & Win \\
+\midrule
+\rowcolor{uaigreen!12}
+pure\_geo \cita{uniforme} & \alert{$+2{.}33$} & 91\% \\
+hybrid\_cv\_70 & $+0{.}77$ & 36\% \\
+hybrid\_oracle\_50 & $+0{.}44$ & 29\% \\
+hybrid\_geo\_median & $-1{.}11$ & 52\% \\
+\bottomrule
+\end{tabular}\\[4pt]
+{\tiny\itshape Cuanto más se ``especializa'' por clase, peor.}
+\end{column}
+\end{columns}
+\vspace{0.4em}
+\begin{insight}
+\scriptsize Aplicar el filtro \textbf{uniforme y simple} gana. Curriculum, híbridos por dificultad, multi-criterio (combined $-3{.}28$) y cascade L2--L4 ($\approx$ L1) \textbf{no superan} la versión simple. Refuerza el hallazgo central: \emph{simple $>$ complejo}.
+\end{insight}
+\end{frame}
+
+% --- B13: NER — filtrado vs LLM sin filtrar ---
+\begin{frame}{Backup B13: NER --- ¿cuánto aporta el filtro sobre el LLM sin filtrar?}
+\begin{columns}[T]
+
+\begin{column}{0.54\textwidth}
+\centering
+{\scriptsize\textbf{$\Delta$F1 vs.\ LLM sin filtrar} \cita{pareado, 9 datasets}}\\[2pt]
+\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.46]
+  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.4);
+  \node[below, font=\tiny] at (0,-0.35) {sin filtrar = 0};
+  \draw[->,thick,uaigray] (-7.2,-0.3) -- (2.6,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \foreach \x in {-6,-4,-2,2}{ \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38); }
+  % positivos
+  \fill[methodOurs] (0,3.6) rectangle (1.98,4.0);
+  \node[right, font=\tiny] at (2.08,3.8) {\textbf{Mejor filtro/dataset $+1.98$} (8/9)};
+  \fill[methodOurs!80] (0,2.9) rectangle (0.89,3.3);
+  \node[right, font=\tiny] at (0.99,3.1) {LOF $+0.89$};
+  \fill[methodOurs!70] (0,2.2) rectangle (0.86,2.6);
+  \node[right, font=\tiny] at (0.96,2.4) {Cascade L1 $+0.86$ (n.s.)};
+  % negativo
+  \fill[methodWorse] (-6.58,1.2) rectangle (0,1.6);
+  \node[left, font=\tiny, color=uaiorange] at (-6.68,1.4) {\textbf{Combined $-6.58$}};
+\end{tikzpicture}\\[2pt]
+{\scriptsize\itshape El filtro fijo agrega poco (no-sig.); el AND (combined) \textbf{sobre-filtra}.}
+\end{column}
+
+\begin{column}{0.46\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{\small El grueso lo aporta el dato LLM}
+\scriptsize
+F1 macro medio (9 datasets):\\[3pt]
+\centering
+sin aumentar \textbf{23.3} $\xrightarrow{+8.4}$ LLM s/filtrar \textbf{31.7} $\xrightarrow{+0.9}$ filtrado \textbf{32.6}
+\end{block}
+
+\vspace{0.3em}
+\textbf{Filtrado vs sin filtrar por $n$-shot:}\\[2pt]
+\centering
+\scriptsize
+\begin{tabular}{@{}lr@{}}
+\toprule
+$n$-shot & $\Delta$ (cascade L1) \\
+\midrule
+10 & $+1.18$ \\
+25 & \alert{$+1.89$} \\
+50 & $-0.48$ \\
+\bottomrule
+\end{tabular}\\[2pt]
+{\tiny Igual que en clasificación: el filtro ayuda en bajo-recurso.}
+\end{column}
+
+\end{columns}
+
+\begin{insight}
+\scriptsize El titular de la slide principal ($\sim\!+9.6$ vs sin aumentar) combina \textbf{dato LLM} ($+8.4$) y \textbf{filtro}. El aporte marginal del filtro sobre el LLM sin filtrar es \textbf{modesto} ($+0.9$ fijo, n.s.\ $\to$ $+1.98$ mejor-por-dataset, 8/9), pero \textbf{positivo y en otra tarea sin modificar el filtro}: la prueba más fuerte de generalización.
+\end{insight}
+\end{frame}
+
