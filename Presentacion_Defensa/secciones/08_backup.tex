@@ -179,6 +179,9 @@ XGBoost       & $+9{.}10$ & $<10^{-9}$ \\
 \begin{block}{Implicancia}
 \scriptsize
 Los CIs del exp.\ principal subestiman la varianza, pero las pruebas $t$ pareadas \textbf{siguen válidas} (mismo split por par). Y donde la varianza es \textbf{genuina} (re-runs), el efecto no solo sobrevive: \textbf{crece} (XGBoost $+9{.}10$).
+
+\vspace{0.3em}
+Si ese subset usa un árbol que \emph{sí} pondera (prom.\ MLP $+2{.}16$ / RF $+1{.}50$ / XGB $+9{.}10$): de $+1{.}79$ a $\boldsymbol{\approx +4{.}3}$\,\textbf{pp}.
 \end{block}
 \end{column}
 
