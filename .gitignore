@@ -95,6 +95,9 @@ Presentacion_Defensa/*.snm
 Presentacion_Defensa/*.vrb
 Presentacion_Defensa/*.synctex.gz
 Presentacion_Defensa/*.pdf
+Presentacion_Defensa/*.fls
+Presentacion_Defensa/*.fdb_latexmk
+Presentacion_Defensa/*.xdv
 
 # Misc logs
 texput.log
