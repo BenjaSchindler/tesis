@@ -250,20 +250,27 @@ Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasific
 \textbf{Score compuesto} (media geométrica de $L$ niveles activos):\\[2pt]
 \centerline{$\displaystyle s(x) = \left(\prod_{i=1}^{L} s_i(x)\right)^{1/L}$}
 
-\vspace{0.2em}
+\vspace{0.1em}
 \begin{description}\scriptsize
-  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al \textbf{ancla más cercana} (real más próximo):\;
-    $d(x, a^{*}) = \min_{a\in\mathcal{A}} \|x - a\|_2$
-  \item[Nivel 2] Similitud coseno al ancla:\;
-    $\cos(x, a) = \dfrac{x \cdot a}{\|x\|\,\|a\|}$
-  \item[Nivel 3] Pureza KNN ($k=10$ vecinos misma clase).
-  \item[Nivel 4] Distancia al \textbf{centroide} $c$:\;
-    $d(x, c) = \|x - c\|_2$.
+  \item[Nivel 1 \alert{$\star$}] Distancia euclidiana al \textbf{ancla más cercana} (real más próximo):\\
+    $d(x,a^{*}) = \min_{a\in\mathcal{A}} \|x-a\|_2
+      \;\longrightarrow\; s_1 = 1-\dfrac{d}{\max d}$
+  \item[Nivel 2] Similitud coseno al ancla:\\
+    $\cos(x,a) = \dfrac{x\cdot a}{\|x\|\,\|a\|}
+      \;\longrightarrow\; s_2 = \mathrm{clip}(\cos,0,1)$
+  \item[Nivel 3] Pureza KNN ($k=10$ misma clase); $\bar d_k=$ dist.\ media:\\
+    $\bar d_k
+      \;\longrightarrow\; s_3 = \dfrac{1/(1+\bar d_k)}{\max\, 1/(1+\bar d_k)}$
+  \item[Nivel 4] Distancia al \textbf{centroide} $c$:\\
+    $d(x,c) = \|x-c\|_2
+      \;\longrightarrow\; s_4 = 1-\dfrac{d}{\max d}$
 \end{description}
 
-\vspace{0.1em}
+{\tiny La flecha normaliza e invierte cada métrica a $s_i\!\in\![0,1]$ ($\max$ sobre candidatos).}
+
+\vspace{0.05em}
 \begin{insight}
-\scriptsize Con embeddings L2-normalizados, L1 y L2 quedan monotónicamente relacionados (mismo ranking).
+\scriptsize L2-normalización $\Rightarrow$ niveles 1 y 2 dan el mismo ranking.
 \end{insight}
 \end{column}
 
