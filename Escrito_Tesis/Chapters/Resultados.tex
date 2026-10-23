@@ -10,9 +10,7 @@ Este capítulo presenta los resultados experimentales organizados en 19 seccione
 \section{Comparación Principal de Métodos}
 \label{sec:comparacion_principal}
 
-El experimento principal evalúa 3,675 configuraciones (7 conjuntos de datos $\times$ 3 valores de n-shot $\times$ 5 clasificadores $\times$ 7 métodos $\times$ 5 semillas). La Tabla~\ref{tab:modern_method_comparison} presenta la comparación de todos los métodos respecto a SMOTE.
-
-\input{Tables/tab_modern_method_comparison}
+El experimento principal evalúa 3,675 configuraciones (7 conjuntos de datos $\times$ 3 valores de n-shot $\times$ 5 clasificadores $\times$ 7 métodos $\times$ 5 semillas). La Tabla~\ref{tab:absolute_f1_by_method} presenta la comparación de todos los métodos respecto a SMOTE.
 
 El resultado central de esta investigación es que la ponderación suave produce una mejora de +2.25 puntos porcentuales respecto a SMOTE ($p < 0.0001$ con corrección de Bonferroni, $d = 0.74$, tasa de victoria del 83.8\%)\footnote{Los valores $p$ e intervalos de confianza de este resultado deben interpretarse considerando que el 80\% de las combinaciones método/clasificador determinístico presentan varianza cero entre semillas debido al caching de generaciones del LLM. Restringiendo el análisis a clasificadores estocásticos, la mejora se mantiene significativa: +1.79 puntos porcentuales ($p = 0.0015$, $d = 0.52$). Véase la Sección~\ref{sec:asimetria_semillas} para el análisis completo.}. Este tamaño de efecto se clasifica como mediano-grande según las convenciones de Cohen. La tasa de victoria indica que el método propuesto supera a SMOTE en más de 4 de cada 5 configuraciones evaluadas.
 
@@ -43,7 +41,11 @@ La Figura~\ref{fig:boxplot_deltas} visualiza la distribución de deltas para cad
 \section{Comparación con Líneas Base Modernas}
 \label{sec:lineas_base_modernas}
 
-La comparación con 10 métodos de aumentación sobre 1,890 configuraciones proporciona el resultado más fuerte de esta investigación. La ponderación suave alcanza +2.61 puntos porcentuales respecto a SMOTE ($p < 0.0001$ con corrección de Bonferroni, $d = 0.95$, tasa de victoria del 88.9\%). El tamaño de efecto de 0.95 se clasifica como grande.
+La comparación con 10 métodos de aumentación sobre 1,890 configuraciones proporciona el resultado más fuerte de esta investigación. Este experimento emplea un protocolo distinto al de la Sección~\ref{sec:comparacion_principal}: 3 clasificadores lineales y 3 semillas, a cambio de ampliar el conjunto de métodos comparados. La Tabla~\ref{tab:modern_method_comparison} presenta los resultados.
+
+\input{Tables/tab_modern_method_comparison}
+
+La ponderación suave alcanza +2.61 puntos porcentuales respecto a SMOTE ($p < 0.0001$ con corrección de Bonferroni, $d = 0.95$, tasa de victoria del 88.9\%). El tamaño de efecto de 0.95 se clasifica como grande.
 
 El filtrado binario obtiene +2.39 puntos porcentuales ($d = 0.82$, tasa de victoria del 79.4\%). Ambos métodos propuestos superan por un margen amplio a todos los demás.
 
@@ -62,7 +64,7 @@ El patrón de retornos decrecientes es pronunciado. Con 10 ejemplos por clase, l
 
 Este patrón tiene una interpretación directa. Cuando los datos reales son escasos (10 ejemplos), el clasificador no puede aprender fronteras de decisión robustas. Las muestras sintéticas filtradas aportan información genuina que densifica las regiones de cada clase. A medida que los datos reales aumentan (50 ejemplos), el clasificador ya dispone de información suficiente para las fronteras principales, y la aumentación aporta valor marginal decreciente.
 
-La Tabla~\ref{tab:absolute_f1_by_nshot} presenta los valores absolutos de macro F1 por nivel de n-shot, proporcionando contexto para interpretar las magnitudes de las mejoras. Con 10 ejemplos por clase, el macro F1 base sin aumentación es del 57.55\%, indicando un escenario de clasificación desafiante donde la aumentación filtrada produce las mayores ganancias. Con 50 ejemplos, el F1 base sube al 82.40\%, un escenario donde los clasificadores ya alcanzan rendimiento razonable y la aumentación tiene menor margen de mejora.
+La Tabla~\ref{tab:absolute_f1_by_nshot} presenta los valores absolutos de macro F1 por nivel de n-shot, proporcionando contexto para interpretar las magnitudes de las mejoras. Con 10 ejemplos por clase, el macro F1 base sin aumentación es del 66.09\%, indicando un escenario de clasificación desafiante donde la aumentación filtrada produce las mayores ganancias. Con 50 ejemplos, el F1 base sube al 75.11\%, un escenario donde los clasificadores ya alcanzan rendimiento razonable y la aumentación tiene menor margen de mejora.
 
 \input{Tables/tab_absolute_f1_by_nshot}
 
@@ -192,9 +194,9 @@ La aumentación de datos para NER con recursos limitados ha sido estudiada previ
 
 La ganancia del filtrado sobre la generación sin filtrar es de +0.86 puntos porcentuales para cascada nivel 1 vs ningún filtro, aunque esta diferencia no alcanza significancia estadística ($p = 0.27$, $d = 0.40$) con solo 9 configuraciones. La dirección del efecto es consistente (tasa de victoria del 66.7\%), sugiriendo que la potencia estadística es insuficiente para detectar una diferencia de esta magnitud con $N = 9$.
 
-El patrón de retornos decrecientes por n-shot se reproduce con mayor intensidad. Con 10 ejemplos por tipo de entidad, la mejora alcanza +15.15 puntos porcentuales. Con 25 ejemplos, +9.21 puntos porcentuales. Con 50 ejemplos, +6.91 puntos porcentuales. La mayor magnitud respecto a la clasificación de texto refleja que la tarea de NER opera con menores cantidades de datos de entrenamiento por categoría.
+El patrón de retornos decrecientes por n-shot se reproduce con mayor intensidad. Con 10 ejemplos por tipo de entidad, la mejora de la cascada nivel 1 alcanza +14.72 puntos porcentuales. Con 25 ejemplos, +8.57 puntos porcentuales. Con 50 ejemplos, +5.52 puntos porcentuales. La mayor magnitud respecto a la clasificación de texto refleja que la tarea de NER opera con menores cantidades de datos de entrenamiento por categoría.
 
-Por corpus, MultiNERD obtiene la mayor ganancia (+12.82 puntos porcentuales), seguido de Few-NERD (+9.80 puntos porcentuales) y WikiANN (+8.65 puntos porcentuales). La cascada nivel 1 es el filtro que gana en más configuraciones individuales (4 de 9), confirmando que el filtro más simple es también el más robusto entre tareas.
+Por corpus, MultiNERD obtiene la mayor ganancia (+12.70 puntos porcentuales), seguido de Few-NERD (+8.22 puntos porcentuales) y WikiANN (+7.89 puntos porcentuales). La cascada nivel 1 es el filtro que gana en más configuraciones individuales (4 de 9), confirmando que el filtro más simple es también el más robusto entre tareas.
 
 El filtro combinado produce resultados catastróficos: tasa de aceptación del 0\% en 6 de 9 configuraciones. Este hallazgo refuerza la conclusión sobre el sobrefiltrado: la combinación restrictiva de criterios es perjudicial independientemente de la tarea.
 
@@ -247,7 +249,7 @@ La Tabla~\ref{tab:curriculum_results} y la Figura~\ref{fig:curriculum_curve} pre
 \label{fig:curriculum_curve}
 \end{figure}
 
-El rendimiento presenta una curva de U invertida con pico en la proporción del 50\% (+2.74 puntos porcentuales vs SMOTE, tasa de victoria del 86.2\%). Incluir solo la mitad superior de los candidatos por score geométrico supera al método estándar que incorpora todos los candidatos seleccionados (+2.74 vs +2.22 puntos porcentuales). La mejora del curriculum sobre el método estándar es de +0.66 puntos porcentuales.
+El rendimiento presenta una curva de U invertida con pico en la proporción del 50\% (+2.74 puntos porcentuales vs SMOTE, tasa de victoria del 86.2\%). Incluir solo la mitad superior de los candidatos por score geométrico supera a la inclusión de la totalidad de los candidatos (+2.74 vs +2.22 puntos porcentuales), una mejora de +0.52 puntos porcentuales, y también al método estándar de selección top-$N$ (+2.61 puntos porcentuales), por +0.13 puntos porcentuales. Si en cada configuración se eligiera a posteriori el paso óptimo, la ventaja sobre el método estándar ascendería a +0.66 puntos porcentuales; este valor constituye una cota superior optimista, ya que la proporción de corte se selecciona usando el resultado de test.
 
 El patrón de degradación a partir del 60\% indica que la cola inferior de candidatos, aunque pasan el filtro de selección top-N, introduce ruido que degrada la calidad del conjunto de entrenamiento. Incluso con tan solo el 10\% de los candidatos (137 muestras en promedio), el rendimiento ya supera a SMOTE (+1.93 puntos porcentuales), lo que confirma que las muestras de mayor score geométrico son las más informativas.
 

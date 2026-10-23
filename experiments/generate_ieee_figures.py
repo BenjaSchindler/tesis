@@ -259,11 +259,22 @@ def load_results():
     return data["results"]
 
 
-def plot_delta_by_nshot(results):
-    """Bar chart of delta vs SMOTE at each n-shot, with fixed text positioning."""
+def plot_delta_by_nshot(results=None):
+    """Bar chart of delta vs SMOTE at each n-shot.
+
+    Reads modern_baselines (3 classifiers x 3 seeds) and pairs on
+    (dataset, classifier, seed) so the bars reproduce Table II of the paper
+    exactly. Using thesis_final, or averaging over seeds before pairing,
+    yields different values and makes the figure contradict the table.
+    """
+    with open(PROJECT_ROOT / "results" / "modern_baselines" / "final_results.json") as f:
+        results = json.load(f)["results"]
+
     nshots = sorted(set(r["n_shot"] for r in results))
-    datasets = sorted(set(r["dataset"] for r in results))
-    classifiers = sorted(set(r["classifier"] for r in results))
+
+    scores = {(r["dataset"], r["classifier"], r["seed"], r["augmentation_method"]):
+              r["f1_macro"] for r in results}
+    nshot_of = {r["dataset"]: r["n_shot"] for r in results}
 
     fig, ax = plt.subplots(figsize=(3.5, 2.6))
 
@@ -271,27 +282,16 @@ def plot_delta_by_nshot(results):
     errs = []
     win_rates = []
     for ns in nshots:
-        method_means, smote_means = [], []
-        for ds in datasets:
-            try:
-                ds_nshot = int(ds.split("_")[-1].replace("shot", ""))
-            except ValueError:
+        d_list = []
+        for (ds, clf, seed, method), val in scores.items():
+            if method != "soft_weighted" or nshot_of[ds] != ns:
                 continue
-            if ds_nshot != ns:
-                continue
-            for clf in classifiers:
-                m_f1s = [r["f1_macro"] for r in results
-                         if r["dataset"] == ds and r["classifier"] == clf
-                         and r["augmentation_method"] == "soft_weighted"]
-                s_f1s = [r["f1_macro"] for r in results
-                         if r["dataset"] == ds and r["classifier"] == clf
-                         and r["augmentation_method"] == "smote"]
-                if m_f1s and s_f1s:
-                    method_means.append(np.mean(m_f1s))
-                    smote_means.append(np.mean(s_f1s))
+            base = scores.get((ds, clf, seed, "smote"))
+            if base is not None:
+                d_list.append(val - base)
 
-        if method_means:
-            d_arr = np.array(method_means) - np.array(smote_means)
+        if d_list:
+            d_arr = np.array(d_list)
             deltas.append(np.mean(d_arr) * 100)
             errs.append(1.96 * np.std(d_arr, ddof=1) / np.sqrt(len(d_arr)) * 100 if len(d_arr) > 1 else 0)
             win_rates.append(np.mean(d_arr > 0) * 100)
@@ -306,7 +306,7 @@ def plot_delta_by_nshot(results):
         y = bar.get_height()
         label_y = y + errs[i] + 0.25
         ax.text(bar.get_x() + bar.get_width() / 2, label_y,
-                f"{wr:.0f}% win", ha="center", va="bottom", fontsize=7.5,
+                f"{wr:.1f}% win", ha="center", va="bottom", fontsize=7.5,
                 fontweight="bold")
 
     ax.axhline(0, color="red", linestyle="--", alpha=0.5, linewidth=1)
@@ -339,8 +339,6 @@ if __name__ == "__main__":
     plot_tsne_before_after("emotion_10shot")
 
     print("\n[2/2] Delta by n-shot bar chart...")
-    results = load_results()
-    print(f"  Loaded {len(results)} results")
-    plot_delta_by_nshot(results)
+    plot_delta_by_nshot()
 
     print("\nDone! Figures saved to:", OUTPUT_DIR)
