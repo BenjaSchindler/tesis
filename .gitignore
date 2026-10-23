@@ -75,6 +75,22 @@ Escrito_Tesis/Figures/**/*.pdf
 Escrito_Tesis/Figures/*.png
 Escrito_Tesis/Figures/*.pdf
 
+# ...except figures used by the thesis and the presentations
+!Escrito_Tesis/Figures/fig_boxplot_deltas.png
+!Escrito_Tesis/Figures/fig_classifier_comparison.png
+!Escrito_Tesis/Figures/fig_curriculum_curve.pdf
+!Escrito_Tesis/Figures/fig_delta_by_nshot.png
+!Escrito_Tesis/Figures/fig_f1_vs_nshot.png
+!Escrito_Tesis/Figures/fig_geometric_validation.png
+!Escrito_Tesis/Figures/fig_heatmap_methods.png
+!Escrito_Tesis/Figures/fig_multi_llm_comparison.png
+!Escrito_Tesis/Figures/fig_scaling_nclasses.png
+!Escrito_Tesis/Figures/fig_scores_20news.png
+!Escrito_Tesis/Figures/fig_tsne_before_after_20newsgroups.png
+!Escrito_Tesis/Figures/fig_tsne_before_after_emotion.png
+!Escrito_Tesis/Figures/fig_tsne_filtered_vs_smote_20newsgroups.png
+!Escrito_Tesis/Figures/fig_tsne_filtered_vs_smote_emotion.png
+
 # IEEE paper build artifacts and bundled PDFs
 Escrito_Tesis_IEEE/*.aux
 Escrito_Tesis_IEEE/*.bbl
