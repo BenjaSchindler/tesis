@@ -21,6 +21,7 @@ MBTI_500.csv
 
 # IDE and tools
 .claude/
+.codex/
 .vscode/
 *.swp
 *.swo
@@ -99,5 +100,23 @@ Presentacion_Defensa/*.fls
 Presentacion_Defensa/*.fdb_latexmk
 Presentacion_Defensa/*.xdv
 
+# PhytoLearning presentation build artifacts and PDF
+Presentacion_PhytoLearning/*.aux
+Presentacion_PhytoLearning/*.log
+Presentacion_PhytoLearning/*.out
+Presentacion_PhytoLearning/*.toc
+Presentacion_PhytoLearning/*.nav
+Presentacion_PhytoLearning/*.snm
+Presentacion_PhytoLearning/*.vrb
+Presentacion_PhytoLearning/*.synctex.gz
+Presentacion_PhytoLearning/*.pdf
+Presentacion_PhytoLearning/*.fls
+Presentacion_PhytoLearning/*.fdb_latexmk
+Presentacion_PhytoLearning/*.xdv
+
 # Misc logs
 texput.log
+
+# Generated research outputs and scratch files
+output/
+tmp/
