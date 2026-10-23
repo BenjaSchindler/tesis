@@ -1,0 +1,1082 @@
+% =============================================================================
+% Bloque 9: Backup (slides para Q&A) — AGRUPADOS POR TEMA
+% Cada grupo tiene un color de titulo distinto (frametitle bg). Sin slides
+% divisoras: el color del titulo identifica el grupo. Reordenado 2026-05-30.
+% =============================================================================
+
+% --- Colores de grupo (solo backups) ---
+\definecolor{grpEstadistica}{HTML}{1F4788}    % azul UAI
+\definecolor{grpFiltros}{HTML}{1E8449}        % verde (metodo)
+\definecolor{grpHiperparam}{HTML}{6C4A8C}     % purpura
+\definecolor{grpMetricas}{HTML}{C87F0A}       % ambar oscuro
+\definecolor{grpExperimentos}{HTML}{0E7C7B}   % teal
+
+% =============================================================================
+% GRUPO: Estadística  (frametitle = grpEstadistica)
+% =============================================================================
+\setbeamercolor{frametitle}{fg=white, bg=grpEstadistica}
+
+% --- B0a: Protocolo estadístico — justificación detallada ---
+\begin{frame}{Backup B0a: ¿Por qué este protocolo estadístico?}
+\scriptsize
+Cada herramienta responde una pregunta \textbf{distinta} sobre el efecto:
+
+\vspace{0.3em}
+\begin{tabular}{@{}p{2.6cm}p{3.6cm}p{6.2cm}@{}}
+\toprule
+\textbf{Herramienta} & \textbf{Pregunta} & \textbf{Justificación} \\
+\midrule
+$t$-pareada       & ¿La diferencia es real?       & Configs emparejadas por \textit{dataset $\times$ clasificador $\times$ semilla}: elimina varianza entre configs. \\
+\addlinespace[1pt]
+Bonferroni        & ¿Y con muchos tests?          & 7 métodos vs.\ SMOTE $\Rightarrow$ $\alpha=0{.}05/7$. Conservador, blindado contra falsos positivos. \\
+\addlinespace[1pt]
+Bootstrap CI 95\% & ¿Qué rango es plausible?      & No asume normalidad. 10\,000 remuestreos: percentiles 2.5 y 97.5 estables al 3er decimal. \\
+\addlinespace[1pt]
+$d$ de Cohen      & ¿Qué tan grande es?           & Separa significancia \textbf{estadística} de \textbf{práctica}: con $n{=}525$, $p$ puede ser bajo aunque $\Delta$ sea trivial. \\
+\addlinespace[1pt]
+Win-rate          & ¿Qué tan consistente?         & Media $+2{.}25$pp con 50\% win = volátil. Con 82\% win = robusto. \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Los \textbf{4 apuntan} en la misma dirección $\Rightarrow$ conclusión difícil de atacar.
+\end{insight}
+\end{frame}
+
+% --- B0b: Interpretación de d de Cohen ---
+\begin{frame}{Backup B0b: $d$ de Cohen — interpretación}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.45\textwidth}
+\textbf{Fórmula (pareada):}
+\[
+d = \frac{\overline{\Delta\text{F1}}}{\text{SD}(\Delta\text{F1})}
+\]
+
+\vspace{0.4em}
+\textbf{Convenciones (Cohen 1988):}\\[2pt]
+\scriptsize
+\begin{tabular}{@{}lll@{}}
+\toprule
+$d$ & Magnitud & Interpretación \\
+\midrule
+0.2 & pequeño  & apenas distinguible \\
+0.5 & medio    & visible a ojo \\
+0.8 & grande   & claramente diferente \\
+1.0+ & muy grande & casi sin solapamiento \\
+\bottomrule
+\end{tabular}
+\end{column}
+
+\begin{column}{0.55\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{Nuestros valores}
+\scriptsize
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Configuración           & $d$    & Magnitud      \\
+\midrule
+Global (soft-weighted)  & 0.74   & medio-grande  \\
+SVC (lineal)            & 1.00   & muy grande    \\
+Ridge                   & 1.03   & muy grande    \\
+MLP                     & 0.73   & medio-grande  \\
+LogReg                  & 0.82   & grande        \\
+\midrule
+emotion 6-clases        & 1.24   & muy grande    \\
+20news 10-shot          & 0.95   & muy grande    \\
+\bottomrule
+\end{tabular}
+\end{block}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Con $d{=}0.74$ y $p{<}0.0001$: la diferencia es \textbf{real} \emph{y} \textbf{práctica}.
+\end{insight}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- B0c: Wilcoxon (robustez no-paramétrica) ---
+\begin{frame}{Backup B0c: Robustez no-paramétrica (Wilcoxon)}
+\small
+La $t$ pareada supone normalidad (aprox.) de las diferencias. El \textbf{Wilcoxon de rangos con signo} no supone nada sobre la distribución: si ambos coinciden, la conclusión \textbf{no depende del supuesto}.
+
+\vspace{0.4em}
+\begin{columns}[T]
+
+\begin{column}{0.62\textwidth}
+\scriptsize
+\textbf{Resultado principal} ($N{=}525$: 21 datasets $\times$ 5 clf $\times$ 5 semillas)
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+vs.\ SMOTE        & $\Delta$pp & win  & $p$ ($t$)            & $p$ (Wilcoxon) \\
+\midrule
+soft\_weighted    & $+2{.}25$  & 82\% & $1{.}5{\times}10^{-49}$ & $4{.}3{\times}10^{-54}$ \\
+binary\_filter    & $+2{.}11$  & 78\% & $5{.}6{\times}10^{-44}$ & $6{.}9{\times}10^{-46}$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\textbf{Por n-shot} (Wilcoxon, soft\_weighted)
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+n-shot   & $\Delta$pp & $p$ (Wilcoxon)        & $d$ \\
+\midrule
+10       & $+4{.}52$  & $6{.}3{\times}10^{-25}$ & 1.16 \\
+25       & $+1{.}88$  & $2{.}0{\times}10^{-26}$ & 1.16 \\
+50       & $+0{.}34$  & $1{.}1{\times}10^{-5}$  & 0.22 \\
+\bottomrule
+\end{tabular}
+\end{column}
+
+\begin{column}{0.38\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{Implicancia}
+\scriptsize
+Wilcoxon coincide con la $t$ y da $p$ \textbf{aún menor}. El win-rate (82\%) es la prueba de signos asociada. En 50-shot sigue significativo pero con efecto \textbf{pequeño} ($d{=}0.22$) --- coherente con que el método es para \textbf{muy bajo recurso}.
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- B2: Seed asymmetry ---
+\begin{frame}{Backup B2: Asimetría de semillas y caching}
+\small
+\textbf{Observación:} $\approx$80\% de las combinaciones LLM $\times$ clasificador \emph{determinista} tienen \textbf{varianza cero} entre semillas (la generación LLM está cacheada $\Rightarrow$ los lineales dan F1 idéntico).
+
+\vspace{0.3em}
+\begin{columns}[T]
+
+\begin{column}{0.58\textwidth}
+\scriptsize
+\textbf{Validación 1 --- subset estocástico} (exp.\ principal, MLP+RF, varianza genuina):
+\begin{itemize}\setlength\itemsep{0pt}
+  \item $\Delta$F1 $= +1{.}79$ pp, $p = 0{.}0015$, $d = 0{.}52$.
+  \item Wilcoxon $p = 7{\times}10^{-13}$. Significancia se mantiene.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Validación 2 --- re-runs RF/XGB} (\texttt{tuning\_v2}, clasificadores estocásticos corridos de cero):
+
+\vspace{2pt}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+re-run (var.\ real) & $\Delta$pp vs SMOTE & $p$ (Wilcoxon) \\
+\midrule
+Random Forest & $+1{.}50$ & $0{.}012$ \\
+XGBoost       & $+9{.}10$ & $<10^{-9}$ \\
+\bottomrule
+\end{tabular}\\[3pt]
+{\tiny Solo 22\% de varianza cero (vs $\approx$80\% cacheado): la varianza cross-seed es \textbf{real}.}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{Implicancia}
+\scriptsize
+Los CIs del exp.\ principal subestiman la varianza, pero las pruebas $t$ pareadas \textbf{siguen válidas} (mismo split por par). Y donde la varianza es \textbf{genuina} (re-runs), el efecto no solo sobrevive: \textbf{crece} (XGBoost $+9{.}10$).
+
+\vspace{0.3em}
+Si ese subset usa un árbol que \emph{sí} pondera (prom.\ MLP $+2{.}16$ / RF $+1{.}50$ / XGB $+9{.}10$): de $+1{.}79$ a $\boldsymbol{\approx +4{.}3}$\,\textbf{pp}.
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% =============================================================================
+% GRUPO: Filtros Geométricos  (frametitle = grpFiltros)
+% =============================================================================
+\setbeamercolor{frametitle}{fg=white, bg=grpFiltros}
+
+% --- B0d3: Binario vs peso continuo (tabla sola) --- Random Forest ---
+\begin{frame}{Backup B0d$_3$: ¿Filtro binario o peso continuo? (Random Forest)}
+\centering
+\vspace{0.6em}
+{\small Las formas de usar las muestras del LLM, en Random Forest ($\Delta$F1 macro vs SMOTE):}
+
+\vspace{0.8em}
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}lcl@{}}
+\toprule
+\textbf{Modo}                              & \textbf{$\Delta$ vs SMOTE}        & \\
+\midrule
+\texttt{no\_augmentation} (sin aumentar)   & $-0.70$pp                         & \textcolor{red!70!black}{$\downarrow$ peor que SMOTE} \\
+\texttt{llm\_unfiltered} (sin filtro)      & $+1.39$pp                         & \\
+\rowcolor{uaigreen!15}
+\texttt{binary\_filter} (keep/reject)      & \alert{$\boldsymbol{+1.89}$\,pp}  & \textcolor{uaigreen!55!black}{$\uparrow$ el mejor} \\
+\rowcolor{gray!15}
+\texttt{soft\_weighted} (peso continuo)    & $+1.50$pp                         & \textcolor{red!70!black}{$\downarrow$ no mejora sobre binario} \\
+\bottomrule
+\end{tabular}\\[2pt]
+{\tiny Re-ejecución \texttt{tuning\_v2} (clasificador \emph{fijo}, varianza real, con control \texttt{llm\_unfiltered}).}
+
+\vspace{0.7em}
+\begin{insight}
+\small En RF el aporte está en \textbf{seleccionar} (binario $+1.89$); \textbf{ponderar no agrega} (paso $-0.39$pp, n.s.): el \emph{bagging} usa árboles profundos que memorizan sin importar el \texttt{sample\_weight}. \alert{Opuesto a XGBoost} (B0d$_4$): \emph{bagging} $\to$ selección, \emph{boosting} $\to$ ponderación.
+\end{insight}
+\end{frame}
+
+% --- B0d4: Binario vs peso continuo (tabla sola) ---
+\begin{frame}{Backup B0d$_4$: ¿Filtro binario o peso continuo? (XGBoost)}
+\centering
+\vspace{0.6em}
+{\small Las formas de usar las muestras del LLM, en XGBoost ($\Delta$F1 macro vs SMOTE):}
+
+\vspace{1.1em}
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}lcl@{}}
+\toprule
+\textbf{Modo}                            & \textbf{$\Delta$ vs SMOTE}        & \\
+\midrule
+\texttt{no\_augmentation} (sin aumentar) & $-0.98$pp                         & \textcolor{red!70!black}{$\downarrow$ peor que SMOTE} \\
+\texttt{llm\_unfiltered} (sin filtro)    & $+7.96$pp                         & \\
+\rowcolor{gray!15}
+\texttt{binary\_filter} (keep/reject)    & $+7.52$pp                         & \textcolor{red!70!black}{$\downarrow$ peor que sin filtro} \\
+\rowcolor{uaigreen!15}
+\texttt{soft\_weighted} (peso continuo)  & \alert{$\boldsymbol{+9.10}$\,pp}  & \textcolor{uaigreen!55!black}{$\uparrow$ el mejor} \\
+\bottomrule
+\end{tabular}
+
+\vspace{1.3em}
+\begin{insight}
+\small Seleccionar/descartar (binario) \textbf{no aporta}; \textbf{ponderar por el score sí}. Usá el filtro geométrico como \textbf{peso continuo}, no como \emph{keep/reject}.
+\end{insight}
+\end{frame}
+
+% --- B0d5: Desglose consolidado — selección binaria vs ponderación suave ---
+\begin{frame}{Backup B0d$_5$: Desglose --- ¿seleccionar o ponderar?}
+\small
+Del \alert{$+2{.}25$pp} de \texttt{soft\_weighted} vs SMOTE: ¿cuánto es \textbf{seleccionar} (filtro binario) y cuánto el \textbf{paso} de \textbf{ponderar} (peso continuo)?
+
+\vspace{0.2em}
+\begin{columns}[T]
+
+\begin{column}{0.54\textwidth}
+\scriptsize
+\textbf{Por familia de clasificador} ($\Delta$F1 vs SMOTE):\\[2pt]
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Familia} & \textbf{Binario} & \textbf{Suave} & \textbf{Paso suave} \\
+                 & (selección)     & (completo)     & (suave$-$bin.) \\
+\midrule
+No-árbol\,$^a$        & $+2{.}27$ & $+2{.}46$ & $+0{.}19$ \\
+\rowcolor{uaiorange!10}
+Bagging (RF)\,$^a$    & $+1{.}51$ & $+1{.}42$ & \textcolor{red!70!black}{$-0{.}09$} \\
+\rowcolor{uaigreen!14}
+Boosting (XGB)\,$^b$  & $+7{.}52$ & \alert{$+9{.}10$} & \alert{$\boldsymbol{+1{.}59}$}$^{***}$ \\
+\bottomrule
+\end{tabular}\\[1pt]
+{\tiny $^a$ exp.\ principal (No-árbol $=$ LR/SVC/Ridge/MLP; y RF). $^b$ \texttt{tuning\_v2}, clf.\ fijo. $^{***}d{=}0.92$.}
+
+\vspace{0.35em}
+\textbf{Global --- los 5 clf} ($N{=}525$):\\[2pt]
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Modo & $\Delta$pp & win & $d$ \\
+\midrule
+\texttt{binary\_filter} (selección) & $+2{.}11$ & 78\% & 0.69 \\
+\rowcolor{uaigreen!12}
+\texttt{soft\_weighted} (completo)  & \alert{$+2{.}25$} & 82\% & 0.74 \\
+\textit{paso de ponderar}           & $+0{.}13$ & 54\% & \textit{n.s.} \\
+\bottomrule
+\end{tabular}
+\end{column}
+
+\begin{column}{0.46\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{\small Ponderación suave a profundidad}
+\scriptsize
+El \textbf{paso} de ponderar rinde distinto según el clasificador:
+\begin{itemize}\setlength\itemsep{1pt}
+  \item \textbf{Lineal/MLP:} la \alert{selección} ya quitó los \emph{outliers} del margen $\Rightarrow$ ponderar agrega poco.
+  \item \textbf{Boosting:} cada árbol corrige el error \textbf{ponderado} del previo $\Rightarrow$ el peso \alert{sí} se explota (en XGB el paso binario es nulo, $-0{.}44$ n.s.).
+  \item \textbf{Bagging:} árboles profundos memorizan sin importar el peso $\Rightarrow$ ningún paso ayuda.
+\end{itemize}
+\vspace{1pt}
+{\tiny Por $n$-shot el paso ayuda más en bajo recurso: 10\,$\to$\,\alert{$+0{.}36$} (66\%), 25\,$\to$\,$+0{.}15$, 50\,$\to$\,$-0{.}11$.}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.2em}
+\begin{insight}
+\scriptsize La slide 20 muestra que el \textbf{método completo} gana en \emph{todo} clasificador; este desglose muestra \textbf{por qué}: los lineales explotan la \textbf{selección}, el boosting la \textbf{ponderación}. La misma señal geométrica entra por canales distintos $\Rightarrow$ H1b (peso suave) es \emph{condicional al clasificador}.
+\end{insight}
+\end{frame}
+
+% --- B6: Validación geométrica intrínseca ---
+\begin{frame}{Backup B6: ¿El filtro mejora la geometría? (validación intrínseca)}
+\centering
+\includegraphics[width=0.93\linewidth, height=3.6cm, keepaspectratio]{fig_geometric_validation.png}
+
+\vspace{0.35em}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{\small Filtrado mejora vs.\ sin filtrar}
+\scriptsize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Dist.\ intra-clase $0{.}850 \!\to\! 0{.}822$ \cita{$p<0.001$}: clústeres más compactos.
+  \item Sep.\ inter-clase $0{.}571 \!\to\! 0{.}616$ \cita{$p<0.001$}: clases más separadas.
+  \item Silhouette $0{.}075 \!\to\! 0{.}085$ \cita{$p=0.029$}; Davies-B.\ $3{.}822 \!\to\! 3{.}370$.
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.45\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{\small El matiz de SMOTE}
+\scriptsize
+SMOTE es \textbf{más compacto} (intra $0{.}762$, silhouette $0{.}090$) porque \textbf{interpola} dentro del convex hull. Pero tiene la \textbf{peor separación} inter-clase ($0{.}540$) y peor Davies-Bouldin ($3{.}474$) que el filtrado.
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.15em}
+\begin{insight}
+\scriptsize El filtro \textbf{cierra el lazo causal}: mejora la geometría \emph{intrínseca}, no solo el F1. La compacidad artificial de SMOTE \textbf{no se traduce} en mejor clasificación; la \textbf{diversidad + separación} del LLM filtrado sí.
+\end{insight}
+\end{frame}
+
+% --- B0f: Tabla completa de filtros con costo ---
+\begin{frame}{Backup B0f: Comparación completa de filtros geométricos}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrlrl@{}}
+\toprule
+Filtro                & $\Delta$F1 & Win & Selección & LLM & Notas \\
+\midrule
+\rowcolor{uaigreen!12}
+\textbf{cascade L1 + top-N} & \alert{$+3{.}66$} & 84.5\% & ranking top-$N$ & 3$\times$   & \textbf{Ganador} \\
+cascade L2 (top-N)         & $+3{.}60$ & 83.9\% & ranking top-$N$ & 3$\times$  & Similar a L1 \\
+cascade L4 (top-N)         & $+3{.}60$ & 83.3\% & ranking top-$N$ & 3$\times$  & Redundante \\
+cascade L1 (binary)        & $+1{.}94$ & 91.7\% & ranking top-$N$ & 3$\times$  & Sin pesos suaves \\
+cascade L3 (binary)        & $+1{.}95$ & 91.7\% & ranking top-$N$ & 3$\times$  & + KNN, no ayuda \\
+\addlinespace[2pt]
+LOF ($k{=}5$, $\theta{=}{-}0{.}5$) & $+2{.}43$ & 90.0\% & umbral (relajado)   & 6.2$\times$  & Segundo mejor \\
+LOF ($k{=}20$, $\theta{=}0$)       & $+0{.}05$ & 67.5\% & umbral (estricto)   & 8$\times$    & Default sklearn falla \\
+\addlinespace[2pt]
+none (control)            & $+0{.}72$ & 62.9\% & sin filtrar          & 3$\times$    & LLM directo \\
+\addlinespace[2pt]
+\rowcolor{uaiorange!10}
+embedding\_guided         & $-1{.}29$ & 55.0\% & cobertura greedy     & --           & Coverage-only falla \\
+\rowcolor{uaiorange!10}
+combined (LOF $\land$ sim) & $-3{.}28$ & 52.5\% & AND, $\sim\!23\%$ pasa & 32$\times$ & Demasiado restrictivo \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\scriptsize\itshape \textbf{Selección}: \emph{ranking top-$N$} toma los $N$ mejores del pool 3$\times$ generado (filtrado por ranking, no por umbral). \emph{Umbral}: rechaza candidatos bajo el score; el \% indica cuántos pasan. ``LLM'' = candidatos por muestra requerida.}
+
+\vspace{0.2em}
+\begin{insight}
+\scriptsize \textbf{Tres principios confirmados:}
+(1) \textit{Ranking} top-$N$ $>$ umbral duro.\hspace{0.5em}
+(2) Distancia simple $\geq$ múltiples criterios.\hspace{0.5em}
+(3) Operador \textbf{AND} destruye la señal.
+\end{insight}
+\end{frame}
+
+% =============================================================================
+% GRUPO: Hiperparámetros  (frametitle = grpHiperparam)
+% =============================================================================
+\setbeamercolor{frametitle}{fg=white, bg=grpHiperparam}
+
+% --- B0e: Cómo se eligieron los umbrales ---
+\begin{frame}{Backup B0e: Elección de hiperparámetros}
+\scriptsize
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{LOF: \texttt{n\_neighbors} y \texttt{threshold}}\\[2pt]
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Param & $k=5$ & $k=10$ & $k=20$ \\
+\midrule
+$\Delta$F1 vs.\ SMOTE & \alert{$+2.43$} & $+0.16$ & $+0.05$ \\
+Win-rate              & 90.0\%         & 70.0\% & 67.5\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\itshape Default sklearn $k{=}20$ falla en 10-shot (no hay 20 vecinos por clase). $k{=}5$ es el sweet spot.}
+
+\vspace{0.5em}
+\textbf{LOF: \texttt{threshold}}\\[2pt]
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Threshold & $\Delta$F1 & Win-rate \\
+\midrule
+$-0.50$       & $+1.29$ & 80.0\% \\
+$-0.30$       & $+0.06$ & 68.3\% \\
+$\phantom{-}0.00$ (default sklearn) & $+0.88$ & 75.6\% \\
+\bottomrule
+\end{tabular}
+{\itshape $\theta{=}0$ es la frontera matemática inlier/outlier (\texttt{decision\_function}).}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\textbf{Cascade: \texttt{k\_neighbors} para KNN purity}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Fijado $k{=}10$ (compromiso 10/25/50-shot).
+  \item L1 (sin KNN) no es sensible a este parámetro.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Combined: \texttt{sim\_threshold}}\\[2pt]
+\begin{tabular}{@{}lrr@{}}
+\toprule
+$\theta_{\text{sim}}$ & $\Delta$F1 & Win-rate \\
+\midrule
+$0.3$ & $-0.68$ & 55.0\% \\
+$0.5$ & $-5.71$ & 41.7\% \\
+$0.7$ & $-1.10$ & 71.7\% \\
+\bottomrule
+\end{tabular}
+{\itshape Cualquier $\theta_{\text{sim}}{>}0$ combinado con AND $\Rightarrow$ catastrófico.}
+
+\vspace{0.4em}
+\textbf{Top-N: peso mínimo y selectividad}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Normalización: \texttt{minmax} (vs.\ rank, z-score).
+  \item Selectividad $\tau{=}0.5$ (peaked, $w \propto s^{1/\tau}$).
+  \item Peso mínimo $w_{\min}$: \textbf{poco impacto} ($\pm 0.05$pp).
+\end{itemize}
+\end{column}
+
+\end{columns}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Hiperparámetros del cascade son \textbf{poco sensibles}; los de LOF y combined son \textbf{críticos}.
+\end{insight}
+\end{frame}
+
+% --- B0g: Hiperparámetros del LLM y ponderación suave ---
+\begin{frame}{Backup B0g: Hiperparámetros LLM y ponderación suave}
+\scriptsize
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{LLM (Gemini 3 Flash)}
+\scriptsize
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Param         & Valor & Justificación \\
+\midrule
+\texttt{temperature}      & $0.8$  & Diversidad / coherencia \\
+\texttt{top\_p}, \texttt{top\_k} & default & SDK Gemini \\
+\texttt{max\_tokens}      & $4000$ & $\sim 50$ muestras/llamada \\
+back-trans.\ $T$          & $0.3$  & EN $\leftrightarrow$ ES conservador \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+\textbf{Ablation \texttt{temperature} (cascade L1):}\\[2pt]
+\begin{tabular}{@{}lrr@{}}
+\toprule
+$T$ & sms\_spam & 20news \\
+\midrule
+$0.5$ & $-0.07$ & $+5.04$ \\
+$0.7$ & $+1.44$ & $+4.16$ \\
+$0.8$ & $-1.06$ & $+6.04$ \\
+$0.9$ & $-0.18$ & $+6.25$ \\
+$1.0$ & $+4.95$ & $+7.44$ \\
+\bottomrule
+\end{tabular}\\
+{\itshape No monótono. $T{=}0.8$ por convención.}
+\end{block}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{Ponderación suave (top-N)}
+\scriptsize
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Param            & Valor    & Comentario \\
+\midrule
+$\tau$ ponder.   & $0.5$    & $w \propto s^{1/\tau}$, peaked \\
+normalización    & minmax   & frente a rank, sigmoid \\
+$w_{\min}$       & $0.0$    & sensibilidad $<\!0.2$pp \\
+candidatos       & $3\times$ target & margen top-N \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.1em}
+\textbf{Sweep Phase 2 (468 configs):}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Param          & $\Delta$F1 & Win \\
+\midrule
+$\tau=0.5$     & \alert{$+4.10$} & 88.3\% \\
+$\tau=1.0$     & $+3.67$         & 84.0\% \\
+$\tau=2.0$     & $+3.41$         & 83.3\% \\
+norm.\ minmax  & \alert{$+3.98$} & 89.6\% \\
+norm.\ rank    & $+3.56$         & 83.3\% \\
+\bottomrule
+\end{tabular}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\begin{insight}
+\scriptsize $\tau{=}0.5$ \textbf{peaked} amplifica diferencias entre muestras buenas y mediocres $\Rightarrow$ máxima ganancia.
+\end{insight}
+\end{frame}
+
+% --- B0i: Hiperparámetros de los modelos de ML (detalle) ---
+\begin{frame}{Backup B0i: Hiperparámetros de los clasificadores}
+\scriptsize
+\begin{columns}[T]
+
+\begin{column}{0.53\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{\small Experimento principal --- 5 clasificadores}
+\scriptsize
+\textit{Defaults sklearn / PyTorch, sin tuning por dataset:}\\[2pt]
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Modelo & Hiperparámetros \\
+\midrule
+Logistic Reg.\ & L2, $C{=}1{.}0$, \texttt{lbfgs}, \texttt{max\_iter=1000} \\
+SVC            & \texttt{kernel=linear}, $C{=}1{.}0$ \\
+Ridge          & $\alpha{=}1{.}0$ \\
+Random Forest  & \texttt{n\_estimators=100}, \texttt{max\_depth=None}, \\
+               & \texttt{class\_weight=None}, \texttt{max\_features=sqrt} \\
+MLP\,$^{*}$    & 1 capa oculta $=128$, ReLU, \texttt{dropout=0.3}, \\
+               & Adam lr$=10^{-3}$, \texttt{weight\_decay}$=10^{-4}$, \\
+               & \emph{cosine}, 300 épocas, batch 16 \\
+\bottomrule
+\end{tabular}\\[3pt]
+{\tiny $^{*}$ implementación propia (PyTorch); pérdida CE con \texttt{sample\_weight}. Todos: \texttt{random\_state} por semilla; muestras reales $\Rightarrow w{=}1$.}
+\end{block}
+\end{column}
+
+\begin{column}{0.47\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{\small Análisis de árboles (RF / XGBoost)}
+\scriptsize
+\textbf{Fijos} (referencia):
+\begin{itemize}\setlength\itemsep{0pt}
+  \item RF $=$ el del principal (\texttt{n\_estimators=100}).
+  \item XGB: \texttt{n\_est=100}, \texttt{depth=6}, lr$=0{.}1$, \texttt{subsample=colsample=1.0}, \texttt{hist}.
+\end{itemize}
+\vspace{3pt}
+\textbf{Selección por CV} --- \texttt{StratifiedKFold(3)} sobre \textbf{train} (sin fuga al test):\\[2pt]
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}ll@{}}
+\toprule
+ & Grilla (\# combos) \\
+\midrule
+RF\,cv  & \texttt{n\_est=300}; \texttt{depth}$\in\{6,10,15\}$; \\
+        & \texttt{min\_leaf}$\in\{1,3\}$; \texttt{cw}$\in\{$\texttt{None},bal.$\}$ \hfill(12) \\
+XGB\,cv & \texttt{depth}$\in\{3,5\}$; \texttt{min\_child}$\in\{1,3\}$; \\
+        & \texttt{subsample}$\in\{0.8,1\}$; \texttt{colsample}$=0.8$ \hfill(8) \\
+\bottomrule
+\end{tabular}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.15em}
+\begin{insight}
+\scriptsize \textit{Defaults a propósito} en el principal: las diferencias miden el \textbf{método de aumentación}, no el ajuste del clasificador. El tuning de árboles usa CV \textbf{solo en train} (el test se toca una vez) $\Rightarrow$ neutraliza el ataque ``ajustaste XGBoost en el test''. \;LLM y peso suave: B0g; umbrales de filtros: B0e.
+\end{insight}
+\end{frame}
+
+% --- B0h: Embeddings, clasificadores y validación ---
+\begin{frame}{Backup B0h: Embeddings, clasificadores y protocolo}
+\scriptsize
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Clasificadores (sklearn defaults)}
+\scriptsize
+\begin{tabular}{@{}ll@{}}
+\toprule
+Modelo & Hiperparámetros \\
+\midrule
+LogReg        & \texttt{max\_iter=1000} \\
+SVC           & \texttt{kernel="linear"} \\
+RandomForest  & \texttt{n\_estimators=100} \\
+Ridge         & $\alpha = 1.0$ \\
+MLP (custom)  & 128 hidden, 300 ep., lr $10^{-3}$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\itshape Sin tuning por dataset $\Rightarrow$ las diferencias son del \textbf{método de aumentación}.}
+\end{block}
+
+\vspace{0.3em}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Protocolo}
+\scriptsize
+Seeds $\{42, 123, 456, 789, 1011\}$ \textperiodcentered\ $N$-shot $\{10, 25, 50\}$ \textperiodcentered\ LLM \% $\{5, 25, 50, 100\}$ \textperiodcentered\ macro F1 \textperiodcentered\ 50 sintét./clase \textperiodcentered\ cache MD5.
+\end{block}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{Embedding model (504 runs)}
+\scriptsize
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Modelo & Dim & $\Delta$F1 & Win \\
+\midrule
+\rowcolor{uaigreen!12}
+\textbf{mpnet-base} & 768  & \alert{$+2.74$} & 92.1\% \\
+bge-large           & 1024 & $+2.04$         & 69.8\% \\
+bge-small           & 384  & $+2.00$         & 76.2\% \\
+e5-large            & 1024 & $+0.97$         & 68.3\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\itshape \textbf{Más grande $\neq$ mejor}: bge-small (384d) supera a e5-large (1024d).}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.2em}
+\begin{insight}
+\scriptsize Hiperparámetros del \textbf{filtro} son robustos ($\pm 0.5$pp). Los del \textbf{embedding} y \textbf{clasificador} dominan la varianza.
+\end{insight}
+\end{frame}
+
+% =============================================================================
+% GRUPO: Métricas Extra  (frametitle = grpMetricas)
+% =============================================================================
+\setbeamercolor{frametitle}{fg=white, bg=grpMetricas}
+
+% --- B5: Tabla completa de baselines modernos ---
+\begin{frame}{Backup B5: Comparación con baselines modernos}
+\small
+\textbf{1.890 configuraciones, 10 métodos, 3 clasificadores:}
+
+\vspace{0.5em}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Método                         & $\Delta$F1 vs.\ SMOTE & $p$ Bonf. & Win-rate \\
+\midrule
+\textbf{Soft-weighted (ours)}  & \alert{$+2{.}61$}     & $<0{.}0001$ & 88.9\% \\
+\textbf{Binary-filter (ours)}  & $+2{.}39$             & $<0{.}0001$ & 79.4\% \\
+No augmentation                & $+0{.}64$             & $<0{.}05$   & 56.0\% \\
+Embedding mixup                & $-0{.}01$             & n.s.        & 51.0\% \\
+Contextual BERT                & $-0{.}26$             & n.s.        & 48.0\% \\
+T5 paraphrase                  & $-0{.}35$             & n.s.        & 47.0\% \\
+Random oversample              & $-0{.}32$             & n.s.        & 47.0\% \\
+EDA                            & $-0{.}49$             & $<0{.}05$   & 41.0\% \\
+Back-translation               & $-0{.}50$             & $<0{.}05$   & 40.0\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{insight}
+\scriptsize Todas las técnicas modernas \textbf{pierden} contra SMOTE; solo el filtrado geométrico gana.
+\end{insight}
+\end{frame}
+
+% --- B11: Las clases que más ganan (movida desde Resultados) ---
+\begin{frame}{Backup B11: Las clases que más ganan --- las que partían perdiendo}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+\textbf{Dataset} & \textbf{Clase} & \textbf{SMOTE} & \textbf{Ours} & \textbf{$\Delta$} \\
+\midrule
+\rowcolor{uaiorange!12}\multicolumn{5}{l}{\textit{Clases con F1 base bajo}} \\
+emotion       & \textbf{anger}         & 27.8 & 44.6 & \alert{\textbf{+16.9}} \\
+20news        & \textbf{alt.atheism}   & 50.9 & 65.9 & \alert{\textbf{+15.0}} \\
+emotion       & joy                    & 29.4 & 42.6 & \alert{+13.3} \\
+hate\_speech  & \textbf{offensive}     & 73.3 & 86.3 & \alert{+13.0} \\
+emotion       & fear                   & 48.8 & 59.0 & +10.2 \\
+\midrule
+\rowcolor{methodSMOTE!10}\multicolumn{5}{l}{\textit{Clases con F1 base alto}} \\
+20news        & comp.graphics          & 90.8 & 91.3 & +0.5 \\
+emotion       & sadness                & 41.3 & 42.3 & +1.0 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+{\scriptsize\itshape 10-shot; 3 clasificadores lineales.}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\small
+\textbf{Patrón:} las clases \alert{difíciles inicialmente} son las que más ganan con filtrado geométrico.
+
+\vspace{0.5em}
+\begin{itemize}\setlength\itemsep{1pt}\scriptsize
+  \item ``anger'' arranca en \textbf{27.8\%} (poco discriminable).
+  \item Termina en \textbf{44.6\%}: $+16.9$ pp.
+  \item ``comp.graphics'' parte ya en 90.8\%: poco margen, ganancia $+0.5$ pp.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{insight}
+\scriptsize
+Donde el clasificador \textbf{ya rinde bien}, el filtrado aporta poco.\\
+Donde \textbf{tropieza}, el filtrado densifica la región correcta y \alert{refuerza la frontera}.
+\end{insight}
+\end{column}
+
+\end{columns}
+
+\mensaje{El método actúa justo donde el modelo más lo necesita.}
+\end{frame}
+
+% --- B10: Por qué estos datasets (movida desde Metodología) ---
+\begin{frame}{Backup B10: ¿Por qué estos datasets de clasificación?}
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{\small Experimento principal --- 7 datasets}
+\scriptsize
+Buscan \textbf{cobertura en tres ejes}:
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \textbf{Granularidad:} 2 $\to$ 20 clases.
+  \item \textbf{Dominio:} spam, odio, noticias, emoción, ontología.
+  \item \textbf{Estilo:} corto/largo, formal/informal, social/curado.
+\end{itemize}
+\vspace{0.4em}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \dataset{sms\_spam} (2): NLP canónico, frase corta.
+  \item \dataset{hate\_speech\_davidson} (3): dominio sensible.
+  \item \dataset{20newsgroups}, \dataset{ag\_news} (4): noticias.
+  \item \dataset{emotion} (6): el ejemplo recurrente.
+  \item \dataset{dbpedia14} (14): ontología Wikipedia.
+  \item \dataset{20newsgroups\_20class} (20): máxima granularidad.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{\small Escalabilidad --- 3 datasets adicionales}
+\scriptsize
+Responden la pregunta:\\[2pt]
+\alert{¿el filtrado sigue funcionando con muchas clases?}
+\vspace{0.4em}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \dataset{trec6} (6): preguntas TREC, mismo régimen de clases que el principal pero distinto dominio. Sirve de \textbf{control}.
+  \item \dataset{banking77} (77): intenciones bancarias, granularidad fina con clases semánticamente cercanas.
+  \item \dataset{clinc150} (150): intenciones de diálogo de asistentes virtuales. \textbf{Caso extremo}.
+\end{itemize}
+\vspace{0.4em}
+Permiten medir \textbf{degradación del filtrado} al aumentar el número de clases.
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Diez datasets, dos preguntas: ¿qué tan bueno es el filtrado? ¿hasta dónde escala?}
+\end{frame}
+
+% --- B9: Escalabilidad ---
+\begin{frame}{Backup B9: Escalabilidad --- ¿por qué decae con muchas clases?}
+\begin{columns}[T]
+\begin{column}{0.58\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=5.3cm, keepaspectratio]{fig_scaling_nclasses.png}
+\end{column}
+\begin{column}{0.42\textwidth}
+\small
+\textbf{La ganancia cae con más clases.}
+\scriptsize
+\vspace{0.2em}
+\begin{itemize}\setlength\itemsep{1pt}
+  \item Sweet spot \textbf{2--6 clases}: $+3$ a $+7$pp.
+  \item dbpedia14 (14): $+0{.}40$; banking77 (77): \alert{$-0{.}99$}; clinc150 (150): $+0{.}01$.
+  \item Spearman $\rho=-0{.}260$ \cita{$p=0.003$, $n=132$}.
+\end{itemize}
+\vspace{0.25em}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{\small Mecanismo}
+\scriptsize Con muchas clases el espacio se \textbf{fragmenta}: todo cae ``lejos'' del ancla y la distancia pierde poder discriminativo. Además, clases semánticamente cercanas (banking77) se solapan.
+\end{block}
+\end{column}
+\end{columns}
+\begin{insight}
+\scriptsize Límite por diseño: el método es para \textbf{bajo-recurso con pocas clases} (2--6), no para taxonomías de 77+ clases (ahí convienen enfoques jerárquicos).
+\end{insight}
+\end{frame}
+
+% --- B13: NER — filtrado vs LLM sin filtrar ---
+\begin{frame}{Backup B13: NER --- ¿cuánto aporta el filtro sobre el LLM sin filtrar?}
+\begin{columns}[T]
+
+\begin{column}{0.54\textwidth}
+\centering
+{\scriptsize\textbf{$\Delta$F1 vs.\ LLM sin filtrar} \cita{pareado, 9 datasets}}\\[2pt]
+\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.46]
+  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.4);
+  \node[below, font=\tiny] at (0,-0.35) {sin filtrar = 0};
+  \draw[->,thick,uaigray] (-7.2,-0.3) -- (2.6,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \foreach \x in {-6,-4,-2,2}{ \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38); }
+  % positivos
+  \fill[methodOurs] (0,3.6) rectangle (1.98,4.0);
+  \node[right, font=\tiny] at (2.08,3.8) {\textbf{Mejor filtro/dataset $+1.98$} (8/9)};
+  \fill[methodOurs!80] (0,2.9) rectangle (0.89,3.3);
+  \node[right, font=\tiny] at (0.99,3.1) {LOF $+0.89$};
+  \fill[methodOurs!70] (0,2.2) rectangle (0.86,2.6);
+  \node[right, font=\tiny] at (0.96,2.4) {Cascade L1 $+0.86$ (n.s.)};
+  % negativo
+  \fill[methodWorse] (-6.58,1.2) rectangle (0,1.6);
+  \node[left, font=\tiny, color=uaiorange] at (-6.68,1.4) {\textbf{Combined $-6.58$}};
+\end{tikzpicture}\\[2pt]
+{\scriptsize\itshape El filtro fijo agrega poco (no-sig.); el AND (combined) \textbf{sobre-filtra}.}
+\end{column}
+
+\begin{column}{0.46\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{\small El grueso lo aporta el dato LLM}
+\scriptsize
+F1 macro medio (9 datasets):\\[3pt]
+\centering
+sin aumentar \textbf{23.3} $\xrightarrow{+8.4}$ LLM s/filtrar \textbf{31.7} $\xrightarrow{+0.9}$ filtrado \textbf{32.6}
+\end{block}
+
+\vspace{0.3em}
+\textbf{Filtrado vs sin filtrar por $n$-shot:}\\[2pt]
+\centering
+\scriptsize
+\begin{tabular}{@{}lr@{}}
+\toprule
+$n$-shot & $\Delta$ (cascade L1) \\
+\midrule
+10 & $+1.18$ \\
+25 & \alert{$+1.89$} \\
+50 & $-0.48$ \\
+\bottomrule
+\end{tabular}\\[2pt]
+{\tiny Igual que en clasificación: el filtro ayuda en bajo-recurso.}
+\end{column}
+
+\end{columns}
+
+\begin{insight}
+\scriptsize El titular de la slide principal ($\sim\!+9.6$ vs sin aumentar) combina \textbf{dato LLM} ($+8.4$) y \textbf{filtro}. El aporte marginal del filtro sobre el LLM sin filtrar es \textbf{modesto} ($+0.9$ fijo, n.s.\ $\to$ $+1.98$ mejor-por-dataset, 8/9), pero \textbf{positivo y en otra tarea sin modificar el filtro}: la prueba más fuerte de generalización.
+\end{insight}
+\end{frame}
+
+% =============================================================================
+% GRUPO: Experimentos Extra  (frametitle = grpExperimentos)
+% =============================================================================
+\setbeamercolor{frametitle}{fg=white, bg=grpExperimentos}
+
+% --- B3: Closed-loop (iterative prompting) ---
+\begin{frame}{Backup B3: Closed-loop vs.\ pasada única}
+\small
+\textbf{Hipótesis exploratoria:} ¿mejora si re-prompteamos al LLM con feedback de los rechazos?
+
+\vspace{0.5em}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Estrategia                          & $\Delta$F1 vs.\ SMOTE & Win-rate \\
+\midrule
+Closed-loop (5 iteraciones)         & $+1{.}12$             & 52\% \\
+Pasada única \alert{$\star$}        & $+2{.}08$             & 80\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\textbf{¿Por qué falla closed-loop?}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Tasas de aceptación \textbf{decrecen} con iteraciones (-12.3 pp).
+  \item Fallo dominante: \texttt{DISTANCE\_OUTLIER} (77\%).
+  \item Cuello de botella: \textbf{el LLM}, no el prompt.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{insight}
+\scriptsize Pasada única + filtro simple $>$ ingeniería iterativa de prompt.
+\end{insight}
+\end{frame}
+
+% --- B4: Geometric vs Teacher ---
+\begin{frame}{Backup B4: Filtrado geométrico vs.\ \textit{teacher}}
+\small
+\textbf{Comparación con un filtrado supervisado (teacher classifier):}
+
+\vspace{0.5em}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Filtro & $\Delta$F1 vs.\ SMOTE & $p$ & Costo extra \\
+\midrule
+Geométrico (binary) & \alert{$+2{.}78$} & $<0{.}001$ & ninguno \\
+Teacher (binary)    & $+2{.}43$         & $<0{.}001$ & entrenar clf adicional \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\begin{insight}
+\scriptsize El filtro geométrico es \textbf{más general} (no se especializa en separabilidad lineal) y \textbf{más eficiente} (no requiere entrenamiento extra).
+\end{insight}
+\end{frame}
+
+% --- B12: Estrategias complejas no superan al filtro simple ---
+\begin{frame}{Backup B12: ¿Estrategias más ``inteligentes'' ganan? No.}
+\small
+Probamos dos formas de aplicar el filtro \textbf{más sofisticadas} que ``a todas las clases por igual''. Ninguna supera a la versión simple y uniforme.
+
+\vspace{0.3em}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\centering
+{\small\textbf{1. Por etapas (\emph{curriculum})}}\\[2pt]
+{\scriptsize Incorporar las candidatas del LLM \textbf{de a poco}, de las más fáciles a las más difíciles, en vez de todas juntas.}\\[5pt]
+\scriptsize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Estrategia & $\Delta$F1 vs SMOTE \\
+\midrule
+\rowcolor{uaigreen!12}
+Todas a la vez (simple) & $+2{.}61$ \\
+Por etapas (la mejor) & $+2{.}74$ \\
+\bottomrule
+\end{tabular}\\[4pt]
+{\tiny\itshape Ganancia de las etapas: solo $+0{.}13$pp, a costa de más complejidad.}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\centering
+{\small\textbf{2. Mezcla LLM/SMOTE adaptada por clase}}\\[2pt]
+{\scriptsize Decidir \textbf{para cada clase} cuánto usar del LLM y cuánto de SMOTE (según distintas reglas), en vez de la misma receta para todas.}\\[5pt]
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+¿Cómo se decide la mezcla? & $\Delta$ & Win \\
+\midrule
+\rowcolor{uaigreen!12}
+Igual para todas (uniforme) & \alert{$+2{.}33$} & 91\% \\
+Ajustada por clase (CV) & $+0{.}77$ & 36\% \\
+Ajustada por clase (oráculo) & $+0{.}44$ & 29\% \\
+Ajustada por clase (mediana) & $-1{.}11$ & 52\% \\
+\bottomrule
+\end{tabular}\\[4pt]
+{\tiny\itshape Cuanto más se ``especializa'' la mezcla por clase, \textbf{peor} (incluso el ``oráculo'' ideal).}
+\end{column}
+
+\end{columns}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Aplicar el filtro \textbf{uniforme y simple} gana. Ni el \emph{curriculum} por etapas, ni la mezcla adaptada por clase, ni los filtros multi-criterio (combined $-3{.}28$), ni los niveles extra de la cascada (L2--L4 $\approx$ L1) \textbf{superan} la versión simple. Es el mismo hallazgo central: \emph{simple $>$ complejo}.
+\end{insight}
+\end{frame}
+
+% --- B8: Circularidad del embedding ---
+\begin{frame}{Backup B8: Circularidad del embedding --- tres defensas independientes}
+\small
+\textbf{Crítica anticipada:} \textit{``Usás \texttt{all-mpnet} para filtrar Y como \textit{features} del clasificador: el filtro favorece artificialmente su propio espacio.''}
+
+\vspace{0.5em}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{2.9cm}p{5.0cm}r@{}}
+\toprule
+\textbf{Defensa} & \textbf{Por qué rompe el círculo} & \textbf{Resultado} \\
+\midrule
+\rowcolor{uaigreen!8}
+(1) 4 embeddings distintos & filtrar+clasificar con mpnet, bge-large, bge-small, e5 & $+2{.}74$ a $+0{.}97$pp; \textbf{90.5\% acuerdo} \\
+(2) \textit{Teacher} independiente & filtrar con un clasificador aparte, no el espacio geométrico & geom.\ $+2{.}78 \geq$ teacher $+2{.}43$ \\
+\rowcolor{uaigreen!8}
+(3) NER, pipeline externo & evaluación con SpaCy + seqeval (independiente del embedding) & cascade L1 $+9{.}61$pp \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{insight}
+\scriptsize Tres caminos \textbf{independientes} (distinto espacio, distinto filtro, distinta tarea+evaluación) dan la misma conclusión: la mejora \textbf{no} es un artefacto del embedding compartido.
+\end{insight}
+\end{column}
+\begin{column}{0.38\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{\small Límite honesto}
+\scriptsize 9.5\% de desacuerdo entre embeddings en 50-shot: posible efecto residual marginal.
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+% --- B1: Validación de SMOTE ---
+\begin{frame}{Backup B1: SMOTE — validación de implementación}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{Crítica anticipada del comité:}
+\begin{quote}\itshape\scriptsize
+``¿Su SMOTE \textit{dummy-binary} es equivalente al SMOTE estándar binary-mask?''
+\end{quote}
+
+\textbf{Validación:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item 27 comparaciones lado a lado.
+  \item Diferencia máxima: $0{.}0000$ pp.
+  \item F1 idénticos en todos los datasets.
+\end{itemize}
+
+\vspace{0.3em}
+\begin{insight}
+\scriptsize Línea base SMOTE \textbf{robusta y reproducible}.
+\end{insight}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{Resumen}
+\scriptsize
+\begin{tabular}{@{}lr@{}}
+\toprule
+Implementación   & F1 medio \\
+\midrule
+dummy-binary     & 0.7124 \\
+binary-mask std. & 0.7124 \\
+\midrule
+Diferencia       & \textbf{0.0000} \\
+\bottomrule
+\end{tabular}
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}
+

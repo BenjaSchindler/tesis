@@ -1,0 +1,431 @@
+% =============================================================================
+% Bloque 7: Resultados (slides 17–24) — corazón de la defensa
+% =============================================================================
+
+\section{Resultados}
+
+% --- Slide 17: HEADLINE ---
+\begin{frame}{Resultado principal}
+\begin{columns}[T]
+
+\begin{column}{0.42\textwidth}
+\vspace{0.4em}
+\begin{headline}
+\cifra{$+2.25$ pp}{puntos de macro F1\\ sobre SMOTE}
+\end{headline}
+
+\vspace{0.5em}
+\small
+\begin{itemize}\setlength\itemsep{2pt}
+  \item En la nota: de \textbf{71.2} a \textbf{73.5}.
+  \item Gana en el \textbf{83{.}8\%} de los casos.
+  \item Real, no azar: $p<0{.}0001$.
+  \item Efecto de tamaño medio-grande.
+  \item $N = 3{.}675$ experimentos.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.58\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=6.5cm, keepaspectratio]{fig_boxplot_deltas.png}\\[2pt]
+{\scriptsize Distribución de $\Delta$F1 por método.}
+\end{column}
+
+\end{columns}
+
+\mensaje{El método propuesto supera todas las líneas base, incluidas las modernas.}
+\end{frame}
+
+% --- Slide 18a: Antes vs después del filtrado ---
+\begin{frame}{El mapa en acción: antes y después del control de calidad}
+\centering
+\includegraphics[width=0.92\linewidth, height=4.6cm, keepaspectratio]{fig_tsne_before_after_20newsgroups.png}
+
+\vspace{0.1em}
+{\scriptsize Noticias, 4 temas, 10 ejemplos reales por clase (círculos). \textbf{Izq.:} todo lo que escribió la IA (triángulos). \textbf{Der.:} solo lo que pasó el filtro.}
+
+\mensaje{El filtro descarta lo que cae entre medio de dos clases o en la periferia; conserva lo que refuerza al grupo.}
+\end{frame}
+
+% --- Slide 18b: t-SNE filtrado vs SMOTE ---
+\begin{frame}{En el mismo mapa: SMOTE vs.\ nuestro filtro}
+\centering
+\includegraphics[width=0.85\linewidth, height=5.0cm, keepaspectratio]{fig_tsne_filtered_vs_smote_emotion.png}
+
+\vspace{0.1em}
+{\scriptsize Emociones, 6 clases, 10 ejemplos por clase: triángulos = textos de IA filtrados, cuadrados = puntos de SMOTE.}
+
+\mensaje{SMOTE se apila sobre lo conocido; la IA filtrada agranda cada grupo sin invadir a los vecinos.}
+\end{frame}
+
+% =============================================================================
+% [DIVULGACIÓN] Tres slides ocultas para la versión de público general:
+%   «Retornos decrecientes», «Beneficios por clasificador», «Por número de clases».
+% Reactivar quitando \iffalse ... \fi.
+% =============================================================================
+\iffalse
+% --- Slide 19: F1 vs n-shot ---
+\begin{frame}{Retornos decrecientes con más datos}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=5.1cm, keepaspectratio]{fig_delta_by_nshot.png}\\[2pt]
+{\scriptsize Mejora según cuántos ejemplos reales hay por clase.}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\small
+\textbf{El método brilla donde más se necesita:}
+\vspace{0.3em}
+
+\begin{tabular}{@{}lc@{}}
+\toprule
+Ejemplos por clase & Mejora ($\Delta$F1) \\
+\midrule
+\textbf{10} & \alert{$+4{.}89$ pp} \\
+25          & $+2{.}17$ pp        \\
+50          & $+0{.}76$ pp        \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{insight}
+\scriptsize Cuanto menos datos hay, más útil es el control de calidad.
+\end{insight}
+\end{column}
+
+\end{columns}
+
+\mensaje{Caso de uso ideal: 10 ejemplos por clase.}
+\end{frame}
+
+% --- Slide 20: Por clasificador ---
+\begin{frame}{Beneficios de la ponderación suave por clasificador}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=5.5cm, keepaspectratio]{fig_classifier_comparison.png}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\small
+\begin{tabular}{@{}lrc@{}}
+\toprule
+Clasificador & Mejora & ¿Real? \\
+\midrule
+SVC (lineal)        & \alert{$+2{.}99$ pp} & \good \\
+Ridge (lineal)      & $+2{.}69$ pp         & \good \\
+Red neuronal (MLP)  & $+2{.}16$ pp         & \good \\
+Reg.\ logística     & $+1{.}98$ pp         & \good \\
+Random Forest$^{\dagger}$ & $+1{.}42$ pp   & n.s. \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.4em}
+{\scriptsize \good\ $=$ comprobada estadísticamente; n.s.\ $=$ no comprobada.\\[2pt]
+$^{\dagger}$ Los bosques ignoran los pesos por calidad; su pariente XGBoost sí los usa ($+9{.}1$ pp).}
+\end{column}
+
+\end{columns}
+
+\mensaje{Funciona con casi todos los tipos de modelo; los lineales son los que más ganan.}
+\end{frame}
+
+% --- Slide 21: Sweet spot por número de clases ---
+\begin{frame}{¿Cuándo conviene aplicarlo? Por número de clases}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=5.5cm, keepaspectratio]{fig_heatmap_methods.png}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\small
+\textbf{El punto dulce: pocas clases.}
+\vspace{0.2em}
+
+\begin{tabular}{@{}lr@{}}
+\toprule
+N° de clases (ejemplo)     & Mejora \\
+\midrule
+6 (emociones, preguntas) & \alert{$+5{.}42$ pp} \\
+4 (temas de noticias)    & $+2{.}80$ pp \\
+2 (spam / no spam)       & $+3{.}18$ pp \\
+77 (intenciones banca)   & $-0{.}99$ pp \\
+150 (asistente virtual)  & $+0{.}01$ pp \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.4em}
+{\scriptsize Tendencia estadísticamente clara: a más clases, menor ganancia \cita{$\rho=-0.26$, $p=0.003$}.}
+\end{column}
+
+\end{columns}
+
+\mensaje{Con 77+ clases el mapa se fragmenta en territorios diminutos y el filtro pierde tracción.}
+\end{frame}
+\fi
+
+% --- Slide 21c: Agrupado por dificultad de la clase ---
+\begin{frame}{Resumen por dificultad: la mejora escala con el déficit}
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Dificultad (F1 base)} & \textbf{N clases} & \textbf{$\Delta$ medio} \\
+\midrule
+\rowcolor{uaiorange!18} Difícil ($<$30\%)        & 4 & \alert{\textbf{+10.44}} \\
+\rowcolor{uaiorange!8}  Media (30--60\%)         & 4 & +8.45 \\
+                        Fácil (60--80\%)         & 4 & +5.40 \\
+\rowcolor{methodSMOTE!10} Muy fácil ($>$80\%)   & 1 & +0.55 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.55]
+  \draw[->,uaigray] (0,0) -- (5.5,0) node[right]{F1 base};
+  \draw[->,uaigray] (0,0) -- (0,3.4) node[above]{$\Delta$F1};
+  \foreach \x/\lbl in {0.5/30,2/60,3.5/80}{
+    \draw[uaigray!50] (\x,-0.1) -- (\x,0.1);
+    \node[below, font=\tiny] at (\x,-0.1) {\lbl};
+  }
+  \fill[uaiorange] (0.25, 0) rectangle (0.75, 2.6);
+  \fill[uaiorange!70] (1.0, 0) rectangle (1.5, 2.1);
+  \fill[uaiorange!40] (2.25, 0) rectangle (2.75, 1.3);
+  \fill[methodSMOTE!60] (3.75, 0) rectangle (4.25, 0.15);
+  \node[font=\tiny, anchor=west] at (0.0, 3.2) {Spearman $\rho = -0.27$};
+\end{tikzpicture}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\small
+\textbf{Leído en el mapa:}
+\begin{itemize}\setlength\itemsep{1pt}\scriptsize
+  \item Las clases difíciles viven en \alert{zonas de frontera}, donde se mezclan con otras clases.
+  \item Los ejemplos filtrados \textbf{pueblan la zona correcta} de cada clase.
+  \item Eso aclara el límite entre clases justo donde el modelo más dudaba.
+\end{itemize}
+
+\vspace{0.4em}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{\small Implicancia práctica}
+\scriptsize
+Cuanto peor parte una clase, más la ayuda el método: la mejora llega sola \textbf{adonde más se necesita}.
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Mayor déficit inicial $\Rightarrow$ mayor ganancia: la mejora va a buscar a las clases débiles.}
+\end{frame}
+
+% =============================================================================
+% [DIVULGACIÓN] Slide oculta para la versión de público general.
+% Reactivar quitando \iffalse ... \fi.
+% =============================================================================
+\iffalse
+% --- Slide 22: Hallazgo contra-intuitivo ---
+\begin{frame}{Hallazgo contra-intuitivo: simple $>$ complejo}
+
+% =========================
+% FILA 1: dos charts arriba
+% =========================
+\begin{columns}[T]
+
+% --- Chart 1: vs SMOTE ---
+\begin{column}{0.5\textwidth}
+\centering
+{\scriptsize\textbf{$\Delta$F1 vs.\ SMOTE} \cita{exp.\ principal, 3.675 experimentos}}\\[1pt]
+\begin{tikzpicture}[every node/.style={font=\scriptsize}, scale=0.48]
+  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.8);
+  \node[below, font=\tiny] at (0,-0.35) {SMOTE = 0};
+  \draw[->,thick,uaigray] (-3.7,-0.3) -- (2.5,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \foreach \x in {-3,-2,-1,1,2}{
+    \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38);
+  }
+  % Positivas
+  \fill[methodOurs] (0,4.1) rectangle (2.25,4.5);
+  \node[right, font=\tiny] at (2.35,4.3) {\textbf{Cascade L1 soft\,$\dagger$ +2.25}};
+  \fill[methodOurs!70] (0,3.4) rectangle (0.88,3.8);
+  \node[right, font=\tiny] at (0.98,3.6) {LOF +0.88};
+  \fill[methodOther] (0,2.7) rectangle (0.72,3.1);
+  \node[right, font=\tiny] at (0.82,2.9) {None +0.72};
+  % Negativas
+  \fill[methodWorse] (-1.29,2.0) rectangle (0,2.4);
+  \node[left, font=\tiny] at (-1.39,2.2) {Emb.-Guided $-1.29$};
+  \fill[methodWorse] (-3.28,1.3) rectangle (0,1.7);
+  \node[left, font=\tiny, color=uaiorange] at (-3.38,1.5) {\textbf{Combined $-3.28$}};
+\end{tikzpicture}
+\end{column}
+
+% --- Chart 2: vs LLM sin filtrar ---
+\begin{column}{0.5\textwidth}
+\centering
+{\scriptsize\textbf{$\Delta$F1 vs.\ IA sin filtrar} \cita{comparación 1 a 1, $n{=}60$}}\\[1pt]
+\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.42]
+  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.0);
+  \node[below, font=\tiny] at (0,-0.35) {sin filtrar = 0};
+  \draw[->,thick,uaigray] (-7.5,-0.3) -- (2.5,-0.3) node[right, font=\tiny]{$\Delta$F1 (pp)};
+  \foreach \x in {-6,-4,-2,1}{
+    \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38);
+  }
+  \fill[methodOurs] (0,3.1) rectangle (1.10,3.5);
+  \node[right, font=\tiny] at (1.20,3.3) {\textbf{Cascade L1 \alert{+1.10}}};
+  \fill[methodWorse] (-0.79,2.3) rectangle (0,2.7);
+  \node[left, font=\tiny] at (-0.89,2.5) {LOF $-0.79$};
+  \fill[methodWorse] (-2.11,1.5) rectangle (0,1.9);
+  \node[left, font=\tiny] at (-2.21,1.7) {Emb.-Guided $-2.11$};
+  \fill[methodWorse] (-6.49,0.7) rectangle (0,1.1);
+  \node[left, font=\tiny, color=uaiorange] at (-6.59,0.9) {\textbf{Combined $-6.49$}};
+\end{tikzpicture}
+\end{column}
+
+\end{columns}
+
+\vspace{-0.3em}
+{\centering\scriptsize\itshape
+Solo la cascada L1 \alert{mejora} lo que la IA entrega tal cual; los filtros exigentes lo \textbf{empeoran}.\par}
+
+\vspace{0.1em}
+
+% =========================
+% FILA 2: insight + tabla
+% =========================
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{Insight clave}
+\scriptsize
+Los filtros con muchas exigencias \textbf{empeoran} las cosas.
+\vspace{0.1em}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Cercanía y parecido miden casi lo mismo: es \textbf{preguntar dos veces}.
+  \item Con 10 ejemplos, la densidad es poco confiable.
+  \item Exigirlo \textbf{todo a la vez} mata la variedad.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\centering
+{\scriptsize\textbf{Ablación cascada} \cita{$n{=}60$ configs}}\\[3pt]
+{\scriptsize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Nivel} & \textbf{Mejora vs SMOTE} & \textbf{\% victorias} \\
+\midrule
+L0 \textit{\textcolor{uaigray!85}{(sin filtro)}}      & $-0{.}518$ & $50{.}0\%$ \\
+\rowcolor{uaigreen!12}
+L1\,\alert{$\star$} \textit{\textcolor{uaigray!85}{(cercanía)}}   & \alert{$\boldsymbol{+1{.}942}$} & \alert{$\boldsymbol{91{.}7\%}$} \\
+L2 \textit{\textcolor{uaigray!85}{(+\,parecido)}}      & $+1{.}942$ & $91{.}7\%$ \\
+L3 \textit{\textcolor{uaigray!85}{(+\,vecindario)}}    & $+1{.}950$ & $91{.}7\%$ \\
+L4 \textit{\textcolor{uaigray!85}{(+\,centro)}}        & $+1{.}923$ & $91{.}7\%$ \\
+\bottomrule
+\end{tabular}}\\[4pt]
+{\tiny\itshape Sumar preguntas no cambia nada: elegimos la más simple, \textbf{L1}.}
+\end{column}
+
+\end{columns}
+\end{frame}
+\fi
+
+% --- Slide 23: Robustez multi-LLM y multi-embedding ---
+\begin{frame}{Robustez: ¿importa qué IA escribe, o qué mapa se usa?}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=\linewidth, height=4.6cm, keepaspectratio]{fig_multi_llm_comparison.png}\\[2pt]
+\textbf{5 IAs generadoras probadas}\\
+{\scriptsize Gemini, GPT-5, Claude, Kimi, GLM}\\
+{\scriptsize Todas mejoran: entre $+1{.}49$ y $+2{.}31$ pp}\\
+{\scriptsize Sin diferencias significativas entre ellas}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{4 «mapas» (embeddings) distintos}
+\scriptsize
+\begin{tabular}{@{}lr@{}}
+\toprule
+Modelo de mapa & Mejora \\
+\midrule
+mpnet-base-v2     & $+2{.}74$ pp \\
+bge-large         & $+2{.}04$ pp \\
+bge-small         & $+2{.}00$ pp \\
+e5-large          & $+0{.}97$ pp \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}\\
+{\scriptsize Los 4 mapas coinciden en el veredicto el 90.5\% de las veces.}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Da lo mismo qué IA escribe y qué mapa se usa: el método funciona igual.}
+\end{frame}
+
+% =============================================================================
+% [DIVULGACIÓN] Slide oculta para la versión de público general.
+% Reactivar quitando \iffalse ... \fi.
+% =============================================================================
+\iffalse
+% --- Slide 24: NER ---
+\begin{frame}{Generalización a NER: \textit{el filtro funciona en otra tarea}}
+\begin{columns}[T]
+
+\begin{column}{0.45\textwidth}
+\small
+\textbf{La prueba de fuego} — otra tarea, el mismo filtro:
+\begin{itemize}\setlength\itemsep{0pt}
+  \item 3 corpus de entidades (personas, lugares\dots).
+  \item Adaptamos los datos de entrada, \textbf{no el filtro}.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{headline}
+{\color{uaiorange}\bfseries\LARGE $+9{.}61$ pp}\\[3pt]
+{\color{uaigray}\scriptsize \textbf{vs.\ no aumentar} \textperiodcentered\ cascada L1\\($p=0.0003$; con 10 ejemplos: $+15.15$)}
+\end{headline}
+\end{column}
+
+\begin{column}{0.55\textwidth}
+\centering
+{\scriptsize\textbf{$\Delta$F1 vs.\ IA sin filtrar} \cita{comparación 1 a 1, 9 corpus}}\\[4pt]
+\begin{tikzpicture}[every node/.style={font=\tiny}, scale=0.44]
+  \draw[uaigray, dashed, thick] (0,-0.3) -- (0,4.4);
+  \node[below, font=\tiny] at (0,-0.35) {sin filtrar $=0$};
+  \draw[->,thick,uaigray] (-7.0,-0.3) -- (2.0,-0.3);
+  \node[font=\tiny] at (-3.3,-0.85) {$\Delta$F1 (pp)};
+  \foreach \x in {-6,-4,-2}{ \draw[uaigray!50] (\x,-0.22) -- (\x,-0.38) node[below, font=\tiny]{\x}; }
+  % positivos (labels cortos, anclados a la derecha)
+  \fill[methodOurs] (0,3.6) rectangle (1.98,4.0);
+  \node[right, font=\tiny] at (2.1,3.8) {\textbf{Mejor/dataset $+1.98$} (8/9)};
+  \fill[methodOurs!80] (0,2.9) rectangle (0.89,3.3);
+  \node[right, font=\tiny] at (2.1,3.1) {LOF $+0.89$};
+  \fill[methodOurs!70] (0,2.2) rectangle (0.86,2.6);
+  \node[right, font=\tiny] at (2.1,2.4) {Cascade L1 $+0.86$ (n.s.)};
+  % negativo
+  \fill[methodWorse] (-6.58,1.2) rectangle (0,1.6);
+  \node[right, font=\tiny, color=uaiorange] at (2.1,1.4) {\textbf{Combined $-6.58$}};
+\end{tikzpicture}\\[3pt]
+{\scriptsize\itshape La IA hace el grueso; el filtro \textbf{refina}; el doble filtro \textbf{sobre-filtra}.}
+\end{column}
+
+\end{columns}
+
+\mensaje{La misma vara de calidad sirve para tareas distintas: el mapa no sabe de tareas.}
+\end{frame}
+\fi

@@ -1,0 +1,336 @@
+% =============================================================================
+% Bloque 6: Metodología (slides 12–16)
+% =============================================================================
+
+\section{Metodología}
+
+% --- Slide 12: Pipeline arquitectónico ---
+\begin{frame}{Pipeline: del texto real al clasificador entrenado}
+\centering
+\begin{tikzpicture}[
+    every node/.style={font=\scriptsize},
+    box/.style={draw=uaiblue, rounded corners, fill=uaibluelight!15,
+                minimum width=2cm, minimum height=0.9cm, text width=2cm, align=center},
+    box2/.style={draw=uaiorange, very thick, rounded corners, fill=uaiorange!15,
+                 minimum width=2cm, minimum height=0.9cm, text width=2cm, align=center},
+    box3/.style={draw=uaigreen, very thick, rounded corners, fill=uaigreen!15,
+                 minimum width=2cm, minimum height=0.9cm, text width=2cm, align=center},
+    arrow/.style={->, >=Stealth, thick, uaiblue!70}
+  ]
+  % Fila superior
+  \node[box]  (real)  at (0,2)    {\textbf{Datos\\reales}\\\tiny 10/25/50 por clase};
+  \node[box]  (enc)   at (2.6,2)  {\textbf{Al mapa}\\\tiny embeddings};
+  \node[box]  (llm)   at (5.2,2)  {\textbf{IA genera}\\\tiny Gemini\\\tiny $3\times$ de sobra};
+  \node[box]  (cands) at (7.8,2)  {\textbf{Candidatas}\\\tiny puntos en el mapa};
+  \node[box2] (filt)  at (10.4,2) {\textbf{Control de calidad}\\\tiny filtro geométrico};
+
+  % Fila inferior
+  \node[box2] (weight) at (10.4,0)  {\textbf{Pesos}\\\tiny según calidad};
+  \node[box3] (clf)    at (5.2,0)   {\textbf{Clasificador}\\\tiny 5 tipos distintos};
+  \node[box]  (eval)   at (0,0)     {\textbf{Evaluación}\\\tiny con datos nunca vistos};
+
+  % Flechas
+  \draw[arrow] (real)  -- (enc);
+  \draw[arrow] (enc)   -- (llm);
+  \draw[arrow] (llm)   -- (cands);
+  \draw[arrow] (cands) -- (filt);
+  \draw[arrow] (filt)  -- (weight);
+  \draw[arrow] (weight) -- (clf);
+  \draw[arrow] (real.south)  .. controls +(0,-0.6) and +(-0.5,0) .. (clf.west);
+  \draw[arrow] (clf)   -- (eval);
+  % Atajo punteado: filtro binario (sin ponderación suave)
+  \draw[->, >=Stealth, thick, uaibluedark!60, dashed]
+       (filt.south west) .. controls +(-1.2,-0.7) and +(1.0,0.7) ..
+       node[midway, above, font=\tiny\itshape, color=uaibluedark!70] {sin pesos}
+       (clf.north east);
+\end{tikzpicture}
+
+\vspace{0.5em}
+\mensaje{Las dos piezas nuevas (control de calidad y pesos) no tocan la IA: funcionan con cualquiera.}
+\end{frame}
+
+% --- Slide 13: Protocolo experimental (vuelve, antes de los datasets) ---
+\begin{frame}{Protocolo experimental: 8.000+ experimentos}
+\small
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{Probamos la idea en todas las combinaciones:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \textbf{13 conjuntos de datos} en 9 dominios.
+  \item \textbf{Escasez:} 10 / 25 / 50 ejemplos por clase.
+  \item \textbf{5 tipos} de clasificador.
+  \item \textbf{10 métodos} de aumentación en competencia.
+  \item \textbf{5 IAs generadoras} (Gemini, GPT-5, Claude, Kimi, GLM).
+  \item \textbf{4 mapas} (modelos de embeddings) distintos.
+  \item \textbf{5 repeticiones} de cada experimento.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\textbf{Cómo comparamos:}
+\begin{itemize}\setlength\itemsep{0pt}
+  \item Nota de calidad: \textbf{macro F1} (siguiente slide).
+  \item Cada método compite contra \textbf{SMOTE} en el mismo escenario exacto.
+  \item Pruebas estadísticas estrictas: descartan que la diferencia sea \alert{azar}.
+  \item También contamos \textbf{cuántas veces gana} cada método.
+\end{itemize}
+
+\vspace{0.3em}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{Volumen}
+\centering\bfseries\large 8.000+ experimentos
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- Slide 13b: Métrica de evaluación — Macro F1 (sin fórmulas, versión divulgación) ---
+\begin{frame}{¿Cómo medimos el éxito? Una nota justa: macro F1}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\small
+\textbf{El acierto global engaña:} un modelo que responde siempre «clase común» acierta el 95\%\dots\ ignorando por completo a la clase rara.
+
+\vspace{0.5em}
+\textbf{Macro F1} hace algo más justo:
+\begin{enumerate}\setlength\itemsep{3pt}
+  \item Le pone una \textbf{nota de 0 a 100 a cada clase}: qué tan bien la detecta, sin confundirla con otras.
+  \item \textbf{Promedia las notas}: cada clase pesa lo mismo, tenga 16 ejemplos o 720.
+\end{enumerate}
+
+\vspace{0.5em}
+\begin{insight}
+\scriptsize
+Como el promedio de notas por ramo: sacarse un 7 en el ramo fácil \textbf{no tapa} el 2 en el difícil.
+\end{insight}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{\small Por qué nos sirve}
+\scriptsize
+\begin{itemize}\setlength\itemsep{1pt}
+  \item Un error en la clase rara \textbf{duele igual} que uno en la clase grande.
+  \item Si el modelo \emph{ignora} una clase chica, la nota cae de inmediato.
+\end{itemize}
+\end{block}
+
+\vspace{0.4em}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{\small Cómo leerán los resultados}
+\scriptsize
+\begin{itemize}\setlength\itemsep{1pt}
+  \item $\Delta$F1 $=$ cuántos \textbf{puntos de nota} sube (o baja) un método frente a SMOTE.
+  \item «pp» $=$ puntos porcentuales: $+2$ pp $=$ subir de 71 a 73.
+  \item Siempre evaluado sobre datos que el modelo \textbf{nunca vio}.
+\end{itemize}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Macro F1: la métrica honesta cuando hay clases raras.}
+\end{frame}
+
+% --- Slide 14: Conjuntos de datos (tabla) ---
+\begin{frame}{Conjuntos de datos: 13 corpus en 9 dominios}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.92}
+\begin{tabular}{@{}llccr@{}}
+\toprule
+\textbf{Conjunto} & \textbf{Dominio} & \textbf{Clases} & \textbf{$n$-shots} & \textbf{Test} \\
+\midrule
+\rowcolor{uaibluelight!12}\multicolumn{5}{l}{\textit{\color{uaibluedark}Clasificación de texto --- experimento principal}} \\
+\dataset{sms\_spam}              & Detección de spam        & 2  & 10, 25, 50 & 1.394 \\
+\dataset{hate\_speech\_davidson} & Discurso de odio         & 3  & 10, 25, 50 & 4.948 \\
+\dataset{20newsgroups}           & Noticias (4 cat.)        & 4  & 10, 25, 50 & 7.532 \\
+\dataset{ag\_news}               & Noticias (4 cat.)        & 4  & 10, 25, 50 & 7.600 \\
+\dataset{emotion}                & Emociones                & 6  & 10, 25, 50 & 2.000 \\
+\dataset{dbpedia14}              & Clasificación de temas   & 14 & 10, 25, 50 & 5.000 \\
+\dataset{20newsgroups\_20class}  & Noticias (20 cat.)       & 20 & 10, 25, 50 & 7.532 \\
+\midrule
+\rowcolor{uaiorange!12}\multicolumn{5}{l}{\textit{\color{uaibluedark}Adicionales --- escalabilidad por número de clases}} \\
+\dataset{trec6}                  & Preguntas                & 6   & 10, 25, 50 & 500 \\
+\dataset{banking77}              & Intenciones bancarias    & 77  & 10, 25, 50 & 3.080 \\
+\dataset{clinc150}               & Intenciones de diálogo   & 150 & 10, 25, 50 & 4.500 \\
+\midrule
+\rowcolor{uaigreen!12}\multicolumn{5}{l}{\textit{\color{uaibluedark}Reconocimiento de entidades nombradas (NER)}} \\
+\dataset{MultiNERD}              & Entidades generales      & 5 tipos & 10, 25, 50 & 10.000 \\
+\dataset{WikiANN}                & Entidades Wikipedia      & 3 tipos & 10, 25, 50 & 10.000 \\
+\dataset{Few-NERD}               & Entidades detalladas     & 8 tipos & 10, 25, 50 & 10.000 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+{\scriptsize\itshape $n$-shot estricto: 10 / 25 / 50 ejemplos por clase. Rango de complejidad: de binario (\dataset{sms\_spam}) a 150 clases (\dataset{clinc150}).}
+\end{frame}
+
+% --- Slide 16: ¿Qué es NER y por qué la usamos? ---
+\begin{frame}{¿Qué es NER y por qué la usamos?}
+
+\setbeamercolor{block title}{fg=white,bg=uaibluedark}
+\begin{block}{\small NER (\textit{Named Entity Recognition})}
+\scriptsize
+Tarea de NLP que \textbf{detecta nombres propios dentro del texto y los clasifica por tipo}: personas, lugares, organizaciones, fechas, etc.
+
+\vspace{0.3em}
+\textit{Ejemplo:} «Llamé a \colorbox{uaiblue!25}{\strut\,María\,} en \colorbox{uaiorange!25}{\strut\,Madrid\,} el \colorbox{uaigreen!25}{\strut\,2 de marzo\,}.»\hspace{0.5em}{\tiny \textcolor{uaiblue}{$\uparrow$PER}\hspace{1em}\textcolor{uaiorange}{$\uparrow$LOC}\hspace{1em}\textcolor{uaigreen}{$\uparrow$DATE}}
+\end{block}
+
+\vspace{0.4em}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\small
+\textbf{¿Por qué la usamos como prueba?}
+\begin{itemize}\setlength\itemsep{1pt}\scriptsize
+  \item Construimos el filtro para \textbf{clasificación}.
+  \item NER es una tarea NLP \textbf{distinta}: en vez de etiquetar la oración entera, se etiquetan palabras dentro.
+  \item Si el mismo filtro funciona en NER \textbf{sin cambiarlo} $\Rightarrow$ el filtro \alert{no depende de la tarea}.
+\end{itemize}
+
+\vspace{0.2em}
+{\scriptsize Es la prueba más fuerte de que el método \textbf{generaliza}.}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{\small 3 corpus, distinta complejidad}
+\scriptsize
+\begin{itemize}\setlength\itemsep{1pt}
+  \item \dataset{WikiANN} --- 3 tipos (PER, ORG, LOC). \textbf{Fácil}.
+  \item \dataset{MultiNERD} --- 5 tipos (+ DATE, MISC). Medio.
+  \item \dataset{Few-NERD} --- 8 tipos jerárquicos. \textbf{Difícil}.
+\end{itemize}
+\end{block}
+\end{column}
+
+\end{columns}
+
+\mensaje{Mismo filtro, otra tarea: si funciona acá, sirve en general.}
+\end{frame}
+
+% --- Slide 17: Los 4 filtros (versión divulgación) ---
+\begin{frame}{Cuatro maneras de hacer el control de calidad}
+\small
+Probamos cuatro «porteros» distintos, del más permisivo al más estricto:
+
+\vspace{0.5em}
+\begin{tabular}{@{}p{2.9cm}p{9.2cm}@{}}
+\toprule
+\textbf{Filtro} & \textbf{La pregunta que le hace a cada candidata} \\
+\midrule
+\textit{Ninguno} (control)  & Deja pasar todo. Sirve de punto de comparación. \\[4pt]
+\textit{LOF} (densidad)     & ¿Caíste en una zona \textbf{poblada} de tu clase, o en un descampado? \\[4pt]
+\textit{Cascada} (niveles 1--4) & ¿Qué tan \textbf{cerca} caíste de los ejemplos reales? Ordena a todas las candidatas y se queda con las mejores. \\[4pt]
+\textit{Combinado}          & Exige \textbf{dos condiciones a la vez} (densidad \textbf{y} parecido). El portero más estricto. \\
+\bottomrule
+\end{tabular}
+
+\mensaje{Mismo mapa, cuatro criterios: ¿cuál elige mejor?}
+\end{frame}
+
+% --- Slide 14: Cascade — pieza central (versión divulgación, sin fórmulas) ---
+\begin{frame}{La cascada: cuatro preguntas sobre cada candidata}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\small
+Cada texto que escribe la IA recibe un \textbf{puntaje de calidad} según dónde cayó su punto en el mapa. Cuatro preguntas, de la más simple a la más elaborada:
+
+\vspace{0.4em}
+\begin{description}\setlength\itemsep{4pt}\small
+  \item[Nivel 1 \alert{$\star$}] \textbf{Cercanía:} ¿qué tan cerca caíste del ejemplo real más próximo?
+  \item[Nivel 2] \textbf{Parecido:} ¿te «pareces» a ese ejemplo? (similitud de significado)
+  \item[Nivel 3] \textbf{Vecindario:} ¿tus vecinos en el mapa son de tu misma clase?
+  \item[Nivel 4] \textbf{Centro:} ¿qué tan cerca estás del centro de tu clase?
+\end{description}
+
+\vspace{0.4em}
+Las preguntas activas se combinan en un solo puntaje, y nos quedamos con las \textbf{$N$ mejores} candidatas del ranking.
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={font=\tiny}]
+  % Pirámide de niveles
+  \fill[uaiorange!40] (-2.5,2.4) rectangle (2.5,3.0);
+  \node[font=\scriptsize\bfseries] at (0,2.7) {Nivel 1: Cercanía $\star$};
+
+  \fill[uaibluelight!30] (-2.2,1.7) rectangle (2.2,2.3);
+  \node[font=\scriptsize] at (0,2.0) {Nivel 2: Parecido};
+
+  \fill[uaibluelight!20] (-1.9,1.0) rectangle (1.9,1.6);
+  \node[font=\scriptsize] at (0,1.3) {Nivel 3: Vecindario};
+
+  \fill[uaibluelight!15] (-1.6,0.3) rectangle (1.6,0.9);
+  \node[font=\scriptsize] at (0,0.6) {Nivel 4: Centro de clase};
+
+  % Flecha de score
+  \draw[->, very thick, uaiorange] (-3.2,0.3) -- (-3.2,3.0);
+  \node[font=\tiny, rotate=90] at (-3.6,1.65) {puntaje $\uparrow$};
+\end{tikzpicture}\\[4pt]
+{\scriptsize Se queda con las \textbf{$N$ mejores} del ranking\\ (no hay nota mínima de corte).}
+
+\vspace{0.5em}
+\begin{insight}
+\scriptsize \textbf{Adelanto:} la pregunta más simple —el Nivel 1, pura cercanía— resultará ser la única necesaria.
+\end{insight}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+% --- Slide 15: Ponderación suave (versión divulgación, sin ecuaciones) ---
+\begin{frame}{Ponderación suave: no todas las muestras valen lo mismo}
+\begin{columns}[T]
+
+\begin{column}{0.5\textwidth}
+\small
+La segunda contribución: en vez de \textbf{aceptar o rechazar} en seco, cada muestra entra al entrenamiento con un \textbf{peso según su puntaje}.
+
+\vspace{0.4em}
+\begin{itemize}\setlength\itemsep{2pt}
+  \item \textbf{Ejemplo real} $\Rightarrow$ peso máximo (1): en ellos confiamos siempre.
+  \item \textbf{Candidata bien ubicada} $\Rightarrow$ peso alto.
+  \item \textbf{Candidata dudosa} $\Rightarrow$ peso bajo: se usa, pero \alert{se le cree menos}.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{insight}
+\scriptsize
+Como un profesor que escucha a todo el curso, pero pondera más las respuestas de quienes muestran su desarrollo.
+\end{insight}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\centering
+\begin{tikzpicture}[every node/.style={font=\tiny}]
+  % Eje
+  \draw[->,uaigray] (0,0) -- (4.5,0) node[right]{puntaje};
+  \draw[->,uaigray] (0,0) -- (0,3.2) node[above]{peso};
+  \node[font=\tiny] at (4,-0.25) {1};
+  \node[font=\tiny] at (-0.2,3) {1};
+
+  % Curva tau=0.5 (peaked) — w = s^2
+  \draw[very thick, uaiorange, domain=0:4, samples=40, smooth] plot (\x, {3*(\x/4)^2});
+  \node[uaiorange, font=\scriptsize, align=center] at (3.1,2.75) {curva exigente\\(la que usamos)};
+
+  % Curva tau=1 (linear)
+  \draw[thick, uaiblue, dashed, domain=0:4, samples=40] plot (\x, {3*(\x/4)});
+  \node[uaiblue, font=\scriptsize, align=center] at (3.7,1.35) {curva\\neutra};
+
+  \node[align=center, font=\tiny] at (2.2,-0.7) {Puntaje de calidad de la muestra};
+\end{tikzpicture}\\[4pt]
+{\scriptsize La curva exigente castiga fuerte a las dudosas\\y premia a las muy bien ubicadas.}
+\end{column}
+
+\end{columns}
+
+\mensaje{El clasificador escucha a todas las muestras, pero les cree en proporción a su calidad.}
+\end{frame}
+
