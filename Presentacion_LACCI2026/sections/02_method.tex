@@ -1,0 +1,185 @@
+% =============================================================================
+% Method (slides 5–8, ~4 min)
+% =============================================================================
+
+% --- Slide 5: Pipeline ---
+\begin{frame}{Pipeline: decoupled from the generative model}
+\centering
+\vspace{0.4em}
+\begin{tikzpicture}
+  \node[stage]            (real)   at (0,0)    {\textbf{Real data}\\[1pt]{\sub 10 / 25 / 50\\per class}};
+  \node[stage]            (llm)    at (2.6,0)  {\textbf{LLM}\\[1pt]{\sub Gemini 3 Flash\\3$\times$ surplus}};
+  \node[stage]            (enc)    at (5.2,0)  {\textbf{Encoder}\\[1pt]{\sub all-mpnet-base-v2\\768-d, L2-norm}};
+  \node[stage=uaiorange]  (filt)   at (7.8,0)  {\textbf{Geometric filter}\\[1pt]{\sub top-$N$ by distance}};
+  \node[stage=uaiorange]  (weight) at (10.4,0) {\textbf{Soft weights}\\[1pt]{\sub $w(x)\in[0,1]$}};
+
+  \node[stage=uaigreen]   (clf)    at (9.1,-2.2)  {\textbf{Classifier}\\[1pt]{\sub LR, SVC, Ridge, RF, MLP}};
+  \node[stage]            (eval)   at (11.75,-2.2) {\textbf{Full test set}\\[1pt]{\sub macro F1}};
+
+  % our contribution
+  \begin{scope}[on background layer]
+    \node[draw=uaiorange, dashed, thick, rounded corners=5pt, fit=(filt)(weight),
+          inner sep=5pt, fill=uaiorange!4] (ours) {};
+  \end{scope}
+  \node[font=\scriptsize\bfseries, color=uaiorange, anchor=south] at (ours.north) {our contribution};
+
+  \draw[arrow] (real) -- (llm);
+  \draw[arrow] (llm) -- (enc);
+  \draw[arrow] (enc) -- (filt);
+  \draw[arrow] (filt) -- (weight);
+  \draw[arrow] (weight.south) -- node[lbl, right, pos=0.45] {weighted} ($(clf.north)+(0.7,0)$);
+  \draw[arrow, dashed] (filt.south) -- node[lbl, left, pos=0.45] {binary} ($(clf.north)+(-0.7,0)$);
+  \draw[arrow] (real.south) |- node[lbl, pos=0.75, below] {real samples, weight $=1$} (clf.west);
+  \draw[arrow] (clf) -- (eval);
+\end{tikzpicture}
+
+\vspace{0.5em}
+\small
+In-context generation only (no fine-tuning). Any LLM can be plugged in: \textbf{the filter only sees embeddings}.
+
+\keymessage{Two contributions: geometric filtering + soft weighting.}
+\end{frame}
+
+% --- Slide 6: Filters ---
+\begin{frame}{Geometric filters, from simple to complex}
+\begin{columns}[c]
+\begin{column}{0.58\textwidth}
+\footnotesize
+\renewcommand{\arraystretch}{1.3}
+\begin{tikzpicture}
+\node[inner sep=0pt] (tab) {%
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{5.3cm}@{}}
+\toprule
+\textbf{Filter} & \textbf{Criterion} \\
+\midrule
+None (control) & Random selection from LLM candidates. \\
+\rowcolor{uaigreen!14}
+\textbf{Cascade L1}\,$\star$ & \textbf{Euclidean distance to real examples of the class.} \\
+Cascade L2--L4 & + cosine similarity, + $k$NN purity, + centroid distance (geometric mean). \\
+LOF            & Local outlier factor: density vs.\ real examples. \\
+Combined       & Must pass LOF \textbf{and} a cosine threshold. \\
+\bottomrule
+\end{tabular}};
+\draw[-{Stealth[length=5pt]}, very thick, uaigray!45]
+  ([xshift=-6pt, yshift=-16pt]tab.north west) -- ([xshift=-6pt, yshift=2pt]tab.south west)
+  node[midway, sloped, below, font=\scriptsize, color=uaigray] {more criteria};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.42\textwidth}
+\small
+\textbf{Cascade level 1 score:}
+\[
+d(x) = \min_{a \in \mathcal{A}_c} \lVert x - a \rVert_2,
+\qquad s(x) = 1 - \frac{d(x)}{\max d}
+\]
+{\scriptsize $\mathcal{A}_c$: real examples of class $c$.}
+
+\vspace{0.4em}
+Candidates are \textbf{ranked} and the top-$N$ are kept: no hard threshold to tune.
+
+\vspace{0.6em}
+\begin{insight}
+\footnotesize
+\textbf{Spoiler:} the simplest filter (L1) wins.
+\end{insight}
+\end{column}
+\end{columns}
+\end{frame}
+
+% --- Slide 7: Soft weighting ---
+\begin{frame}{Soft weighting: beyond accept / reject}
+\begin{columns}[c]
+\begin{column}{0.5\textwidth}
+\small
+Instead of a binary decision, each kept candidate gets a \textbf{training weight}:
+
+\begin{enumerate}\setlength\itemsep{1pt}\footnotesize
+  \item Compute cascade L1 scores.
+  \item Keep the top-$N$ candidates.
+  \item Min-max normalize: $s_{\text{norm}}(x) \in [0,1]$.
+  \item Temperature scaling:
+\end{enumerate}
+\vspace{-0.4em}
+\[
+w(x) = \max\!\left(w_{\min},\ s_{\text{norm}}(x)^{1/T}\right)
+\]
+{\scriptsize $T = 0.5$ (exponent 2), $w_{\min}=0$. Real samples always get $w=1$.\\
+Weights are passed to the classifier as \texttt{sample\_weight}.}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  lacci, width=6.4cm, height=5.0cm,
+  xmin=0, xmax=1, ymin=0, ymax=1.05,
+  xtick={0,0.25,0.5,0.75,1}, ytick={0,0.25,0.5,0.75,1},
+  xticklabels={0,,0.5,,1}, yticklabels={0,,0.5,,1},
+  xmajorgrids, ymajorgrids,
+  xlabel={normalized score $s_{\text{norm}}(x)$},
+  ylabel={training weight $w(x)$},
+  legend pos=north west, clip=false,
+]
+  \addplot[methodSMOTE, thick, dashed, domain=0:1, samples=2] {x};
+  \addlegendentry{$T=1$ (linear)}
+  \addplot[uaiorange, line width=1.6pt, domain=0:1, samples=60] {x^2};
+  \addlegendentry{$T=0.5$ (ours)}
+  % worked example: a median candidate gets only a quarter of the weight
+  \draw[uaigray, densely dotted] (axis cs:0.5,0) -- (axis cs:0.5,0.25) -- (axis cs:0,0.25);
+  \fill[uaiorange] (axis cs:0.5,0.25) circle (2pt);
+  \node[font=\scriptsize, color=uaiorange, anchor=north west] at (axis cs:0.52,0.22) {$s=0.5 \Rightarrow w=0.25$};
+\end{axis}
+\end{tikzpicture}\\[2pt]
+{\scriptsize $T<1$ concentrates weight on the most class-consistent candidates.}
+\end{column}
+\end{columns}
+
+\keymessage{Geometrically consistent samples contribute more to training.}
+\end{frame}
+
+% --- Slide 8: Experimental setup ---
+
+\begin{frame}{Experimental setup: 6,700+ configurations}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.19\textwidth}\statTile{13}{datasets}{uaiblue}\end{column}
+\begin{column}{0.19\textwidth}\statTile{10}{methods}{uaiblue}\end{column}
+\begin{column}{0.19\textwidth}\statTile{5}{classifiers}{uaiblue}\end{column}
+\begin{column}{0.19\textwidth}\statTile{5}{LLMs}{uaiblue}\end{column}
+\begin{column}{0.19\textwidth}\statTile{3}{$n$-shot levels}{uaiblue}\end{column}
+\end{columns}
+
+\vspace{0.8em}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.53\textwidth}
+\small
+\textbf{Data} \srctag{9 domains; 10 / 25 / 50 per class; full test sets}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item \textbf{7 classification} (2--20 classes): sms\_spam, hate\_speech, 20newsgroups, ag\_news, emotion, dbpedia14, 20newsgroups (20 cl.)
+  \item \textbf{3 scalability} (6--150 classes): trec6, banking77, clinc150
+  \item \textbf{3 NER}: MultiNERD, WikiANN, Few-NERD
+\end{itemize}
+
+\vspace{0.2em}
+\textbf{Methods} \srctag{5 classifiers, 5 LLMs from 4 providers}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Ours (binary, soft) vs.\ SMOTE, random oversampling, EDA, back-translation, T5 paraphrase, BERT contextual, embedding mixup, no augmentation.
+\end{itemize}
+\end{column}
+\begin{column}{0.43\textwidth}
+\small
+\textbf{Statistics}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Metric: \textbf{macro F1}; $\Delta$ vs.\ SMOTE in pp.
+  \item Paired $t$-tests, \textbf{Bonferroni}-corrected.
+  \item Cohen's $d$, bootstrap 95\% CI (10k resamples).
+  \item \textbf{Win rate}: \% of configurations beating SMOTE.
+\end{itemize}
+
+\vspace{0.3em}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{Main comparison}
+\scriptsize
+21 dataset configs $\times$ 3 linear classifiers $\times$ 3 seeds $\times$ 10 methods = \textbf{1,890 runs}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}

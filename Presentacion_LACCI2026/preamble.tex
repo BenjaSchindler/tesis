@@ -1,0 +1,55 @@
+% Shared preamble for main.tex (full deck) and main_simple.tex (simple deck).
+% Load \documentclass[10pt,aspectratio=169]{beamer} before \input{preamble}.
+
+% --- Metropolis theme with UAI palette ---
+\usetheme[
+  progressbar=frametitle,
+  numbering=fraction,
+  block=fill
+]{metropolis}
+
+% --- Base packages ---
+\usepackage[english]{babel}
+\usepackage{fontspec}
+\usepackage{amsmath,amssymb}
+\usepackage{mathtools}
+\usepackage{booktabs,multirow}
+\usepackage{tikz}
+\usetikzlibrary{shapes,shapes.misc,arrows.meta,positioning,fit,calc,backgrounds,decorations.pathreplacing}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{tcolorbox}
+\usepackage{appendixnumberbeamer}
+\usepackage{pifont}
+
+% --- Font: Cantarell when available, otherwise the theme default ---
+\IfFontExistsTF{Cantarell}{%
+  \setsansfont{Cantarell}[
+    UprightFont    = *-Regular,
+    ItalicFont     = *-Regular,
+    BoldFont       = *-Bold,
+    BoldItalicFont = *-Bold,
+    Scale          = 0.95
+  ]%
+}{}
+
+% --- Custom UAI styles ---
+\usepackage{style/uai-colors}
+\usepackage{style/beamer-blocks}
+\usepackage{style/charts}
+\metroset{titleformat=regular}
+
+% --- Figure paths: own figures first, then the thesis figures ---
+\graphicspath{{figures/}{logos/}{../Escrito_Tesis/Figures/}}
+
+% --- Shorthands ---
+\newcommand{\dataset}[1]{\texttt{\small #1}}
+\newcommand{\good}{\textcolor{uaigreen}{\ding{51}}}
+\newcommand{\bad}{\textcolor{uaiorange}{\ding{55}}}
+
+% --- Title information ---
+\title{Geometric Filtering of LLM-Generated Samples\\for Few-Shot Text Classification}
+\author{Benjamín Schindler \and Gonzalo A. Ruz}
+\institute{Universidad Adolfo Ibáñez, Santiago, Chile}
+\date{IEEE LACCI 2026 \textperiodcentered{} Lima, Peru}

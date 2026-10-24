@@ -1,0 +1,133 @@
+% =============================================================================
+% Backup slides (Q&A only, not presented)
+% =============================================================================
+
+% --- Backup 1: Binary vs soft ablation ---
+\begin{frame}{Backup: where does the gain come from?}
+\begin{columns}[c]
+\begin{column}{0.56\textwidth}
+\centering
+{\small\bfseries\color{uaibluedark} Ablation, macro F1 relative to SMOTE} \srctag{$N=63$}\\[6pt]
+% Waterfall: 0.64 + 1.75 + 0.22 = 2.61 pp (1 pp = 1.25 cm)
+\begin{tikzpicture}[y=1.25cm, bw/.style={minimum width=1.05cm}]
+  \draw[methodSMOTE, dashed, thick] (-0.75,0) -- (6.0,0);
+  \node[font=\scriptsize\bfseries, color=methodSMOTE, anchor=east] at (-0.75,0) {SMOTE};
+  \foreach \y in {1,2} {\draw[uaigraylight] (-0.75,\y) -- (6.0,\y); \node[font=\tiny, color=uaigray, anchor=east] at (-0.75,\y) {$+\y$};}
+  % steps
+  \fill[methodOther]       (-0.5,0)    rectangle (0.5,0.64);
+  \fill[methodOurs!60]     (1.25,0.64) rectangle (2.25,2.39);
+  \fill[methodOurs]        (3.0,2.39)  rectangle (4.0,2.61);
+  \fill[methodOurs!80!black] (4.75,0)  rectangle (5.75,2.61);
+  % connectors
+  \draw[uaigray, densely dotted] (0.5,0.64) -- (1.25,0.64);
+  \draw[uaigray, densely dotted] (2.25,2.39) -- (3.0,2.39);
+  \draw[uaigray, densely dotted] (4.0,2.61) -- (4.75,2.61);
+  % values
+  \node[font=\scriptsize\bfseries, color=uaibluedark, above] at (0,0.64)    {$+0.64$};
+  \node[font=\scriptsize\bfseries, color=uaibluedark, above] at (1.75,2.39) {$+1.75$};
+  \node[font=\scriptsize\bfseries, color=uaibluedark, above] at (3.5,2.61)  {$+0.22$};
+  \node[font=\scriptsize\bfseries, color=uaibluedark, above] at (5.25,2.61) {$+2.61$};
+  \node[font=\tiny, color=uaigray, below] at (1.75,0.6)  {$d=0.63$};
+  \node[font=\tiny, color=uaigray, above] at (3.5,2.86)  {$p=0.053$};
+  \node[font=\tiny, color=uaigray, above] at (5.25,2.86) {$d=0.95$};
+  % category labels
+  \node[font=\scriptsize, color=uaibluedark, align=center, anchor=north] at (0,-0.08)    {drop\\SMOTE};
+  \node[font=\scriptsize, color=uaibluedark, align=center, anchor=north] at (1.75,-0.08) {+ filtered\\LLM data};
+  \node[font=\scriptsize, color=uaibluedark, align=center, anchor=north] at (3.5,-0.08)  {+ soft\\weights};
+  \node[font=\scriptsize\bfseries, color=uaibluedark, align=center, anchor=north] at (5.25,-0.08) {total\\(ours)};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.44\textwidth}
+\begin{insight}
+\footnotesize
+Most of the contribution comes from \textbf{geometric selection itself} ($+1.75$ pp over no augmentation,
+$p<0.0001$); soft weighting adds a small, marginally significant refinement ($+0.22$ pp).
+\end{insight}
+
+\vspace{0.4em}
+\scriptsize
+Binary filter vs.\ SMOTE: $+2.39$ pp, $d=0.82$.\\
+No augmentation already beats SMOTE by $+0.64$ pp.
+
+\vspace{0.4em}
+\footnotesize
+\textbf{Caching caveat:} cached LLM responses give zero cross-seed variance for deterministic
+classifiers (80\% of configs). Restricted to stochastic classifiers the effect remains:
+$+1.79$ pp, $p=0.0015$, $d=0.52$.
+\end{column}
+\end{columns}
+\end{frame}
+
+% --- Backup 2: NER table ---
+\begin{frame}{Backup: NER results (entity-level F1)}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+\textbf{Corpus} & \textbf{$n$} & \textbf{Baseline} & \textbf{No filter} & \textbf{Cascade L1} & \textbf{LOF} \\
+\midrule
+\multirow{3}{*}{MultiNERD}
+ & 10 & .247 & .393 & .407 & \textbf{.426} \\
+ & 25 & .315 & .419 & \textbf{.438} & .431 \\
+ & 50 & .415 & .486 & .455 & \textbf{.495} \\
+\midrule
+\multirow{3}{*}{WikiANN}
+ & 10 & .162 & .268 & \textbf{.303} & .302 \\
+ & 25 & .253 & .272 & \textbf{.299} & .276 \\
+ & 50 & .244 & \textbf{.295} & .287 & .293 \\
+\midrule
+\multirow{3}{*}{Few-NERD}
+ & 10 & .103 & \textbf{.234} & .220 & .217 \\
+ & 25 & .161 & .240 & \textbf{.251} & .235 \\
+ & 50 & .200 & .248 & \textbf{.272} & .261 \\
+\midrule
+\multicolumn{2}{@{}l}{\textbf{Average}} & .233 & .317 & .326 & .326 \\
+\multicolumn{2}{@{}l}{\textbf{$\Delta$ vs.\ baseline}} & --- & $+8.40$ & $+9.26$ & $+9.28$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+{\scriptsize Cascade L1: $p_{\text{Bonf}}=0.002$ (7 filters), $d=2.05$, 100\% win rate. Combined filter: 0\% acceptance
+in 6/9 configs, $p=0.29$.}
+\end{frame}
+
+% --- Backup 3: Setup details ---
+\begin{frame}{Backup: protocol details}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\footnotesize
+\textbf{Generation}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Gemini 3 Flash (primary); GPT-5-mini, Claude 4.5 Haiku, Kimi K2.5, GLM-5.
+  \item Real examples as in-context demonstrations; 3 candidates per desired sample.
+  \item Responses cached (MD5) for reproducibility.
+\end{itemize}
+
+\textbf{Embeddings}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item all-mpnet-base-v2, 768-d, L2-normalized.
+  \item Ablation with bge-large, e5-large, bge-small: 90.5\% cross-model agreement.
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\footnotesize
+\textbf{Protocols}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Main: 10 methods, 3 linear classifiers, 3 seeds (1,890 runs).
+  \item Extended: 7 methods, 5 classifiers, 5 seeds (3,675 runs); MLP and RF rows.
+  \item Seeds: 42, 123, 456, 789, 1011.
+\end{itemize}
+
+\textbf{Classifiers}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Logistic regression, linear SVC, Ridge, random forest (100 trees), MLP (100 hidden units).
+\end{itemize}
+
+\textbf{Teacher-model filtering}
+\begin{itemize}\setlength\itemsep{0pt}\scriptsize
+  \item Geometric $+2.78$ vs.\ teacher $+2.43$ pp (binary variants); paired $p=0.0001$.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}

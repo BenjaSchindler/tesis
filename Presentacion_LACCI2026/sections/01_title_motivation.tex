@@ -1,0 +1,146 @@
+% =============================================================================
+% Title + problem + motivation (slides 1–4, ~3.5 min)
+% =============================================================================
+
+% --- Slide 1: Title ---
+\begin{frame}[plain,noframenumbering]
+\vspace*{0.4em}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.68\textwidth}
+\raggedright
+{\color{uaibluedark}\fontsize{18}{22}\selectfont\bfseries
+Geometric Filtering of LLM-Generated Samples for Few-Shot Text Classification\par}
+
+\vspace{0.6em}
+{\color{uaiorange}\rule{0.55\textwidth}{1pt}}
+\vspace{0.8em}
+
+{\large\bfseries\color{uaibluedark} Benjamín Schindler \quad Gonzalo A. Ruz}\\[4pt]
+{\footnotesize\color{uaigray}
+Universidad Adolfo Ibáñez, Santiago, Chile\\
+Millennium Nucleus for Social Data Science (SODAS)\\
+Millennium Nucleus in Data Science for Plant Resilience (PhytoLearning)\par}
+
+\vspace{1.2em}
+{\small\bfseries\color{uaibluedark} IEEE LACCI 2026}\\[2pt]
+{\footnotesize\color{uaigray} Universidad del Pacífico \textperiodcentered{} Lima, Peru \textperiodcentered{} November 2026}
+\end{column}
+\begin{column}{0.30\textwidth}
+\centering
+\vspace{0.4em}
+\includegraphics[height=1.2cm]{logos/fic.png}
+
+\vspace{2.6em}
+{\scriptsize\color{uaigray}
+benjamin.schindler@alumnos.uai.cl\\
+gonzalo.ruz@uai.cl\par}
+\end{column}
+\end{columns}
+\end{frame}
+
+% --- Slide 2: The problem (shared with the simple deck) ---
+\input{sections/problem_intro}
+
+% --- Slide 3: Two ways to create data ---
+\begin{frame}{Two ways to create more training data}
+\small
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=methodSMOTE}
+\begin{block}{Classical oversampling (SMOTE)}
+\scriptsize
+$x_{\text{new}} = x_i + \lambda\,(x_j - x_i)$ in embedding space\\[3pt]
+\good\ Geometric control\\
+\bad\ Produces \alert{vectors, not text}; only fills known space
+\end{block}
+\begin{tikzpicture}[scale=0.85]
+  \embeddingclasses
+  % interpolation segments between real neighbors of class A
+  \foreach \a/\b in {pa1/pa2, pa2/pa3, pa4/pa3, pa5/pa4, pa1/pa5} {\draw[uaiorange!70, dashed] (\a) -- (\b);}
+  \foreach \a/\b/\t in {pa1/pa2/0.45, pa2/pa3/0.6, pa4/pa3/0.4, pa5/pa4/0.55, pa1/pa5/0.5} {\node[synth] at ($(\a)!\t!(\b)$) {};}
+  \node[font=\scriptsize, color=uaigray] at (1.25,-1.3) {stays on segments between real neighbors};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\setbeamercolor{block title}{fg=white,bg=methodOurs}
+\begin{block}{LLM generation (GPT, Gemini, Claude\dots)}
+\scriptsize
+Prompt with real examples, ask for new ones\\[3pt]
+\good\ Fluent, diverse, valid text\\
+\bad\ \alert{No geometric awareness}: noise, class overlap
+\end{block}
+\begin{tikzpicture}[scale=0.85]
+  \embeddingclasses
+  % LLM samples meant for class A: some inside, some peripheral, some cross-class
+  \foreach \pt in {(-0.15,0.15),(0.25,-0.35),(-0.45,0.65)} {\node[synth] at \pt {};}
+  \foreach \pt in {(-1.35,0.75),(-1.2,-0.85),(0.85,1.05)} {\node[synth] at \pt {};}
+  \foreach \pt in {(2.45,0.05),(2.75,0.55)} {\node[synth] at \pt {};}
+  \node[font=\tiny\itshape, color=uaiorange, anchor=south] at (2.6,0.85) {cross-class};
+  \node[font=\tiny\itshape, color=uaiorange, anchor=east] at (-1.42,0.75) {peripheral};
+  \node[font=\scriptsize, color=uaigray] at (1.25,-1.3) {open-ended: no notion of the class region};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+
+\centering
+\begin{tikzpicture}
+  \node[real] (l1) at (0,0) {};            \node[legendtxt] at (0.12,0) {real, class A};
+  \node[realB] (l2) at (2.3,0) {};         \node[legendtxt] at (2.42,0) {real, class B};
+  \node[synth] (l3) at (4.6,0) {};         \node[legendtxt] at (4.72,0) {synthetic sample for class A};
+\end{tikzpicture}
+
+\keymessage{Can we get LLM-quality text \emph{and} SMOTE-like geometric control?}
+\end{frame}
+
+% --- Slide 4: The idea ---
+\begin{frame}{The idea: filter LLM samples in embedding space}
+\begin{columns}[T]
+\begin{column}{0.54\textwidth}
+\small
+LLM samples have \textbf{heterogeneous quality}: some land inside their class region,
+others in peripheral or cross-class zones. Adding all of them can \alert{hurt} the classifier.
+
+\vspace{0.5em}
+\textbf{Post-generation geometric filtering:}
+\begin{enumerate}\setlength\itemsep{1pt}\footnotesize
+  \item Generate a \textbf{3$\times$ surplus} of candidates with an LLM.
+  \item Embed them with the same sentence encoder.
+  \item Score each candidate by its \textbf{distance to real examples} of its class.
+  \item Keep the best; \textbf{weight} them by their score.
+\end{enumerate}
+
+\vspace{0.4em}
+\begin{insight}
+\footnotesize
+\textbf{Research question:} can geometric filtering make LLM augmentation
+reliably better than SMOTE in few-shot settings?
+\end{insight}
+\end{column}
+\begin{column}{0.46\textwidth}
+\centering
+\vspace{0.6em}
+\begin{tikzpicture}[scale=1.15, every node/.append style={transform shape=false}]
+  \embeddingclasses
+  \draw[uaibluedark, dashed, thick] (0,0) circle (1.45);
+  % candidates generated for class A
+  \foreach \pt in {(-0.15,0.1),(0.35,0.2),(-0.2,0.85),(0.7,0.65),(-0.95,0.0),(0.55,-0.75),(-0.85,-0.75),(1.15,-0.3)} {\node[kept] at \pt {};}
+  \foreach \pt in {(-1.75,0.75),(-1.45,-1.25),(0.3,1.75),(2.4,0.05),(2.75,0.65),(1.75,-1.15)} {\node[rejected] at \pt {};}
+  % distance of one rejected candidate to its nearest real example
+  \draw[<->, >=Stealth, uaigray, thin, shorten <=2pt, shorten >=3pt] (pa1) -- (-1.75,0.75);
+  \node[font=\scriptsize, color=uaigray] at (-1.0,0.8) {$d(x)$};
+  \node[font=\scriptsize, color=uaibluedark, anchor=south west] at (0.75,1.2) {keep top-$N$};
+  \node[font=\tiny\itshape, color=uaiorange, anchor=north] at (2.6,-0.62) {cross-class};
+\end{tikzpicture}
+
+\vspace{0.6em}
+\begin{tikzpicture}
+  \node[real]     at (0,0.45) {};  \node[legendtxt] at (0.12,0.45) {real example (class A / B)};
+  \node[realB]    at (-0.16,0.45) {};
+  \node[kept]     at (0,0)    {};  \node[legendtxt] at (0.12,0)    {LLM candidate, kept};
+  \node[rejected] at (0,-0.45) {}; \node[legendtxt] at (0.12,-0.45) {LLM candidate, rejected};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}

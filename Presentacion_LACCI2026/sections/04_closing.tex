@@ -1,0 +1,115 @@
+% =============================================================================
+% When to use it + conclusions (slides 14–15, ~2 min)
+% =============================================================================
+
+% --- Slide 14: When it helps, limitations ---
+\begin{frame}[t]{When does it help? And where are the limits?}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\centering
+{\small\bfseries\color{uaibluedark} $\Delta$ vs.\ SMOTE by number of classes}\\[2pt]
+% Thesis, Table "nclasses pattern" (soft-weighted vs SMOTE)
+\begin{tikzpicture}
+\begin{axis}[
+  lacci vbar, width=6.9cm, height=4.1cm, bar width=11pt,
+  ymin=-2.3, ymax=6.4, ytick={0,2,4,6},
+  ylabel={$\Delta$ (pp)}, xlabel={number of classes},
+  symbolic x coords={2,3,4,6,14,20,77,150}, xtick={2,3,4,6,14,20,77,150}, enlarge x limits=0.08,
+  bar shift=0pt,
+  point meta=explicit symbolic,
+  nodes near coords, nodes near coords style={font=\tiny, color=uaibluedark},
+  clip=false,
+]
+  \addplot[fill=methodOurs, draw=none]
+    coordinates {(2,3.18)[$+3.18$] (3,1.86)[$+1.86$] (4,1.70)[$+1.70$] (14,0.40)[$+0.40$] (20,2.36)[$+2.36$]};
+  \addplot[fill=methodOurs!80!black, draw=none] coordinates {(6,5.42)[\textbf{+5.42}]};
+  \addplot[fill=methodWorse, draw=none] coordinates {(77,-0.99)[]};
+  \node[font=\tiny, color=methodWorse, anchor=north] at (axis cs:77,-0.99) {$-0.99$};
+  \addplot[fill=methodOther, draw=none] coordinates {(150,0.01)[$+0.01$]};
+  \draw[uaigray, thick] ({rel axis cs:0,0}|-{axis cs:2,0}) -- ({rel axis cs:1,0}|-{axis cs:2,0});
+  \node[font=\scriptsize\itshape, color=methodOurs!80!black, anchor=west] at (axis cs:6,5.42) {\ \ sweet spot};
+  \node[font=\scriptsize\itshape, color=methodWorse, anchor=south west] at (axis cs:77,1.1) {too packed};
+\end{axis}
+\end{tikzpicture}
+
+{\scriptsize Spearman $\rho=-0.26$, $p=0.003$}
+
+\vspace{0.3em}
+\setbeamercolor{block title}{fg=white,bg=uaiblue}
+\begin{block}{Why it works: cleaner geometry}
+\scriptsize
+Tighter classes (intra-class distance $0.822$ vs.\ $0.850$) and better separation
+(inter-class $0.616$ vs.\ $0.571$), both $p<0.001$.
+\end{block}
+\end{column}
+\begin{column}{0.52\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaigreen}
+\begin{block}{Helps most}
+\footnotesize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \textbf{Hard classes} (F1 $<30\%$): $+10.44$ pp vs.\ $+0.55$ pp for easy ones (F1 $>80\%$).
+        \emph{anger}, emotion 10-shot: $27.8\% \to 44.6\%$.
+  \item \textbf{Few classes}: best at 6 ($+5.42$ pp, 100\% win rate).
+  \item \textbf{10--25 per class}, linear classifier.
+\end{itemize}
+\end{block}
+
+\setbeamercolor{block title}{fg=white,bg=uaiamber}
+\begin{block}{Limitations}
+\footnotesize
+\begin{itemize}\setlength\itemsep{0pt}
+  \item \textbf{Many classes}: $-0.99$ pp at 77, $+0.01$ pp at 150.
+  \item \textbf{More data}: only $+0.76$ pp at 50-shot.
+  \item \textbf{English only}; multilingual transfer untested.
+  \item \textbf{Same encoder} filters and classifies; mitigated by 90.5\% agreement
+        across 4 embedding models.
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+% --- Slide 15: Conclusions ---
+\begin{frame}[t]{Take-home messages}
+\vspace{0.3em}
+\begin{columns}[T]
+\begin{column}{0.56\textwidth}
+\small
+\begin{enumerate}\setlength\itemsep{2pt}
+  \item \textbf{Distance filtering works:} $+2.61$ pp over SMOTE
+        ($d=0.95$, 88.9\% win rate) across 13 datasets.
+  \item \textbf{Simple beats complex:} distance alone outperforms LOF, cosine and
+        combined criteria. Don't over-filter.
+  \item \textbf{Decoupled and general:} robust across 5 LLMs;
+        transfers to NER ($+9.26$ pp) unchanged.
+\end{enumerate}
+
+\vspace{0.2em}
+{\scriptsize\textbf{Next:} multilingual embeddings, local open-source LLMs,
+joint tuning of filter and weighting, other tasks (QA, summarization).}
+\end{column}
+\begin{column}{0.44\textwidth}
+\setbeamercolor{block title}{fg=white,bg=uaiorange}
+\begin{block}{Recipe}
+\footnotesize
+\begin{enumerate}\setlength\itemsep{1pt}
+  \item Prompt an LLM with your few real examples.
+  \item Generate a \textbf{3$\times$ surplus}.
+  \item Embed; score by \textbf{distance to the nearest real example}.
+  \item Keep the top half; \textbf{soft-weight} them.
+  \item Train a linear classifier.
+\end{enumerate}
+\end{block}
+\end{column}
+\end{columns}
+
+\vfill
+\begin{center}
+\begin{tcolorbox}[colback=uaibluedark, colframe=uaibluedark, coltext=white,
+                  width=0.8\linewidth, halign=center, arc=4pt,
+                  top=2pt, bottom=2pt]
+\textbf{Thank you! Questions?}\\[2pt]
+{\scriptsize benjamin.schindler@alumnos.uai.cl \textperiodcentered{} gonzalo.ruz@uai.cl}
+\end{tcolorbox}
+\end{center}
+\end{frame}

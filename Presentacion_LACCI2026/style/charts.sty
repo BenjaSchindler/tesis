@@ -1,0 +1,155 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{charts}[2026/10/23 Shared pgfplots/TikZ chart styles (LACCI 2026 talk)]
+
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+
+% -----------------------------------------------------------------------------
+% Base look for every chart: light horizontal/vertical grid, no box,
+% UAI gray text, small sans labels.
+% -----------------------------------------------------------------------------
+\pgfplotsset{
+  lacci/.style={
+    axis lines*=left,
+    axis line style={uaigray!60},
+    tick style={uaigray!60, thin},
+    major tick length=2pt,
+    tick label style={font=\scriptsize, color=uaigray},
+    label style={font=\scriptsize, color=uaigray},
+    title style={font=\scriptsize\bfseries, color=uaibluedark},
+    grid style={uaigraylight, line width=0.4pt},
+    every axis plot/.append style={line join=round},
+    legend style={font=\scriptsize, draw=none, fill=none, text=uaigray},
+    legend cell align=left,
+    /pgf/number format/.cd, fixed, precision=2, assume math mode=true,
+  },
+  % Horizontal bar chart (categories on the y axis, top to bottom)
+  lacci hbar/.style={
+    lacci,
+    xbar, bar width=7pt,
+    xmajorgrids, ymajorgrids=false,
+    axis y line*=none, ytick style={draw=none},
+    y dir=reverse,
+    yticklabel style={font=\scriptsize, color=uaibluedark},
+    enlarge y limits={abs=0.6},
+  },
+  % Vertical bar chart (categories on the x axis)
+  lacci vbar/.style={
+    lacci,
+    ybar, bar width=16pt,
+    ymajorgrids, xmajorgrids=false,
+    xtick style={draw=none},
+    xticklabel style={font=\scriptsize, color=uaibluedark},
+  },
+}
+
+% Zero rule spanning the whole plot: \vzero for x = 0, \hzero for y = 0.
+% Optional argument: extra TikZ style (e.g. the SMOTE reference color).
+\newcommand{\vzero}[1][uaigray, thick]{%
+  \draw[#1] ({axis cs:0,0}|-{rel axis cs:0,0}) -- ({axis cs:0,0}|-{rel axis cs:0,1});}
+\newcommand{\hzero}[1][uaigray, thick]{%
+  \draw[#1] ({rel axis cs:0,0}|-{axis cs:0,0}) -- ({rel axis cs:1,0}|-{axis cs:0,0});}
+
+% -----------------------------------------------------------------------------
+% Marks for the conceptual embedding-space sketches (slides 2-3)
+% -----------------------------------------------------------------------------
+\tikzset{
+  real/.style={circle, fill=uaibluedark, inner sep=0pt, minimum size=5pt},
+  realB/.style={circle, fill=methodOther!90!black, inner sep=0pt, minimum size=5pt},
+  synth/.style={circle, draw=uaiorange, very thick, fill=white, inner sep=0pt, minimum size=5pt},
+  kept/.style={circle, draw=methodOurs, very thick, fill=white, inner sep=0pt, minimum size=5pt},
+  rejected/.style={cross out, draw=uaiorange, very thick, inner sep=0pt, minimum size=5pt},
+  classA/.style={fill=uaibluelight!18, draw=uaibluelight!50},
+  classB/.style={fill=methodOther!18, draw=methodOther!50},
+  legendtxt/.style={font=\scriptsize, color=uaigray, anchor=west, text height=1.5ex, text depth=0.3ex},
+}
+
+% Generated samples by class, and a generated sample with the wrong content
+% (intro slide of the simple deck)
+\tikzset{
+  genA/.style={circle, draw=uaibluedark, thick, fill=white, inner sep=0pt, minimum size=5pt},
+  genB/.style={circle, draw=methodOther!90!black, thick, fill=white, inner sep=0pt, minimum size=5pt},
+  genBad/.style={circle, draw=uaiorange, very thick, fill=uaiorange!25, inner sep=0pt, minimum size=5pt},
+  boundary/.style={line width=1.4pt, #1},
+  boundary/.default=methodOurs,
+}
+
+% Small icons for \iconcard (setup slide of the simple deck); the argument is
+% a TikZ option list, e.g. {color=uaiblue, scale=0.8}
+\newcommand{\glyphdata}[1]{% database cylinders
+  \begin{tikzpicture}[#1, line width=1.2pt]
+    \foreach \y in {0,0.32,0.64} {
+      \draw[fill=white] (-0.42,\y) -- (-0.42,\y+0.24) arc[start angle=180, end angle=360, x radius=0.42, y radius=0.12]
+                        -- (0.42,\y) arc[start angle=0, end angle=-180, x radius=0.42, y radius=0.12];
+    }
+    \draw[fill=white] (0,0.88) ellipse[x radius=0.42, y radius=0.12];
+  \end{tikzpicture}}
+\newcommand{\glyphmethods}[1]{% shuffle arrows
+  \begin{tikzpicture}[#1, line width=1.4pt, -{Stealth[length=5pt]}]
+    \draw (-0.5,0.15) .. controls (0,0.15) and (0,0.75) .. (0.5,0.75);
+    \draw (-0.5,0.75) .. controls (0,0.75) and (0,0.15) .. (0.5,0.15);
+    \draw (-0.5,0.45) -- (0.5,0.45);
+  \end{tikzpicture}}
+\newcommand{\glyphclf}[1]{% two point clouds and a boundary
+  \begin{tikzpicture}[#1]
+    \foreach \pt in {(-0.4,0.7),(-0.25,0.3),(-0.5,0.4)} {\fill \pt circle (2.2pt);}
+    \foreach \pt in {(0.35,0.5),(0.5,0.15),(0.25,0.15)} {\draw[line width=1pt] \pt circle (2.2pt);}
+    \draw[line width=1.4pt] (-0.15,-0.05) -- (0.15,0.95);
+  \end{tikzpicture}}
+\newcommand{\glyphllm}[1]{% speech bubble with lines
+  \begin{tikzpicture}[#1, line width=1.3pt]
+    \draw[rounded corners=3pt] (-0.5,0.2) rectangle (0.5,0.9);
+    \draw (-0.25,0.2) -- (-0.35,0) -- (-0.05,0.2);
+    \draw (-0.32,0.68) -- (0.32,0.68); \draw (-0.32,0.45) -- (0.15,0.45);
+  \end{tikzpicture}}
+\newcommand{\glyphgrid}[1]{% grid of small squares
+  \begin{tikzpicture}[#1]
+    \foreach \x in {0,...,3} \foreach \y in {0,...,2} {\fill (\x*0.24-0.38,\y*0.24+0.15) rectangle ++(0.17,0.17);}
+  \end{tikzpicture}}
+
+% Two class regions with their real examples (named pa1..pa5 for class A).
+% Shared by the slide-2 and slide-3 sketches so they read as one story.
+\newcommand{\embeddingclasses}{%
+  \fill[classA] (0,0) circle (1.0);
+  \fill[classB] (2.6,0.2) circle (0.72);
+  \node[font=\tiny\bfseries, color=uaibluelight] at (-0.62,-0.95) {A};
+  \node[font=\tiny\bfseries, color=methodOther!90!black] at (3.18,-0.42) {B};
+  \node[real] (pa1) at (-0.55,0.35) {};
+  \node[real] (pa2) at (0.25,0.6) {};
+  \node[real] (pa3) at (0.6,-0.1) {};
+  \node[real] (pa4) at (0.05,-0.6) {};
+  \node[real] (pa5) at (-0.55,-0.35) {};
+  \foreach \pt in {(2.35,0.5),(2.85,0.3),(2.5,-0.2)} {\node[realB] at \pt {};}
+}
+
+% Value columns printed to the right of a bar chart
+\tikzset{
+  colnum/.style={font=\scriptsize, color=uaigray, anchor=east},
+  colnum ours/.style={font=\scriptsize\bfseries, color=methodOurs!80!black, anchor=east},
+  colhead/.style={font=\scriptsize\bfseries, color=uaibluedark, anchor=east},
+}
+
+% \colat[style]{offset}{row}{text}: value printed `offset` to the right of
+% the axis' right edge, on the row with y coordinate `row` (inside an axis).
+\newcommand{\colat}[4][colnum]{%
+  \node[#1, xshift=#2] at ({rel axis cs:1,0}|-{axis cs:0,#3}) {#4};}
+
+% Class swatches for the t-SNE legend (matplotlib tab10, as in the figure)
+\definecolor{tabblue}{HTML}{1F77B4}\definecolor{taborange}{HTML}{FF7F0E}
+\definecolor{tabgreen}{HTML}{2CA02C}\definecolor{tabred}{HTML}{D62728}
+\definecolor{tabpurple}{HTML}{9467BD}\definecolor{tabbrown}{HTML}{8C564B}
+\tikzset{sw/.style={fill=#1, minimum width=8pt, minimum height=6pt, inner sep=0pt}}
+
+% Pipeline diagram (slide 4)
+\tikzset{
+  stage/.style={draw=#1, rounded corners=3pt, fill=#1!12, line width=0.8pt,
+                minimum width=2.15cm, minimum height=1.25cm, text width=2.0cm,
+                align=center, font=\footnotesize, text=uaibluedark},
+  stage/.default=uaiblue,
+  arrow/.style={-{Stealth[length=5pt]}, thick, uaiblue!70},
+  lbl/.style={font=\scriptsize\itshape, color=uaigray},
+}
+\newcommand{\sub}{\scriptsize\color{uaigray}}
+
+\endinput

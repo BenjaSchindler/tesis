@@ -1,0 +1,92 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamer-blocks}[2026/10/23 Custom Beamer blocks (LACCI 2026 talk)]
+
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins,breakable,raster}
+
+% Takeaway box (message at the bottom of a slide)
+\newtcolorbox{takeaway}{
+  colback=uaibluedark,
+  colframe=uaibluedark,
+  coltext=white,
+  arc=2pt,
+  boxrule=0pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt,
+  fontupper=\small\bfseries
+}
+
+% Headline-number box
+\newtcolorbox{headline}{
+  colback=white,
+  colframe=uaiorange,
+  arc=4pt,
+  boxrule=2pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  halign=center
+}
+
+% Insight box
+\newtcolorbox{insight}{
+  colback=uaiamber!10,
+  colframe=uaiamber,
+  coltitle=uaibluedark,
+  arc=3pt,
+  boxrule=1.5pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+% Equal-height titled box for side-by-side explanations
+\newtcolorbox{mechbox}[2][]{
+  colback=uaigraylight,
+  coltitle=white,
+  fonttitle=\small\bfseries,
+  fontupper=\scriptsize,
+  arc=2pt,
+  boxrule=0pt,
+  left=5pt, right=5pt, top=4pt, bottom=4pt,
+  equal height group=mech,
+  title={#2},
+  #1
+}
+
+% Key message at the bottom of a slide
+\newcommand{\keymessage}[1]{%
+  \vfill
+  \begin{takeaway}#1\end{takeaway}
+}
+
+% Large highlighted number
+\newcommand{\bignumber}[2]{%
+  {\color{uaiorange}\bfseries\Huge #1}\\[2pt]
+  {\color{uaigray}\small #2}
+}
+
+% Small inline source tag
+\newcommand{\srctag}[1]{{\scriptsize\color{uaigray}[#1]}}
+
+% Big-number tile: \statTile{number}{label}{color}
+\newcommand{\statTile}[3]{%
+  \begin{tcolorbox}[colback=#3!10, colframe=#3, boxrule=0pt, leftrule=3pt, arc=2pt,
+                    width=\linewidth, left=5pt, right=2pt, top=3pt, bottom=3pt,
+                    halign=flush left, equal height group=tiles]
+    {\color{#3!80!black}\bfseries\LARGE #1}\\[-1pt]
+    {\scriptsize\color{uaigray} #2}
+  \end{tcolorbox}}
+
+% Number card with an icon on top: \iconcard{\glyph...}{number}{label}{color}
+% (use inside a tcbraster; the glyphs are defined in charts.sty)
+\newcommand{\iconcard}[4]{%
+  \begin{tcolorbox}[colback=white, colframe=#4!35, boxrule=0.8pt, arc=5pt,
+                    halign=center, valign=center, height=3.35cm, left=1pt, right=1pt]
+    #1{color=#4, scale=0.8}\\[4pt]
+    {\color{#4}\bfseries\fontsize{24}{26}\selectfont #2}\\[1pt]
+    {\small\color{uaigray} #3}
+  \end{tcolorbox}}
+
+% Rounded tag: \chip{text} or \chip[color]{text}
+\newcommand{\chip}[2][uaibluedark]{%
+  \tikz[baseline=(c.base)]\node[c, draw=#1!60, fill=#1!8, text=#1, rounded corners=7pt,
+        inner xsep=7pt, inner ysep=3pt, font=\small] (c) {\strut #2};}
+\tikzset{c/.style={}}
+
+\endinput

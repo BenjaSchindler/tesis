@@ -1,0 +1,73 @@
+% =============================================================================
+% Intro slide shared by both decks (slide 2): why few labels are a problem and
+% why generated data must be reliable. Input once per document.
+% =============================================================================
+
+% Toy 2-D sketch: class A (left) vs. class B (right); the true boundary is x = 0.
+\newcommand{\fewshotpanel}{%
+  \draw[uaigray!50, dashed] (0,-1.15) -- (0,1.15);
+  \foreach \pt in {(-1.0,0.6),(-0.7,-0.5),(-1.3,-0.1)} {\node[real] at \pt {};}
+  \foreach \pt in {(0.9,0.4),(1.2,-0.6),(0.6,-0.2)} {\node[realB] at \pt {};}
+}
+\begin{frame}{The problem: learning from very few examples}
+\small
+Many real tasks have only \textbf{10--50 labeled examples per class}: labeling is slow and costly.
+
+\vspace{0.6em}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.32\textwidth}
+\centering
+{\bfseries\color{uaibluedark} 1.\ Few examples}\\[4pt]
+\begin{tikzpicture}
+  \fill[uaigraylight!60] (-1.6,-1.15) rectangle (1.6,1.15);
+  \fewshotpanel
+  \draw[uaiorange, thick] (-0.5,-1.15) -- (0.4,1.15);
+  \draw[uaiorange, thick] (0.4,-1.15) -- (-0.55,1.15);
+  \draw[uaiorange, thick] (0.15,-1.15) -- (0.2,1.15);
+  \node[font=\large\bfseries, color=uaiorange, fill=uaigraylight, circle, inner sep=0.5pt] at (0.0,0.0) {?};
+\end{tikzpicture}\\[4pt]
+Many boundaries fit the data.\\
+\textbf{Which one is right?}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\bfseries\color{uaibluedark} 2.\ Create more from them}\\[4pt]
+\begin{tikzpicture}
+  \fill[uaigraylight!60] (-1.6,-1.15) rectangle (1.6,1.15);
+  \fewshotpanel
+  \foreach \pt in {(-0.4,0.9),(-0.3,-0.2),(-1.4,0.8),(-0.9,-0.95),(-0.25,0.4)} {\node[genA] at \pt {};}
+  \foreach \pt in {(0.3,0.7),(0.35,-0.8),(1.4,0.2),(0.8,0.95),(0.25,0.1)} {\node[genB] at \pt {};}
+  \draw[boundary] (0.02,-1.15) -- (-0.02,1.15);
+\end{tikzpicture}\\[4pt]
+Reliable new examples\\
+\textbf{pin the boundary down.}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\bfseries\color{uaibluedark} 3.\ But only if reliable}\\[4pt]
+\begin{tikzpicture}
+  \fill[uaigraylight!60] (-1.6,-1.15) rectangle (1.6,1.15);
+  \fewshotpanel
+  \foreach \pt in {(-0.4,0.9),(-0.3,-0.2),(-1.4,0.8)} {\node[genA] at \pt {};}
+  \foreach \pt in {(1.4,0.2),(0.8,0.95)} {\node[genB] at \pt {};}
+  \foreach \pt in {(0.45,-0.75),(0.55,0.1),(0.35,0.65)} {\node[genBad] at \pt {};}
+  \draw[boundary=methodWorse] (1.05,-1.15) -- (0.45,1.15);
+\end{tikzpicture}\\[4pt]
+Wrong examples\\
+\textbf{teach the wrong boundary.}
+\end{column}
+\end{columns}
+
+\vspace{0.5em}
+\centering
+\begin{tikzpicture}
+  \node[real] at (0,0) {};    \node[legendtxt] at (0.12,0) {real A};
+  \node[realB] at (1.4,0) {}; \node[legendtxt] at (1.52,0) {real B};
+  \node[genA] at (2.8,0) {};  \node[legendtxt] at (2.92,0) {new A};
+  \node[genB] at (4.15,0) {}; \node[legendtxt] at (4.27,0) {new B};
+  \node[genBad] at (5.5,0) {}; \node[legendtxt] at (5.62,0) {new ``A'' that is really B};
+  \draw[uaigray!60, dashed] (9.0,0) -- (9.4,0); \node[legendtxt] at (9.45,0) {true boundary};
+\end{tikzpicture}
+
+\keymessage{We need more training data, but only data we can trust.}
+\end{frame}
